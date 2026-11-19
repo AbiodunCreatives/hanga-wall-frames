@@ -323,7 +323,7 @@ section.section {
 .gallery-card-body h3 { font-size: 15px; margin-bottom: 5px; }
 .gallery-card-body p  { font-size: 13px; color: var(--muted); }
 
-/* ─── Pricing ───────────────────────────────────────────────── */
+/* ─── Pricing (old simple grid kept for reference) ─────────── */
 .pricing-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
@@ -346,6 +346,94 @@ section.section {
 .price-card .size   { font-family: "Playfair Display", serif; font-size: 19px; font-weight: 600; margin-bottom: 7px; }
 .price-card .price  { font-size: 14px; color: var(--gold); font-weight: 700; }
 .price-card .inches { font-size: 12px; color: var(--muted); margin-top: 4px; }
+
+/* ─── Pricing Visual ────────────────────────────────────────── */
+/*
+  Scale reference: 1 inch ≈ 6px at display size.
+  Sizes: 12×16 / 16×20 / 16×24 / 20×24 / 20×30 / 24×36
+  All portrait (width × height).
+*/
+.pricing-visual-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px 24px;
+  align-items: end;    /* frames sit on the same baseline */
+  margin-top: 48px;
+}
+
+.pv-card {
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  transition: transform 0.25s;
+}
+.pv-card:hover { transform: translateY(-4px); }
+
+/* Frame display area — fixed height so all 6 share same vertical space */
+.pv-frames {
+  width: 100%;
+  height: 220px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 12px;
+}
+
+/*
+  Frame border = 7px solid simulating a real frame moulding.
+  Inner image fills the rest via object-fit cover.
+  Width/height set proportionally to actual inch dimensions.
+  Scale factor: largest size 24×36 → display at 96×144px.
+  Factor = 4px per inch.
+  12×16 → 48×64   16×20 → 64×80   16×24 → 64×96
+  20×24 → 80×96   20×30 → 80×120  24×36 → 96×144
+*/
+.pv-frame {
+  flex-shrink: 0;
+  border: 7px solid var(--black);
+  box-shadow: 3px 3px 0 rgba(0,0,0,0.12), 0 6px 20px rgba(0,0,0,0.15);
+  overflow: hidden;
+  position: relative;
+  background: #f8f5f0;
+}
+.pv-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* inner mat line */
+.pv-frame::before {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  border: 1px solid rgba(255,255,255,0.3);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Per-size dimensions (width × height at 4px/inch) */
+.pv-s1 { width: 48px;  height: 64px;  }   /* 12×16 */
+.pv-s2 { width: 64px;  height: 80px;  }   /* 16×20 */
+.pv-s3 { width: 64px;  height: 96px;  }   /* 16×24 */
+.pv-s4 { width: 80px;  height: 96px;  }   /* 20×24 */
+.pv-s5 { width: 80px;  height: 120px; }   /* 20×30 */
+.pv-s6 { width: 96px;  height: 144px; }   /* 24×36 */
+
+/* Info row under the frames */
+.pv-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  text-align: center;
+}
+.pv-size  { font-family: "Playfair Display", serif; font-size: 17px; font-weight: 600; color: var(--black); }
+.pv-cm    { font-size: 12px; color: var(--muted); }
+.pv-price { font-size: 15px; font-weight: 700; color: var(--gold); margin-top: 2px; }
 
 /* ─── Testimonials ──────────────────────────────────────────── */
 .testimonials-grid {
@@ -866,6 +954,9 @@ footer {
 /* ─── Tablet  ≤ 900px ───────────────────────────────────────── */
 @media (max-width: 900px) {
 
+  /* Pricing visual 2 col on tablet */
+  .pricing-visual-grid { grid-template-columns: repeat(2, 1fr); gap: 28px 20px; }
+
   /* Gallery 2 col on tablet */
   .gallery-grid { grid-template-columns: repeat(2, 1fr); }
 
@@ -911,6 +1002,7 @@ footer {
   .gallery-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
   /* Pricing 2 col */
   .pricing-grid { grid-template-columns: repeat(2, 1fr); }
+  .pricing-visual-grid { grid-template-columns: repeat(2, 1fr); gap: 24px 16px; }
 
   /* Chips smaller text */
   .chip { font-size: 12px; padding: 7px 13px; }
