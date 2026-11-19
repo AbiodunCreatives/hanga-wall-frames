@@ -57,14 +57,20 @@
 
       <div id="tab-gallery">
         <div class="mini-gallery" id="miniGallery">
-          <div class="mini-thumb" data-id="nature-sunset"  onclick="selectGalleryImage(this,'🌅','Golden Sunset')">🌅</div>
-          <div class="mini-thumb" data-id="abstract-blue"  onclick="selectGalleryImage(this,'🌊','Ocean Abstract')">🌊</div>
-          <div class="mini-thumb" data-id="city-night"     onclick="selectGalleryImage(this,'🌃','City at Night')">🌃</div>
-          <div class="mini-thumb" data-id="botanical"      onclick="selectGalleryImage(this,'🌿','Botanical Green')">🌿</div>
-          <div class="mini-thumb" data-id="mountain-mist"  onclick="selectGalleryImage(this,'⛰️','Mountain Mist')">⛰️</div>
-          <div class="mini-thumb" data-id="afro-art"       onclick="selectGalleryImage(this,'🎨','Afro Expression')">🎨</div>
-          <div class="mini-thumb" data-id="sakura"         onclick="selectGalleryImage(this,'🌸','Sakura Bloom')">🌸</div>
-          <div class="mini-thumb" data-id="desert-dunes"   onclick="selectGalleryImage(this,'🏜️','Desert Dunes')">🏜️</div>
+          <div class="mini-thumb" data-id="build-in-silence"  data-src="images/build-in-silence.jpg"   onclick="selectGalleryImage(this,'Build in Silence')"><img src="images/build-in-silence.jpg"   alt="Build in Silence" loading="lazy"></div>
+          <div class="mini-thumb" data-id="iron-mike"          data-src="images/iron-mike.jpg"           onclick="selectGalleryImage(this,'Iron Mike')"><img src="images/iron-mike.jpg"           alt="Iron Mike" loading="lazy"></div>
+          <div class="mini-thumb" data-id="alpine-bloom"       data-src="images/alpine-bloom.jpg"        onclick="selectGalleryImage(this,'Alpine Bloom')"><img src="images/alpine-bloom.jpg"        alt="Alpine Bloom" loading="lazy"></div>
+          <div class="mini-thumb" data-id="one-percent"        data-src="images/one-percent.jpg"         onclick="selectGalleryImage(this,'1% Better Every Day')"><img src="images/one-percent.jpg"         alt="1% Better Every Day" loading="lazy"></div>
+          <div class="mini-thumb" data-id="city-architecture"  data-src="images/city-architecture.jpg"   onclick="selectGalleryImage(this,'City Architecture')"><img src="images/city-architecture.jpg"   alt="City Architecture" loading="lazy"></div>
+          <div class="mini-thumb" data-id="joyful-soul"        data-src="images/joyful-soul.jpg"         onclick="selectGalleryImage(this,'Joyful Soul')"><img src="images/joyful-soul.jpg"         alt="Joyful Soul" loading="lazy"></div>
+          <div class="mini-thumb" data-id="burna-boy"          data-src="images/burna-boy.jpg"           onclick="selectGalleryImage(this,'Burna Boy')"><img src="images/burna-boy.jpg"           alt="Burna Boy" loading="lazy"></div>
+          <div class="mini-thumb" data-id="classic-roadster"   data-src="images/classic-roadster.jpg"    onclick="selectGalleryImage(this,'Classic Roadster')"><img src="images/classic-roadster.jpg"    alt="Classic Roadster" loading="lazy"></div>
+          <div class="mini-thumb" data-id="he-left-99"         data-src="images/he-left-99.jpg"          onclick="selectGalleryImage(this,'He Left the 99')"><img src="images/he-left-99.jpg"          alt="He Left the 99" loading="lazy"></div>
+          <div class="mini-thumb" data-id="alpine-meadow"      data-src="images/alpine-meadow.jpg"       onclick="selectGalleryImage(this,'Alpine Meadow')"><img src="images/alpine-meadow.jpg"       alt="Alpine Meadow" loading="lazy"></div>
+          <div class="mini-thumb" data-id="dont-overthink"     data-src="images/dont-overthink.jpg"      onclick="selectGalleryImage(this,"Don't Overthink It")"><img src="images/dont-overthink.jpg"      alt="Don't Overthink It" loading="lazy"></div>
+          <div class="mini-thumb" data-id="if-you-want"        data-src="images/if-you-want.jpg"         onclick="selectGalleryImage(this,'If You Want, You Can')"><img src="images/if-you-want.jpg"         alt="If You Want You Can" loading="lazy"></div>
+          <div class="mini-thumb" data-id="zen-balance"        data-src="images/zen-balance.jpg"         onclick="selectGalleryImage(this,'Zen Balance')"><img src="images/zen-balance.jpg"         alt="Zen Balance" loading="lazy"></div>
+          <div class="mini-thumb" data-id="raleigh-bike"       data-src="images/raleigh-bike.jpg"        onclick="selectGalleryImage(this,'Raleigh Classic')"><img src="images/raleigh-bike.jpg"        alt="Raleigh Classic" loading="lazy"></div>
         </div>
       </div>
 
@@ -185,8 +191,7 @@ drawer.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
   const img = new URLSearchParams(window.location.search).get('image');
   if (img) {
     const thumb = document.querySelector(`[data-id="${img}"]`);
-    if (thumb) selectGalleryImage(thumb, thumb.textContent.trim(),
-      img.replace(/-/g,' ').replace(/\b\w/g, c => c.toUpperCase()));
+    if (thumb) selectGalleryImage(thumb, thumb.dataset.id.replace(/-/g,' ').replace(/\b\w/g, c => c.toUpperCase()));
   }
 })();
 
@@ -206,10 +211,11 @@ function switchTab(tab, btn) {
 }
 
 // ── Gallery select ─────────────────────────────────────────────
-function selectGalleryImage(el, emoji, name) {
+function selectGalleryImage(el, name) {
   document.querySelectorAll('.mini-thumb').forEach(t => t.classList.remove('selected'));
   el.classList.add('selected');
-  Object.assign(state, { isUpload: false, imageId: el.dataset.id, imageName: name, imageEmoji: emoji, imageData: null });
+  const src = el.dataset.src || '';
+  Object.assign(state, { isUpload: false, imageId: el.dataset.id, imageName: name, imageEmoji: null, imageData: src });
   updateSummary(); renderPreview();
   showToast('Image selected: ' + name);
 }
@@ -354,8 +360,9 @@ function proceedToCheckout() {
   if (!state.imageName) { showToast('Please select or upload an image first.'); return; }
   if (!state.size)      { showToast('Please select a frame size.'); return; }
   sessionStorage.setItem('hangaOrder', JSON.stringify({
-    imageName: state.imageName, imageEmoji: state.imageEmoji,
-    imageData: state.isUpload ? state.imageData : null,
+    imageName: state.imageName,
+    imageEmoji: null,
+    imageData: state.imageData || null,
     size: state.size, price: state.price, style: state.style
   }));
   window.location.href = 'checkout.html';

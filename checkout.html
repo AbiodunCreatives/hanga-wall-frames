@@ -230,8 +230,11 @@ document.getElementById('sidebarFramePrice').textContent = order.price ? '₦' +
 document.getElementById('sidebarTotal').textContent       = order.price ? '₦' + order.price.toLocaleString() : '₦0';
 
 const sidebarImg = document.getElementById('sidebarImg');
-if (order.imageData)       sidebarImg.innerHTML = `<img src="${order.imageData}" alt="Your image">`;
-else if (order.imageEmoji) sidebarImg.textContent = order.imageEmoji;
+if (order.imageData) {
+  sidebarImg.innerHTML = `<img src="${order.imageData}" alt="Your image">`;
+} else if (order.imageEmoji) {
+  sidebarImg.textContent = order.imageEmoji;
+}
 
 // ── Payment toggle ─────────────────────────────────────────────
 let activePayMethod = 'paystack';
