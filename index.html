@@ -13,12 +13,20 @@
 <!-- ─── Header ─────────────────────────────────────────────── -->
 <header>
   <a href="index.html" class="logo">HANGA<span>.</span></a>
-  <nav class="links">
+  <nav class="nav-links">
     <a href="index.html">Home</a>
     <a href="about.html">About</a>
     <a href="customize.html" class="btn-nav">Create Your Frame</a>
   </nav>
+  <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
 </header>
+<nav class="nav-drawer" id="navDrawer">
+  <a href="index.html">Home</a>
+  <a href="about.html">About</a>
+  <a href="customize.html" class="btn-nav-mobile">Create Your Frame</a>
+</nav>
 
 <!-- ─── Hero ───────────────────────────────────────────────── -->
 <section class="hero">
@@ -26,16 +34,18 @@
     <p class="hero-eyebrow">Custom Wall Frames · Handcrafted in Nigeria</p>
     <h1>Make Your<br>Wall Speak.</h1>
     <p>Turn any photo, memory, or artwork into a beautifully framed piece that transforms your space. You pick the image. We handle the rest.</p>
-    <a href="customize.html" class="btn btn-primary" style="margin-right:14px">Start Customising</a>
-    <a href="#gallery" class="btn btn-outline">Browse Gallery</a>
+    <div class="hero-actions">
+      <a href="customize.html" class="btn btn-primary">Start Customising</a>
+      <a href="#gallery" class="btn btn-outline">Browse Gallery</a>
+    </div>
   </div>
 </section>
 
 <!-- ─── How It Works ───────────────────────────────────────── -->
 <section class="section" style="background: var(--cream); text-align:center">
-  <p class="section-label">Simple process</p>
+  <span class="section-label">Simple process</span>
   <h2 class="section-title">How It Works</h2>
-  <p class="section-sub" style="margin: 0 auto 0">From idea to wall in three easy steps.</p>
+  <p class="section-sub" style="margin-left:auto; margin-right:auto">From idea to wall in three easy steps.</p>
   <div class="steps">
     <div class="step">
       <div class="step-icon">🖼️</div>
@@ -57,131 +67,74 @@
 
 <!-- ─── Gallery ─────────────────────────────────────────────── -->
 <section class="section" id="gallery">
-  <p class="section-label">Our collection</p>
+  <span class="section-label">Our collection</span>
   <h2 class="section-title">Browse & Customise</h2>
   <p class="section-sub">Every image is available in any size and frame style. Click one to start customising.</p>
 
   <div class="gallery-grid">
-
     <div class="gallery-card" onclick="goCustomize('nature-sunset')">
       <div class="gallery-card-img-placeholder">🌅</div>
-      <div class="gallery-card-body">
-        <h3>Golden Sunset</h3>
-        <p>Warm tones · Landscape</p>
-      </div>
+      <div class="gallery-card-body"><h3>Golden Sunset</h3><p>Warm tones · Landscape</p></div>
     </div>
-
     <div class="gallery-card" onclick="goCustomize('abstract-blue')">
       <div class="gallery-card-img-placeholder">🌊</div>
-      <div class="gallery-card-body">
-        <h3>Ocean Abstract</h3>
-        <p>Cool blues · Abstract art</p>
-      </div>
+      <div class="gallery-card-body"><h3>Ocean Abstract</h3><p>Cool blues · Abstract art</p></div>
     </div>
-
     <div class="gallery-card" onclick="goCustomize('city-night')">
       <div class="gallery-card-img-placeholder">🌃</div>
-      <div class="gallery-card-body">
-        <h3>City at Night</h3>
-        <p>Urban glow · Cityscape</p>
-      </div>
+      <div class="gallery-card-body"><h3>City at Night</h3><p>Urban glow · Cityscape</p></div>
     </div>
-
     <div class="gallery-card" onclick="goCustomize('botanical')">
       <div class="gallery-card-img-placeholder">🌿</div>
-      <div class="gallery-card-body">
-        <h3>Botanical Green</h3>
-        <p>Earthy tones · Botanical</p>
-      </div>
+      <div class="gallery-card-body"><h3>Botanical Green</h3><p>Earthy tones · Botanical</p></div>
     </div>
-
     <div class="gallery-card" onclick="goCustomize('mountain-mist')">
       <div class="gallery-card-img-placeholder">⛰️</div>
-      <div class="gallery-card-body">
-        <h3>Mountain Mist</h3>
-        <p>Soft greys · Nature</p>
-      </div>
+      <div class="gallery-card-body"><h3>Mountain Mist</h3><p>Soft greys · Nature</p></div>
     </div>
-
     <div class="gallery-card" onclick="goCustomize('afro-art')">
       <div class="gallery-card-img-placeholder">🎨</div>
-      <div class="gallery-card-body">
-        <h3>Afro Expression</h3>
-        <p>Bold colours · African art</p>
-      </div>
+      <div class="gallery-card-body"><h3>Afro Expression</h3><p>Bold colours · African art</p></div>
     </div>
-
     <div class="gallery-card" onclick="goCustomize('sakura')">
       <div class="gallery-card-img-placeholder">🌸</div>
-      <div class="gallery-card-body">
-        <h3>Sakura Bloom</h3>
-        <p>Blush pinks · Floral</p>
-      </div>
+      <div class="gallery-card-body"><h3>Sakura Bloom</h3><p>Blush pinks · Floral</p></div>
     </div>
-
     <div class="gallery-card" onclick="goCustomize('desert-dunes')">
       <div class="gallery-card-img-placeholder">🏜️</div>
-      <div class="gallery-card-body">
-        <h3>Desert Dunes</h3>
-        <p>Sandy warmth · Landscape</p>
-      </div>
+      <div class="gallery-card-body"><h3>Desert Dunes</h3><p>Sandy warmth · Landscape</p></div>
     </div>
-
   </div>
 
-  <div style="text-align:center; margin-top:48px">
-    <p style="color:var(--muted); margin-bottom:16px; font-size:15px">Have a personal photo in mind?</p>
+  <div style="text-align:center; margin-top:44px">
+    <p style="color:var(--muted); margin-bottom:14px; font-size:15px">Have a personal photo in mind?</p>
     <a href="customize.html" class="btn btn-primary">Upload Your Own Image →</a>
   </div>
 </section>
 
 <!-- ─── Pricing ─────────────────────────────────────────────── -->
 <section class="section" style="background: var(--cream)">
-  <p class="section-label">Transparent pricing</p>
+  <span class="section-label">Transparent pricing</span>
   <h2 class="section-title">Frame Sizes & Prices</h2>
   <p class="section-sub">All prices are per frame. Frame style (black, white, or wood) is included at no extra charge.</p>
 
   <div class="pricing-grid">
-    <div class="price-card">
-      <div class="size">12×16</div>
-      <div class="price">₦8,000</div>
-      <div class="inches">30×40 cm</div>
-    </div>
-    <div class="price-card">
-      <div class="size">16×20</div>
-      <div class="price">₦9,500</div>
-      <div class="inches">40×50 cm</div>
-    </div>
-    <div class="price-card">
-      <div class="size">16×24</div>
-      <div class="price">₦11,000</div>
-      <div class="inches">40×60 cm</div>
-    </div>
-    <div class="price-card">
-      <div class="size">20×24</div>
-      <div class="price">₦14,000</div>
-      <div class="inches">50×60 cm</div>
-    </div>
-    <div class="price-card">
-      <div class="size">20×30</div>
-      <div class="price">₦17,500</div>
-      <div class="inches">50×75 cm</div>
-    </div>
-    <div class="price-card">
-      <div class="size">24×36</div>
-      <div class="price">₦20,000</div>
-      <div class="inches">60×90 cm</div>
-    </div>
+    <div class="price-card"><div class="size">12×16</div><div class="price">₦8,000</div><div class="inches">30×40 cm</div></div>
+    <div class="price-card"><div class="size">16×20</div><div class="price">₦9,500</div><div class="inches">40×50 cm</div></div>
+    <div class="price-card"><div class="size">16×24</div><div class="price">₦11,000</div><div class="inches">40×60 cm</div></div>
+    <div class="price-card"><div class="size">20×24</div><div class="price">₦14,000</div><div class="inches">50×60 cm</div></div>
+    <div class="price-card"><div class="size">20×30</div><div class="price">₦17,500</div><div class="inches">50×75 cm</div></div>
+    <div class="price-card"><div class="size">24×36</div><div class="price">₦20,000</div><div class="inches">60×90 cm</div></div>
   </div>
 
-  <div style="text-align:center; margin-top:40px">
+  <div style="text-align:center; margin-top:36px">
     <a href="customize.html" class="btn btn-primary">Build Your Frame Now</a>
   </div>
 </section>
 
 <!-- ─── Testimonials ────────────────────────────────────────── -->
 <section class="section">
-  <p class="section-label">Customer love</p>
+  <span class="section-label">Customer love</span>
   <h2 class="section-title">What People Say</h2>
   <div class="testimonials-grid">
     <div class="testimonial-card">
@@ -203,10 +156,10 @@
 </section>
 
 <!-- ─── CTA Banner ───────────────────────────────────────────── -->
-<section style="background: var(--black); color: var(--white); padding: 80px 48px; text-align:center">
-  <p style="font-size:12px; letter-spacing:0.2em; text-transform:uppercase; color:var(--gold); margin-bottom:14px">Your story, framed</p>
-  <h2 style="font-family:'Playfair Display',serif; font-size:clamp(28px,4vw,46px); margin-bottom:20px">Your walls deserve better.</h2>
-  <p style="font-size:16px; color:rgba(255,255,255,0.65); max-width:460px; margin:0 auto 36px; line-height:1.7">Stop leaving walls bare. Turn your memories and favourite art into statement pieces today.</p>
+<section class="cta-banner">
+  <span class="section-label">Your story, framed</span>
+  <h2>Your walls deserve better.</h2>
+  <p>Stop leaving walls bare. Turn your memories and favourite art into statement pieces today.</p>
   <a href="customize.html" class="btn btn-gold">Create Your Frame →</a>
 </section>
 
@@ -214,7 +167,7 @@
 <footer>
   <div class="footer-grid">
     <div class="footer-brand">
-      <a href="index.html" class="logo">HANGA<span style="color:var(--gold)">.</span></a>
+      <a href="index.html" class="logo">HANGA<span>.</span></a>
       <p>Make your wall speak. Custom wall frames crafted with care, designed by you.</p>
     </div>
     <div class="footer-col">
@@ -241,9 +194,22 @@
 </footer>
 
 <script>
-  function goCustomize(imageId) {
-    window.location.href = 'customize.html?image=' + imageId;
-  }
+function goCustomize(id) { window.location.href = 'customize.html?image=' + id; }
+
+// Hamburger
+const toggle = document.getElementById('navToggle');
+const drawer = document.getElementById('navDrawer');
+toggle.addEventListener('click', () => {
+  const open = drawer.classList.toggle('open');
+  toggle.classList.toggle('open', open);
+  toggle.setAttribute('aria-expanded', open);
+});
+// Close drawer when a link is clicked
+drawer.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+  drawer.classList.remove('open');
+  toggle.classList.remove('open');
+  toggle.setAttribute('aria-expanded', false);
+}));
 </script>
 
 </body>

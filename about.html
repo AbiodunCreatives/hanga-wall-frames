@@ -12,16 +12,24 @@
 <!-- ─── Header ─────────────────────────────────────────────── -->
 <header>
   <a href="index.html" class="logo">HANGA<span>.</span></a>
-  <nav class="links">
+  <nav class="nav-links">
     <a href="index.html">Home</a>
     <a href="about.html">About</a>
     <a href="customize.html" class="btn-nav">Create Your Frame</a>
   </nav>
+  <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
 </header>
+<nav class="nav-drawer" id="navDrawer">
+  <a href="index.html">Home</a>
+  <a href="about.html">About</a>
+  <a href="customize.html" class="btn-nav-mobile">Create Your Frame</a>
+</nav>
 
 <!-- ─── About Hero ──────────────────────────────────────────── -->
 <section class="about-hero">
-  <p class="eyebrow">Our story</p>
+  <span class="eyebrow">Our story</span>
   <h1>We Believe Every Wall<br>Has a Story to Tell.</h1>
   <p>Hanga was born from a simple obsession: walls should not be blank. They should speak — of memories, of beauty, of who you are.</p>
 </section>
@@ -36,13 +44,13 @@
     <a href="customize.html" class="btn btn-primary" style="margin-top:8px">Start Creating</a>
   </div>
   <div>
-    <img src="images/about-us.jpg" alt="The Hanga team at work" style="border-radius: 8px;">
+    <img src="images/about-us.jpg" alt="The Hanga team at work">
   </div>
 </div>
 
-<!-- ─── Values Section ──────────────────────────────────────── -->
+<!-- ─── Values ──────────────────────────────────────────────── -->
 <section class="values-section">
-  <p class="section-label">What we stand for</p>
+  <span class="section-label">What we stand for</span>
   <h2 class="section-title">Our Values</h2>
   <div class="values-grid">
     <div class="value-card">
@@ -69,10 +77,10 @@
 </section>
 
 <!-- ─── CTA ──────────────────────────────────────────────────── -->
-<section style="padding: 90px 48px; text-align:center">
-  <p class="section-label">Ready?</p>
+<section class="section" style="text-align:center">
+  <span class="section-label">Ready?</span>
   <h2 class="section-title">Your blank wall is waiting.</h2>
-  <p style="color:var(--muted); font-size:16px; max-width:440px; margin:0 auto 32px; line-height:1.7">
+  <p class="section-sub" style="margin-left:auto; margin-right:auto">
     It takes under two minutes to build your frame. Upload a photo or choose one of ours and get started.
   </p>
   <a href="customize.html" class="btn btn-primary">Create Your Frame →</a>
@@ -82,7 +90,7 @@
 <footer>
   <div class="footer-grid">
     <div class="footer-brand">
-      <a href="index.html" class="logo">HANGA<span style="color:var(--gold)">.</span></a>
+      <a href="index.html" class="logo">HANGA<span>.</span></a>
       <p>Make your wall speak. Custom wall frames crafted with care, designed by you.</p>
     </div>
     <div class="footer-col">
@@ -107,6 +115,21 @@
     <span>Made with love in Nigeria 🇳🇬</span>
   </div>
 </footer>
+
+<script>
+const toggle = document.getElementById('navToggle');
+const drawer = document.getElementById('navDrawer');
+toggle.addEventListener('click', () => {
+  const open = drawer.classList.toggle('open');
+  toggle.classList.toggle('open', open);
+  toggle.setAttribute('aria-expanded', open);
+});
+drawer.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+  drawer.classList.remove('open');
+  toggle.classList.remove('open');
+  toggle.setAttribute('aria-expanded', false);
+}));
+</script>
 
 </body>
 </html>

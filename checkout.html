@@ -6,7 +6,6 @@
   <title>Checkout – Hanga</title>
   <link rel="stylesheet" href="style.css">
   <link rel="icon" href="images/favicon.png" type="image/x-icon">
-  <!-- Paystack JS SDK -->
   <script src="https://js.paystack.co/v1/inline.js"></script>
 </head>
 <body>
@@ -14,16 +13,50 @@
 <!-- ─── Header ─────────────────────────────────────────────── -->
 <header>
   <a href="index.html" class="logo">HANGA<span>.</span></a>
-  <nav class="links">
+  <nav class="nav-links">
     <a href="index.html">Home</a>
     <a href="customize.html">← Edit Frame</a>
   </nav>
+  <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
 </header>
+<nav class="nav-drawer" id="navDrawer">
+  <a href="index.html">Home</a>
+  <a href="customize.html">← Edit Frame</a>
+</nav>
 
 <!-- ─── Checkout Layout ─────────────────────────────────────── -->
 <div class="checkout-layout">
 
-  <!-- ── Left: Form ──────────────────────────────────────────── -->
+  <!-- ── Order Sidebar (shown first on mobile) ──────────────── -->
+  <div class="order-sidebar">
+    <div class="order-sidebar-box">
+      <div class="sidebar-header">Your Order</div>
+      <div class="sidebar-body">
+        <div class="order-item">
+          <div class="order-item-img" id="sidebarImg">🖼️</div>
+          <div class="order-item-info">
+            <h4 id="sidebarName">Custom Frame</h4>
+            <p id="sidebarDetails">—</p>
+          </div>
+        </div>
+        <div class="sidebar-totals">
+          <div class="row"><span>Frame</span><span id="sidebarFramePrice">₦0</span></div>
+          <div class="row"><span>Delivery</span><span id="sidebarDelivery">TBC</span></div>
+          <div class="row grand"><span>Total</span><span id="sidebarTotal">₦0</span></div>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:16px; padding:16px; background:var(--cream); border-radius:var(--radius); font-size:13px; color:var(--muted); line-height:1.75">
+      <strong style="color:var(--black)">📦 Delivery Info</strong><br>
+      Lagos: 2–3 business days<br>
+      Other states: 3–5 business days<br>
+      Delivery fee calculated after order placement.
+    </div>
+  </div>
+
+  <!-- ── Form ───────────────────────────────────────────────── -->
   <div class="checkout-form-col">
     <h2>Complete Your Order</h2>
 
@@ -99,86 +132,39 @@
     <!-- Payment -->
     <div class="form-section">
       <h3>Payment</h3>
-
       <div class="payment-methods">
-        <div class="pay-method active" id="paystackMethod">
+        <div class="pay-method active" id="paystackMethod" onclick="selectPayMethod('paystack')">
           <div class="paystack-logo">Paystack</div>
-          <div style="font-size:11px; color:var(--muted); margin-top:4px">Card · Bank Transfer · USSD</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:4px">Card · Bank Transfer · USSD</div>
         </div>
         <div class="pay-method" id="transferMethod" onclick="selectPayMethod('transfer')">
           <div style="font-weight:700">Bank Transfer</div>
-          <div style="font-size:11px; color:var(--muted); margin-top:4px">Manual transfer</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:4px">Manual transfer</div>
         </div>
       </div>
 
-      <!-- Paystack Panel -->
       <div id="paystackPanel">
-        <div style="background:rgba(0,195,247,0.06); border:1px solid rgba(0,195,247,0.2); border-radius:6px; padding:18px; font-size:14px; color:var(--muted); line-height:1.7">
+        <div style="background:rgba(0,195,247,0.06);border:1px solid rgba(0,195,247,0.2);border-radius:6px;padding:16px;font-size:14px;color:var(--muted);line-height:1.75">
           <strong style="color:var(--black)">🔒 Secure Payment via Paystack</strong><br>
-          Click <strong>"Place Order"</strong> below. You'll be redirected to Paystack's secure checkout to pay with your card, bank transfer, USSD, or mobile money.
+          Click <strong>"Place Order"</strong> below. You'll be taken to Paystack's secure checkout to pay with your card, bank transfer, USSD, or mobile money.
         </div>
       </div>
 
-      <!-- Manual Transfer Panel -->
       <div id="transferPanel" class="hidden">
-        <div style="background:var(--cream); border-radius:6px; padding:18px; font-size:14px; line-height:1.8">
+        <div style="background:var(--cream);border-radius:6px;padding:16px;font-size:14px;line-height:1.85">
           <strong>Bank Transfer Details</strong><br>
           Bank: <strong>Zenith Bank</strong><br>
           Account Name: <strong>Hanga Frames Ltd</strong><br>
           Account Number: <strong>2234567890</strong><br><br>
-          <span style="color:var(--muted)">Transfer the exact amount and send your receipt to <strong>hello@hanga.ng</strong> with your order reference. We'll confirm within 2 hours.</span>
+          <span style="color:var(--muted)">Transfer the exact amount, then send your receipt to <strong>hello@hanga.ng</strong> with your order reference. We'll confirm within 2 hours.</span>
         </div>
       </div>
     </div>
 
-    <button class="btn btn-gold place-order-btn" onclick="placeOrder()">
-      Place Order & Pay →
-    </button>
-
-    <p style="font-size:12px; color:var(--muted); margin-top:14px; text-align:center">
+    <button class="btn btn-gold place-order-btn" onclick="placeOrder()">Place Order & Pay →</button>
+    <p style="font-size:12px;color:var(--muted);margin-top:12px;text-align:center">
       🔒 All payments are processed securely. Your data is never stored on our servers.
     </p>
-  </div>
-
-  <!-- ── Right: Order Sidebar ────────────────────────────────── -->
-  <div class="order-sidebar">
-    <div class="order-sidebar-box">
-      <div class="sidebar-header">Your Order</div>
-      <div class="sidebar-body">
-
-        <div class="order-item">
-          <div class="order-item-img" id="sidebarImg">🖼️</div>
-          <div class="order-item-info">
-            <h4 id="sidebarName">Custom Frame</h4>
-            <p id="sidebarDetails">—</p>
-          </div>
-        </div>
-
-        <div class="sidebar-totals">
-          <div class="row">
-            <span>Frame</span>
-            <span id="sidebarFramePrice">₦0</span>
-          </div>
-          <div class="row">
-            <span>Delivery</span>
-            <span id="sidebarDelivery">TBC</span>
-          </div>
-          <div class="row grand">
-            <span>Total</span>
-            <span id="sidebarTotal">₦0</span>
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- Delivery note -->
-    <div style="margin-top:20px; padding:16px; background:var(--cream); border-radius:var(--radius); font-size:13px; color:var(--muted); line-height:1.7">
-      <strong style="color:var(--black)">📦 Delivery Info</strong><br>
-      Lagos: 2–3 business days<br>
-      Other states: 3–5 business days<br>
-      Delivery fee calculated after order placement.
-    </div>
   </div>
 
 </div>
@@ -190,7 +176,7 @@
 <footer>
   <div class="footer-grid">
     <div class="footer-brand">
-      <a href="index.html" class="logo">HANGA<span style="color:var(--gold)">.</span></a>
+      <a href="index.html" class="logo">HANGA<span>.</span></a>
       <p>Make your wall speak. Custom wall frames crafted with care, designed by you.</p>
     </div>
     <div class="footer-col">
@@ -217,53 +203,49 @@
 </footer>
 
 <script>
-// ── Load order from session ────────────────────────────────────
+// ── Hamburger ──────────────────────────────────────────────────
+const toggle = document.getElementById('navToggle');
+const drawer = document.getElementById('navDrawer');
+toggle.addEventListener('click', () => {
+  const open = drawer.classList.toggle('open');
+  toggle.classList.toggle('open', open);
+  toggle.setAttribute('aria-expanded', open);
+});
+drawer.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+  drawer.classList.remove('open');
+  toggle.classList.remove('open');
+  toggle.setAttribute('aria-expanded', false);
+}));
+
+// ── Load order ─────────────────────────────────────────────────
 const order = JSON.parse(sessionStorage.getItem('hangaOrder') || '{}');
-
-// Fallback if page loaded directly (for testing)
 if (!order.imageName) {
-  order.imageName  = 'Sample Frame';
-  order.imageEmoji = '🖼️';
-  order.size       = '20×30';
-  order.price      = 17500;
-  order.style      = 'Black';
+  order.imageName = 'Sample Frame'; order.imageEmoji = '🖼️';
+  order.size = '20×30'; order.price = 17500; order.style = 'Black';
 }
 
-// Populate sidebar
 document.getElementById('sidebarName').textContent    = order.imageName || 'Custom Frame';
-document.getElementById('sidebarDetails').textContent =
-  `${order.size || '—'} · ${order.style || '—'} Frame`;
-document.getElementById('sidebarFramePrice').textContent =
-  order.price ? '₦' + order.price.toLocaleString() : '₦0';
-document.getElementById('sidebarTotal').textContent =
-  order.price ? '₦' + order.price.toLocaleString() : '₦0';
+document.getElementById('sidebarDetails').textContent = `${order.size || '—'} · ${order.style || '—'} Frame`;
+document.getElementById('sidebarFramePrice').textContent = order.price ? '₦' + order.price.toLocaleString() : '₦0';
+document.getElementById('sidebarTotal').textContent       = order.price ? '₦' + order.price.toLocaleString() : '₦0';
 
-// Sidebar image
 const sidebarImg = document.getElementById('sidebarImg');
-if (order.imageData) {
-  sidebarImg.innerHTML = `<img src="${order.imageData}" alt="Your image">`;
-} else if (order.imageEmoji) {
-  sidebarImg.textContent = order.imageEmoji;
-}
+if (order.imageData)       sidebarImg.innerHTML = `<img src="${order.imageData}" alt="Your image">`;
+else if (order.imageEmoji) sidebarImg.textContent = order.imageEmoji;
 
-// ── Payment method toggle ──────────────────────────────────────
+// ── Payment toggle ─────────────────────────────────────────────
 let activePayMethod = 'paystack';
-
-function selectPayMethod(method) {
-  activePayMethod = method;
-  document.getElementById('paystackMethod').classList.toggle('active', method === 'paystack');
-  document.getElementById('transferMethod').classList.toggle('active', method === 'transfer');
-  document.getElementById('paystackPanel').classList.toggle('hidden', method !== 'paystack');
-  document.getElementById('transferPanel').classList.toggle('hidden', method === 'paystack');
+function selectPayMethod(m) {
+  activePayMethod = m;
+  document.getElementById('paystackMethod').classList.toggle('active', m === 'paystack');
+  document.getElementById('transferMethod').classList.toggle('active', m === 'transfer');
+  document.getElementById('paystackPanel').classList.toggle('hidden', m !== 'paystack');
+  document.getElementById('transferPanel').classList.toggle('hidden', m === 'paystack');
 }
-
-// Click on paystack method card
-document.getElementById('paystackMethod').addEventListener('click', () => selectPayMethod('paystack'));
 
 // ── Validation ─────────────────────────────────────────────────
 function validate() {
-  const fields = ['firstName','lastName','email','phone','address','city','state'];
-  for (const id of fields) {
+  for (const id of ['firstName','lastName','email','phone','address','city','state']) {
     const el = document.getElementById(id);
     if (!el.value.trim()) {
       el.style.borderColor = '#e55';
@@ -273,94 +255,62 @@ function validate() {
       return false;
     }
   }
-  const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRe.test(document.getElementById('email').value)) {
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(document.getElementById('email').value)) {
     showToast('Please enter a valid email address.');
     return false;
   }
   return true;
 }
 
-// ── Generate order reference ───────────────────────────────────
-function genRef() {
-  return 'HNG-' + Date.now().toString(36).toUpperCase();
-}
+function genRef() { return 'HNG-' + Date.now().toString(36).toUpperCase(); }
 
 // ── Place Order ────────────────────────────────────────────────
 function placeOrder() {
   if (!validate()) return;
-
   const firstName = document.getElementById('firstName').value.trim();
   const lastName  = document.getElementById('lastName').value.trim();
   const email     = document.getElementById('email').value.trim();
   const ref       = genRef();
-  const amountKobo = (order.price || 0) * 100; // Paystack uses kobo
 
   if (activePayMethod === 'transfer') {
-    // Bank transfer — save ref and confirm
     sessionStorage.setItem('hangaOrderRef', ref);
-    sessionStorage.setItem('hangaOrderData', JSON.stringify({
-      name: firstName + ' ' + lastName,
-      email,
-      ref,
-      ...order
-    }));
+    sessionStorage.setItem('hangaOrderData', JSON.stringify({ name: firstName+' '+lastName, email, ref, ...order }));
     window.location.href = `confirmation.html?ref=${ref}&method=transfer`;
     return;
   }
 
-  // ── Paystack inline ────────────────────────────────────────
-  // ⚠️  Replace YOUR_PAYSTACK_PUBLIC_KEY with your actual public key from
-  //     https://dashboard.paystack.com/#/settings/developer
   const PAYSTACK_PUBLIC_KEY = 'pk_test_YOUR_PAYSTACK_PUBLIC_KEY_HERE';
 
   if (PAYSTACK_PUBLIC_KEY.includes('YOUR_PAYSTACK')) {
-    // Demo mode — skip real payment for now
     showToast('Demo mode: simulating payment…');
     setTimeout(() => {
       sessionStorage.setItem('hangaOrderRef', ref);
+      sessionStorage.setItem('hangaOrderData', JSON.stringify({ name: firstName+' '+lastName, email, ref, ...order }));
       window.location.href = `confirmation.html?ref=${ref}&method=paystack`;
     }, 1500);
     return;
   }
 
-  const handler = PaystackPop.setup({
-    key:       PAYSTACK_PUBLIC_KEY,
-    email:     email,
-    amount:    amountKobo,
-    currency:  'NGN',
-    ref:       ref,
-    metadata: {
-      custom_fields: [
-        { display_name: 'Customer Name', variable_name: 'customer_name',  value: firstName + ' ' + lastName },
-        { display_name: 'Frame Size',    variable_name: 'frame_size',    value: order.size  || '—' },
-        { display_name: 'Frame Style',   variable_name: 'frame_style',   value: order.style || '—' },
-        { display_name: 'Image',         variable_name: 'image_name',    value: order.imageName || '—' }
-      ]
-    },
-    onClose: function() {
-      showToast('Payment window closed. Your order was not placed.');
-    },
-    callback: function(response) {
+  PaystackPop.setup({
+    key: PAYSTACK_PUBLIC_KEY, email, amount: (order.price || 0) * 100, currency: 'NGN', ref,
+    metadata: { custom_fields: [
+      { display_name: 'Customer Name', variable_name: 'customer_name', value: firstName+' '+lastName },
+      { display_name: 'Frame Size',    variable_name: 'frame_size',    value: order.size  || '—' },
+      { display_name: 'Frame Style',   variable_name: 'frame_style',   value: order.style || '—' },
+      { display_name: 'Image',         variable_name: 'image_name',    value: order.imageName || '—' }
+    ]},
+    onClose: () => showToast('Payment window closed. Your order was not placed.'),
+    callback: response => {
       sessionStorage.setItem('hangaOrderRef', response.reference);
-      sessionStorage.setItem('hangaOrderData', JSON.stringify({
-        name: firstName + ' ' + lastName,
-        email,
-        ref: response.reference,
-        ...order
-      }));
+      sessionStorage.setItem('hangaOrderData', JSON.stringify({ name: firstName+' '+lastName, email, ref: response.reference, ...order }));
       window.location.href = `confirmation.html?ref=${response.reference}&method=paystack`;
     }
-  });
-
-  handler.openIframe();
+  }).openIframe();
 }
 
-// ── Toast ──────────────────────────────────────────────────────
 function showToast(msg) {
   const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
+  t.textContent = msg; t.classList.add('show');
   setTimeout(() => t.classList.remove('show'), 3000);
 }
 </script>
