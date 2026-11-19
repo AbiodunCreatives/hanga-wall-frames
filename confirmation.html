@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order Confirmed – Hanga</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="images/favicon.png" type="image/x-icon">
+</head>
+<body>
+
+<!-- ─── Header ─────────────────────────────────────────────── -->
+<header>
+  <a href="index.html" class="logo">HANGA<span>.</span></a>
+  <nav class="links">
+    <a href="index.html">Home</a>
+    <a href="customize.html">Create Another Frame</a>
+  </nav>
+</header>
+
+<!-- ─── Confirmation ────────────────────────────────────────── -->
+<div class="confirm-wrap">
+  <div class="confirm-icon">🎉</div>
+  <h1 id="confirmTitle">Order Placed!</h1>
+  <p id="confirmMsg">Thank you for your order. We've received your request and will begin crafting your frame right away.</p>
+  <div class="confirm-ref" id="confirmRef">—</div>
+  <p id="confirmEmail" style="font-size:14px; color:var(--muted)"></p>
+  <div id="transferNote" class="hidden" style="background:var(--cream); border-radius:6px; padding:20px 28px; margin:20px 0; font-size:14px; color:var(--muted); line-height:1.8; max-width:460px; text-align:left">
+    <strong style="color:var(--black)">📋 Next Steps for Bank Transfer</strong><br>
+    Please transfer <strong id="transferAmount">—</strong> to:<br><br>
+    Bank: <strong>Zenith Bank</strong><br>
+    Account: <strong>2234567890</strong><br>
+    Name: <strong>Hanga Frames Ltd</strong><br><br>
+    Use your order reference as the payment description, then send your receipt to <strong>hello@hanga.ng</strong>.
+    We'll confirm and begin production within 2 hours.
+  </div>
+  <div style="display:flex; gap:16px; flex-wrap:wrap; justify-content:center; margin-top:12px">
+    <a href="customize.html" class="btn btn-primary">Create Another Frame</a>
+    <a href="index.html" class="btn btn-outline">Back to Home</a>
+  </div>
+</div>
+
+<!-- ─── Footer ──────────────────────────────────────────────── -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a href="index.html" class="logo">HANGA<span style="color:var(--gold)">.</span></a>
+      <p>Make your wall speak. Custom wall frames crafted with care, designed by you.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Navigate</h4>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="customize.html">Customise</a></li>
+        <li><a href="about.html">About Us</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <ul>
+        <li><a href="mailto:hello@hanga.ng">hello@hanga.ng</a></li>
+        <li><a href="#">Instagram</a></li>
+        <li><a href="#">WhatsApp</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>&copy; 2026 Hanga. All rights reserved.</span>
+    <span>Made with love in Nigeria 🇳🇬</span>
+  </div>
+</footer>
+
+<script>
+const params = new URLSearchParams(window.location.search);
+const ref    = params.get('ref')    || '—';
+const method = params.get('method') || 'paystack';
+
+document.getElementById('confirmRef').textContent = 'Order Reference: ' + ref;
+
+const orderData = JSON.parse(sessionStorage.getItem('hangaOrderData') || '{}');
+
+if (orderData.email) {
+  document.getElementById('confirmEmail').textContent =
+    'A confirmation will be sent to ' + orderData.email;
+}
+
+if (method === 'transfer') {
+  document.getElementById('confirmTitle').textContent = 'Order Received!';
+  document.getElementById('confirmMsg').textContent   =
+    'We\'ve received your order details. Please complete your bank transfer to confirm production.';
+  document.getElementById('transferNote').classList.remove('hidden');
+  if (orderData.price) {
+    document.getElementById('transferAmount').textContent =
+      '₦' + orderData.price.toLocaleString();
+  }
+}
+</script>
+
+</body>
+</html>

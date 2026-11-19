@@ -1,63 +1,112 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About Us - YOUR CLOTHING BRAND</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="icon" href="images/favicon.png" type="image/x-icon">
-    <link rel="shortcut icon" href="images/favicon.png" type="image/x-icon">
-    <style>
-        @media (max-width: 768px) {
-            header {
-                flex-direction: column;
-                text-align: center;
-            }
-
-            .links {
-                flex-direction: column;
-                gap: 10px;
-            }
-
-            .about-content {
-                flex-direction: column;
-                padding: 20px;
-            }
-
-            .about-text {
-                font-size: 14px;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About – Hanga</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="images/favicon.png" type="image/x-icon">
 </head>
-
 <body>
-    <header>
-        <div class="logo">Clothing brand</div>
-        <nav class="links">
-            <a href="index.html">Home</a>
-            <a href="about.html">About</a>
-        </nav>
-    </header>
-    <section class="about-content"
-        style="display: flex; justify-content: center; align-items: center; gap: 40px; padding: 40px; height: 85vh;">
-        <div class="about-text" style="max-width: 600px;">
-            <h1>About Us</h1><br>
-            <p>At <strong>Clothing Brand</strong>, we believe in quality, style, and comfort. Founded in 2024, our
-                mission is to provide timeless designs that stand the test of time.</p>
-            <p>Every piece is crafted with care, ensuring that you look and feel your best, no matter the occasion.</p>
-        </div>
-        <div class="about-image">
-            <img src="images/about-us.jpg" alt="Team working on clothing designs" width="400" height="300"
-                style="border-radius: 8px;">
-        </div>
-    </section>
-    <footer
-        style="text-align: center; padding: 20px; border-top: 1px solid rgb(234, 234, 234); font-size: 12px; background-color: rgb(249, 249, 249);">
-        <a href="https://www.vecteezy.com/free-photos/">Stock photos by Vecteezy</a>
-        <p>&copy; 2025 Your Clothing Brand - Strona powstała dzięki gishdev.pl</p>
-    </footer>
-</body>
 
+<!-- ─── Header ─────────────────────────────────────────────── -->
+<header>
+  <a href="index.html" class="logo">HANGA<span>.</span></a>
+  <nav class="links">
+    <a href="index.html">Home</a>
+    <a href="about.html">About</a>
+    <a href="customize.html" class="btn-nav">Create Your Frame</a>
+  </nav>
+</header>
+
+<!-- ─── About Hero ──────────────────────────────────────────── -->
+<section class="about-hero">
+  <p class="eyebrow">Our story</p>
+  <h1>We Believe Every Wall<br>Has a Story to Tell.</h1>
+  <p>Hanga was born from a simple obsession: walls should not be blank. They should speak — of memories, of beauty, of who you are.</p>
+</section>
+
+<!-- ─── Story Section ───────────────────────────────────────── -->
+<div class="about-grid">
+  <div class="text">
+    <h2>Why We Started Hanga</h2>
+    <p>It started with a bare wall in a Lagos apartment. The kind of wall that stared back at you every morning with nothing to say. We asked ourselves — why is it so hard to get a beautiful, custom-framed print in Nigeria?</p>
+    <p>Between searching for good quality, waiting weeks for imports, and paying absurd prices, most people just gave up and lived with blank walls. We thought that was unacceptable.</p>
+    <p>So we built Hanga. A place where you pick the image, choose the frame, and we handle the rest — printed, framed, and delivered to your door.</p>
+    <a href="customize.html" class="btn btn-primary" style="margin-top:8px">Start Creating</a>
+  </div>
+  <div>
+    <img src="images/about-us.jpg" alt="The Hanga team at work" style="border-radius: 8px;">
+  </div>
+</div>
+
+<!-- ─── Values Section ──────────────────────────────────────── -->
+<section class="values-section">
+  <p class="section-label">What we stand for</p>
+  <h2 class="section-title">Our Values</h2>
+  <div class="values-grid">
+    <div class="value-card">
+      <div class="value-icon">🎨</div>
+      <h3>Quality First</h3>
+      <p>Every frame is built to last. We use premium materials — sharp prints, solid frames, and clean finishes every time.</p>
+    </div>
+    <div class="value-card">
+      <div class="value-icon">🛡️</div>
+      <h3>Your Vision</h3>
+      <p>Your image, your size, your frame style. The end product is 100% yours — we're just the craftsmen who bring it to life.</p>
+    </div>
+    <div class="value-card">
+      <div class="value-icon">🚀</div>
+      <h3>Fast Delivery</h3>
+      <p>We know you can't wait to hang your frame. Lagos orders ship in 2–3 business days, nationwide in 3–5.</p>
+    </div>
+    <div class="value-card">
+      <div class="value-icon">💬</div>
+      <h3>Real Support</h3>
+      <p>Not a bot. If anything goes wrong, a real person will make it right — no questions asked.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ─── CTA ──────────────────────────────────────────────────── -->
+<section style="padding: 90px 48px; text-align:center">
+  <p class="section-label">Ready?</p>
+  <h2 class="section-title">Your blank wall is waiting.</h2>
+  <p style="color:var(--muted); font-size:16px; max-width:440px; margin:0 auto 32px; line-height:1.7">
+    It takes under two minutes to build your frame. Upload a photo or choose one of ours and get started.
+  </p>
+  <a href="customize.html" class="btn btn-primary">Create Your Frame →</a>
+</section>
+
+<!-- ─── Footer ──────────────────────────────────────────────── -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a href="index.html" class="logo">HANGA<span style="color:var(--gold)">.</span></a>
+      <p>Make your wall speak. Custom wall frames crafted with care, designed by you.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Navigate</h4>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="customize.html">Customise</a></li>
+        <li><a href="about.html">About Us</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <ul>
+        <li><a href="mailto:hello@hanga.ng">hello@hanga.ng</a></li>
+        <li><a href="#">Instagram</a></li>
+        <li><a href="#">WhatsApp</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>&copy; 2026 Hanga. All rights reserved.</span>
+    <span>Made with love in Nigeria 🇳🇬</span>
+  </div>
+</footer>
+
+</body>
 </html>

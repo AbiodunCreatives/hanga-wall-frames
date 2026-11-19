@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Customise Your Frame – Hanga</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="images/favicon.png" type="image/x-icon">
+</head>
+<body>
+
+<!-- ─── Header ─────────────────────────────────────────────── -->
+<header>
+  <a href="index.html" class="logo">HANGA<span>.</span></a>
+  <nav class="links">
+    <a href="index.html">Home</a>
+    <a href="about.html">About</a>
+    <a href="customize.html" class="btn-nav">Create Your Frame</a>
+  </nav>
+</header>
+
+<!-- ─── Customiser Layout ───────────────────────────────────── -->
+<div class="customize-layout">
+
+  <!-- ── Left: Config Panel ─────────────────────────────────── -->
+  <div class="config-panel">
+    <h1>Build Your Frame</h1>
+    <p class="tagline text-muted">Pick an image, choose your size and style, then order.</p>
+
+    <!-- Step 1: Image Source -->
+    <div class="config-section">
+      <h3>Step 1 — Choose Your Image</h3>
+
+      <div class="source-tabs">
+        <button class="source-tab active" onclick="switchTab('gallery', this)">Our Gallery</button>
+        <button class="source-tab" onclick="switchTab('upload', this)">Upload Mine</button>
+      </div>
+
+      <!-- Gallery Tab -->
+      <div id="tab-gallery">
+        <div class="mini-gallery" id="miniGallery">
+          <div class="mini-thumb" data-id="nature-sunset"   onclick="selectGalleryImage(this, '🌅', 'Golden Sunset')">🌅</div>
+          <div class="mini-thumb" data-id="abstract-blue"   onclick="selectGalleryImage(this, '🌊', 'Ocean Abstract')">🌊</div>
+          <div class="mini-thumb" data-id="city-night"      onclick="selectGalleryImage(this, '🌃', 'City at Night')">🌃</div>
+          <div class="mini-thumb" data-id="botanical"       onclick="selectGalleryImage(this, '🌿', 'Botanical Green')">🌿</div>
+          <div class="mini-thumb" data-id="mountain-mist"   onclick="selectGalleryImage(this, '⛰️', 'Mountain Mist')">⛰️</div>
+          <div class="mini-thumb" data-id="afro-art"        onclick="selectGalleryImage(this, '🎨', 'Afro Expression')">🎨</div>
+          <div class="mini-thumb" data-id="sakura"          onclick="selectGalleryImage(this, '🌸', 'Sakura Bloom')">🌸</div>
+          <div class="mini-thumb" data-id="desert-dunes"    onclick="selectGalleryImage(this, '🏜️', 'Desert Dunes')">🏜️</div>
+        </div>
+      </div>
+
+      <!-- Upload Tab -->
+      <div id="tab-upload" class="hidden">
+        <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
+          <div class="upload-icon">📁</div>
+          <p><strong>Click to upload</strong> or drag & drop your image here</p>
+          <p style="font-size:12px; margin-top:4px">JPG, PNG, WEBP — max 10 MB</p>
+        </div>
+        <input type="file" id="fileInput" accept="image/*" style="display:none" onchange="handleFileUpload(event)">
+      </div>
+    </div>
+
+    <!-- Step 2: Frame Size -->
+    <div class="config-section">
+      <h3>Step 2 — Frame Size</h3>
+      <div class="option-chips" id="sizeChips">
+        <button class="chip" data-size="12×16"  data-price="8000"  onclick="selectSize(this)">12×16 — ₦8,000</button>
+        <button class="chip" data-size="16×20"  data-price="9500"  onclick="selectSize(this)">16×20 — ₦9,500</button>
+        <button class="chip" data-size="16×24"  data-price="11000" onclick="selectSize(this)">16×24 — ₦11,000</button>
+        <button class="chip" data-size="20×24"  data-price="14000" onclick="selectSize(this)">20×24 — ₦14,000</button>
+        <button class="chip" data-size="20×30"  data-price="17500" onclick="selectSize(this)">20×30 — ₦17,500</button>
+        <button class="chip" data-size="24×36"  data-price="20000" onclick="selectSize(this)">24×36 — ₦20,000</button>
+      </div>
+    </div>
+
+    <!-- Step 3: Frame Style -->
+    <div class="config-section">
+      <h3>Step 3 — Frame Style</h3>
+      <div class="style-swatches" id="styleSwatches">
+        <div>
+          <div class="swatch swatch-black selected" data-style="Black" onclick="selectStyle(this, 'Black')"></div>
+          <span class="swatch-label">Black</span>
+        </div>
+        <div>
+          <div class="swatch swatch-white" data-style="White" onclick="selectStyle(this, 'White')"></div>
+          <span class="swatch-label">White</span>
+        </div>
+        <div>
+          <div class="swatch swatch-wood" data-style="Wood" onclick="selectStyle(this, 'Wood')"></div>
+          <span class="swatch-label">Natural Wood</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Order Summary -->
+    <div class="order-summary-box">
+      <h3>Order Summary</h3>
+      <div class="summary-row">
+        <span>Image</span>
+        <span id="summaryImage">—</span>
+      </div>
+      <div class="summary-row">
+        <span>Size</span>
+        <span id="summarySize">—</span>
+      </div>
+      <div class="summary-row">
+        <span>Frame Style</span>
+        <span id="summaryStyle">Black</span>
+      </div>
+      <div class="summary-row">
+        <span>Delivery</span>
+        <span>Calculated at checkout</span>
+      </div>
+      <div class="summary-row total">
+        <span>Total</span>
+        <span id="summaryTotal">₦0</span>
+      </div>
+
+      <button class="btn btn-gold proceed-btn" onclick="proceedToCheckout()">
+        Proceed to Checkout →
+      </button>
+    </div>
+  </div>
+
+  <!-- ── Right: Preview Panel ───────────────────────────────── -->
+  <div class="preview-panel">
+    <div class="frame-preview-wrap">
+      <div id="canvasPlaceholder" class="canvas-placeholder">
+        🖼️
+        <p>Your frame preview<br>will appear here</p>
+      </div>
+      <canvas id="frameCanvas" style="display:none"></canvas>
+      <p style="font-size:12px; color:var(--muted); text-align:center" id="previewLabel"></p>
+    </div>
+  </div>
+
+</div>
+
+<!-- ─── Toast ────────────────────────────────────────────────── -->
+<div class="toast" id="toast"></div>
+
+<!-- ─── Footer ──────────────────────────────────────────────── -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a href="index.html" class="logo">HANGA<span style="color:var(--gold)">.</span></a>
+      <p>Make your wall speak. Custom wall frames crafted with care, designed by you.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Navigate</h4>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="customize.html">Customise</a></li>
+        <li><a href="about.html">About Us</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <ul>
+        <li><a href="mailto:hello@hanga.ng">hello@hanga.ng</a></li>
+        <li><a href="#">Instagram</a></li>
+        <li><a href="#">WhatsApp</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>&copy; 2026 Hanga. All rights reserved.</span>
+    <span>Made with love in Nigeria 🇳🇬</span>
+  </div>
+</footer>
+
+<script>
+// ── State ──────────────────────────────────────────────────────
+const state = {
+  imageId:    null,
+  imageName:  null,
+  imageEmoji: null,
+  imageData:  null,   // base64 / URL for uploaded image
+  isUpload:   false,
+  size:       null,
+  price:      0,
+  style:      'Black'
+};
+
+// ── Frame border colours ───────────────────────────────────────
+const FRAME_COLOURS = {
+  Black: '#1a1a1a',
+  White: '#f0f0f0',
+  Wood:  '#c8a46e'
+};
+
+// ── On load: check query param ─────────────────────────────────
+(function() {
+  const params = new URLSearchParams(window.location.search);
+  const img    = params.get('image');
+  if (img) {
+    const thumb = document.querySelector(`[data-id="${img}"]`);
+    if (thumb) {
+      const emoji = thumb.textContent.trim();
+      const name  = thumb.dataset.id.replace(/-/g,' ').replace(/\b\w/g, c => c.toUpperCase());
+      selectGalleryImage(thumb, emoji, name);
+    }
+  }
+})();
+
+// ── Tab switching ──────────────────────────────────────────────
+function switchTab(tab, btn) {
+  document.querySelectorAll('.source-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tab-gallery').classList.toggle('hidden', tab !== 'gallery');
+  document.getElementById('tab-upload').classList.toggle('hidden', tab !== 'upload');
+  if (tab === 'gallery') {
+    state.isUpload = false;
+  } else {
+    // clear gallery selection
+    document.querySelectorAll('.mini-thumb').forEach(t => t.classList.remove('selected'));
+    state.imageId   = null;
+    state.imageName = null;
+    state.imageEmoji= null;
+    state.imageData = null;
+    state.isUpload  = true;
+    updateSummary();
+    renderPreview();
+  }
+}
+
+// ── Gallery selection ──────────────────────────────────────────
+function selectGalleryImage(el, emoji, name) {
+  document.querySelectorAll('.mini-thumb').forEach(t => t.classList.remove('selected'));
+  el.classList.add('selected');
+  state.isUpload  = false;
+  state.imageId   = el.dataset.id;
+  state.imageName = name;
+  state.imageEmoji= emoji;
+  state.imageData = null;
+  updateSummary();
+  renderPreview();
+  showToast('Image selected: ' + name);
+}
+
+// ── File upload ────────────────────────────────────────────────
+function handleFileUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  if (file.size > 10 * 1024 * 1024) { showToast('File too large (max 10 MB)'); return; }
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    state.imageData = e.target.result;
+    state.imageName = file.name.replace(/\.[^.]+$/, '');
+    state.imageEmoji= null;
+    state.isUpload  = true;
+    updateSummary();
+    renderPreview();
+    showToast('Image uploaded: ' + state.imageName);
+
+    // show mini preview in upload zone
+    const zone = document.getElementById('uploadZone');
+    zone.innerHTML = `<img src="${state.imageData}" style="max-height:100px; border-radius:4px; margin-bottom:8px; display:block; margin:0 auto 8px"><p><strong>${state.imageName}</strong></p><p style="font-size:12px; margin-top:4px; color:var(--gold)">✓ Uploaded · click to change</p>`;
+  };
+  reader.readAsDataURL(file);
+}
+
+// Drag & drop
+(function() {
+  const zone = document.getElementById('uploadZone');
+  if (!zone) return;
+  zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('dragover'); });
+  zone.addEventListener('dragleave', ()  => zone.classList.remove('dragover'));
+  zone.addEventListener('drop', e => {
+    e.preventDefault();
+    zone.classList.remove('dragover');
+    const file = e.dataTransfer.files[0];
+    if (file) {
+      const fakeEvent = { target: { files: [file] } };
+      handleFileUpload(fakeEvent);
+    }
+  });
+})();
+
+// ── Size selection ─────────────────────────────────────────────
+function selectSize(el) {
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  state.size  = el.dataset.size;
+  state.price = parseInt(el.dataset.price, 10);
+  updateSummary();
+  renderPreview();
+}
+
+// ── Style selection ────────────────────────────────────────────
+function selectStyle(el, style) {
+  document.querySelectorAll('.swatch').forEach(s => s.classList.remove('selected'));
+  el.classList.add('selected');
+  state.style = style;
+  document.getElementById('summaryStyle').textContent = style;
+  renderPreview();
+}
+
+// ── Summary update ─────────────────────────────────────────────
+function updateSummary() {
+  document.getElementById('summaryImage').textContent =
+    state.imageName ? state.imageName : '—';
+  document.getElementById('summarySize').textContent =
+    state.size ? (state.size + ' inches') : '—';
+  document.getElementById('summaryTotal').textContent =
+    state.price > 0 ? '₦' + state.price.toLocaleString() : '₦0';
+}
+
+// ── Canvas preview ─────────────────────────────────────────────
+function renderPreview() {
+  const canvas = document.getElementById('frameCanvas');
+  const placeholder = document.getElementById('canvasPlaceholder');
+  const label = document.getElementById('previewLabel');
+
+  const hasImage = state.imageName !== null;
+  if (!hasImage) { canvas.style.display = 'none'; placeholder.style.display = ''; label.textContent = ''; return; }
+
+  placeholder.style.display = 'none';
+  canvas.style.display = 'block';
+
+  const W = 400, H = 300;
+  canvas.width  = W;
+  canvas.height = H;
+  const ctx = canvas.getContext('2d');
+
+  const borderW  = 20;
+  const matW     = 10;
+  const frameCol = FRAME_COLOURS[state.style] || '#1a1a1a';
+
+  // Draw using uploaded image or emoji
+  const draw = (imgEl) => {
+    ctx.clearRect(0, 0, W, H);
+
+    // Frame border
+    ctx.fillStyle = frameCol;
+    ctx.fillRect(0, 0, W, H);
+
+    // Wood grain for wood style
+    if (state.style === 'Wood') {
+      ctx.save();
+      for (let i = 0; i < 20; i++) {
+        ctx.strokeStyle = 'rgba(0,0,0,0.06)';
+        ctx.lineWidth   = 1;
+        ctx.beginPath();
+        ctx.moveTo(i * (W/20), 0);
+        ctx.lineTo(i * (W/20), H);
+        ctx.stroke();
+      }
+      ctx.restore();
+    }
+
+    // White shadow glow for white frame
+    if (state.style === 'White') {
+      ctx.save();
+      ctx.strokeStyle = '#ccc';
+      ctx.lineWidth   = 2;
+      ctx.strokeRect(2, 2, W-4, H-4);
+      ctx.restore();
+    }
+
+    // Mat board
+    ctx.fillStyle = '#f8f5f0';
+    ctx.fillRect(borderW, borderW, W - borderW*2, H - borderW*2);
+
+    // Inner image area
+    const ix = borderW + matW;
+    const iy = borderW + matW;
+    const iw = W - (borderW + matW)*2;
+    const ih = H - (borderW + matW)*2;
+
+    if (imgEl) {
+      ctx.drawImage(imgEl, ix, iy, iw, ih);
+    } else {
+      // Emoji/placeholder fill
+      ctx.fillStyle = '#e8e3dc';
+      ctx.fillRect(ix, iy, iw, ih);
+      ctx.font = '60px serif';
+      ctx.textAlign    = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(state.imageEmoji || '🖼️', ix + iw/2, iy + ih/2);
+    }
+
+    // Size label on canvas
+    if (state.size) {
+      label.textContent = `Preview: ${state.size}" · ${state.style} Frame`;
+    }
+  };
+
+  if (state.imageData) {
+    const img = new Image();
+    img.onload = () => draw(img);
+    img.src    = state.imageData;
+  } else {
+    draw(null);
+  }
+}
+
+// ── Proceed to checkout ────────────────────────────────────────
+function proceedToCheckout() {
+  if (!state.imageName) { showToast('Please select or upload an image first.'); return; }
+  if (!state.size)      { showToast('Please select a frame size.'); return; }
+
+  // Persist order to sessionStorage
+  const order = {
+    imageName:  state.imageName,
+    imageEmoji: state.imageEmoji,
+    imageData:  state.isUpload ? state.imageData : null,
+    size:       state.size,
+    price:      state.price,
+    style:      state.style
+  };
+  sessionStorage.setItem('hangaOrder', JSON.stringify(order));
+  window.location.href = 'checkout.html';
+}
+
+// ── Toast ──────────────────────────────────────────────────────
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+</script>
+
+</body>
+</html>
