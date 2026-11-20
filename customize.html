@@ -38,7 +38,8 @@
         <p>Your frame preview<br>will appear here</p>
       </div>
       <canvas id="frameCanvas" style="display:none"></canvas>
-      <p style="font-size:12px; color:var(--muted); text-align:center" id="previewLabel"></p>
+      <p class="preview-label" id="previewLabel"></p>
+      <p class="preview-scale-note" id="previewScaleNote"></p>
     </div>
   </div>
 
@@ -217,7 +218,29 @@ const state = {
   imageData: null, isUpload: false, size: null, price: 0, style: 'Black'
 };
 
-const FRAME_COLOURS = { Black: '#1a1a1a', White: '#f0f0f0', Wood: '#c8a46e' };
+const FRAME_COLOURS = { Black: '#1a1a1a', White: '#f3f3f3', Wood: '#c8a46e' };
+
+// Room mockup: Unsplash living-room photo, wall extended for large frames.
+// Coordinates are in the prepared image's pixels (images/room/living-room.jpg).
+const ROOM = {
+  src: 'images/room/living-room.jpg',
+  width: 1600,
+  height: 1517,
+  sofaLeft: 218,
+  sofaRight: 1428,
+  sofaTop: 868,
+  sofaWidthCm: 200,
+  hangGapCm: 18,
+  mouldingCm: 2.4
+};
+const roomBg = new Image();
+roomBg.src = ROOM.src;
+roomBg.onload = () => { if (state.imageName) renderPreview(); };
+
+function parseFrameSize(size) {
+  const m = String(size || '').match(/(\d+)\s*[×x]\s*(\d+)/);
+  return m ? { wIn: Number(m[1]), hIn: Number(m[2]) } : { wIn: 16, hIn: 20 };
+}
 
 // ── Hamburger ──────────────────────────────────────────────────
 const toggle = document.getElementById('navToggle');
@@ -338,106 +361,208 @@ function updateSummary() {
   document.getElementById('summaryTotal').textContent = state.price > 0 ? '₦' + state.price.toLocaleString() : '₦0';
 }
 
-// ── Canvas preview ─────────────────────────────────────────────
+// ── Canvas preview (room-wall mockup) ──────────────────────────
+function coverFitSource(imgEl, iw, ih) {
+  const imgRatio = imgEl.naturalWidth / imgEl.naturalHeight;
+  const boxRatio = iw / ih;
+  if (imgRatio > boxRatio) {
+    const sh = imgEl.naturalHeight;
+    const sw = sh * boxRatio;
+    return { sx: (imgEl.naturalWidth - sw) / 2, sy: 0, sw, sh };
+  }
+  const sw = imgEl.naturalWidth;
+  const sh = sw / boxRatio;
+  return { sx: 0, sy: (imgEl.naturalHeight - sh) / 2, sw, sh };
+}
+
+function mouldingPath(ctx, fx, fy, fw, fh, m) {
+  ctx.beginPath();
+  ctx.rect(fx, fy, fw, fh);
+  ctx.rect(fx + m, fy + m, fw - m * 2, fh - m * 2);
+}
+
+function drawWoodMoulding(ctx, fx, fy, fw, fh, m) {
+  const ix = fx + m, iy = fy + m, iw = fw - m * 2, ih = fh - m * 2;
+  // Base moulding colour
+  ctx.save();
+  mouldingPath(ctx, fx, fy, fw, fh, m);
+  ctx.fillStyle = '#c4a06a';
+  ctx.fill('evenodd');
+  ctx.restore();
+
+  const rails = [
+    { // top — grain runs left to right
+      clip() { ctx.moveTo(fx, fy); ctx.lineTo(fx + fw, fy); ctx.lineTo(ix + iw, iy); ctx.lineTo(ix, iy); },
+      horiz: true, x: fx, y: fy, len: fw, thick: m
+    },
+    { // bottom
+      clip() { ctx.moveTo(fx, fy + fh); ctx.lineTo(fx + fw, fy + fh); ctx.lineTo(ix + iw, iy + ih); ctx.lineTo(ix, iy + ih); },
+      horiz: true, x: fx, y: iy + ih, len: fw, thick: m
+    },
+    { // left — grain runs top to bottom
+      clip() { ctx.moveTo(fx, fy); ctx.lineTo(ix, iy); ctx.lineTo(ix, iy + ih); ctx.lineTo(fx, fy + fh); },
+      horiz: false, x: fx, y: fy, len: fh, thick: m
+    },
+    { // right
+      clip() { ctx.moveTo(fx + fw, fy); ctx.lineTo(ix + iw, iy); ctx.lineTo(ix + iw, iy + ih); ctx.lineTo(fx + fw, fy + fh); },
+      horiz: false, x: ix + iw, y: fy, len: fh, thick: m
+    }
+  ];
+
+  rails.forEach((rail, idx) => {
+    ctx.save();
+    ctx.beginPath();
+    rail.clip();
+    ctx.closePath();
+    ctx.clip();
+    const step = Math.max(1.6, rail.thick / 3.2);
+    for (let i = 0, n = 0; i < rail.len + step; i += step, n++) {
+      const jitter = ((idx * 17 + n * 13) % 9) - 4;
+      const t = (n % 5);
+      ctx.strokeStyle = t === 0 ? 'rgba(90,50,18,0.10)' : t === 1 ? 'rgba(255,236,200,0.14)' : 'rgba(120,70,25,0.07)';
+      ctx.lineWidth = t === 0 ? 1.2 : 0.8;
+      ctx.beginPath();
+      if (rail.horiz) {
+        const yy = rail.y + rail.thick * (0.2 + (n % 4) * 0.18);
+        ctx.moveTo(rail.x - 2, yy + jitter * 0.15);
+        ctx.lineTo(rail.x + rail.len + 2, yy - jitter * 0.15);
+      } else {
+        const xx = rail.x + rail.thick * (0.2 + (n % 4) * 0.18);
+        ctx.moveTo(xx + jitter * 0.15, rail.y - 2);
+        ctx.lineTo(xx - jitter * 0.15, rail.y + rail.len + 2);
+      }
+      ctx.stroke();
+    }
+    ctx.restore();
+  });
+}
+
+function shadeMoulding(ctx, fx, fy, fw, fh, m, style) {
+  const ix = fx + m, iy = fy + m, iw = fw - m * 2, ih = fh - m * 2;
+  const inset = Math.max(1, m * 0.28);
+  ctx.save();
+  // Outer top/left highlight — gives the moulding an edge without a drawn border
+  const outerLit = style === 'Black' ? 'rgba(255,255,255,0.16)' : style === 'White' ? 'rgba(255,255,255,0.7)' : 'rgba(255,245,220,0.28)';
+  const outerDim = style === 'White' ? 'rgba(0,0,0,0.06)' : 'rgba(0,0,0,0.28)';
+  ctx.fillStyle = outerLit;
+  ctx.fillRect(fx, fy, fw, inset);
+  ctx.fillRect(fx, fy, inset, fh);
+  ctx.fillStyle = outerDim;
+  ctx.fillRect(fx, fy + fh - inset, fw, inset);
+  ctx.fillRect(fx + fw - inset, fy, inset, fh);
+
+  // Inner recess (artwork sitting in the rebate) — very thin, never a mat
+  const innerDim = style === 'White' ? 'rgba(0,0,0,0.08)' : 'rgba(0,0,0,0.35)';
+  const innerLit = style === 'Black' ? 'rgba(255,255,255,0.10)' : 'rgba(255,255,255,0.18)';
+  const i2 = Math.max(1, m * 0.22);
+  ctx.fillStyle = innerDim;
+  ctx.fillRect(ix, iy, iw, i2);
+  ctx.fillRect(ix, iy, i2, ih);
+  ctx.fillStyle = innerLit;
+  ctx.fillRect(ix, iy + ih - i2, iw, i2);
+  ctx.fillRect(ix + iw - i2, iy, i2, ih);
+  ctx.restore();
+}
+
 function renderPreview() {
   const canvas      = document.getElementById('frameCanvas');
   const placeholder = document.getElementById('canvasPlaceholder');
   const label       = document.getElementById('previewLabel');
+  const scaleNote   = document.getElementById('previewScaleNote');
 
   if (!state.imageName) {
     canvas.style.display = 'none';
     placeholder.style.display = '';
     label.textContent = '';
+    if (scaleNote) scaleNote.textContent = '';
     return;
   }
 
   placeholder.style.display = 'none';
   canvas.style.display = 'block';
 
-  // 16×24 portrait ratio — logical canvas size
-  const W = 320, H = 480;
+  const W = 800;
+  const H = Math.round(W * (ROOM.height / ROOM.width));
   const dpr = window.devicePixelRatio || 1;
   canvas.width  = W * dpr;
   canvas.height = H * dpr;
-  canvas.style.width  = W + 'px';
-  canvas.style.height = H + 'px';
+  canvas.style.width  = '100%';
+  canvas.style.height = 'auto';
   const ctx = canvas.getContext('2d');
-  ctx.scale(dpr, dpr);
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-  const frameW = 10;   // outer frame border thickness
-  const matW   = 7;    // inner mat/mount thickness
-  const frameCol = FRAME_COLOURS[state.style] || '#1a1a1a';
+  const sizeChosen = !!state.size;
+  const { wIn, hIn } = parseFrameSize(state.size || '16×20');
+  const style = state.style || 'Black';
+  const frameCol = FRAME_COLOURS[style] || '#1a1a1a';
 
-  const drawFrame = imgEl => {
+  const drawScene = imgEl => {
     ctx.clearRect(0, 0, W, H);
 
-    // ── Outer frame ──
+    // ── Room ──
+    if (roomBg.complete && roomBg.naturalWidth) {
+      ctx.drawImage(roomBg, 0, 0, W, H);
+    } else {
+      ctx.fillStyle = '#efece6';
+      ctx.fillRect(0, 0, W, H);
+    }
+
+    const scale = W / ROOM.width;
+    const pxPerCm = ((ROOM.sofaRight - ROOM.sofaLeft) * scale) / ROOM.sofaWidthCm;
+    const sofaMidX = ((ROOM.sofaLeft + ROOM.sofaRight) / 2) * scale;
+    const sofaTop  = ROOM.sofaTop * scale;
+    const fw = wIn * 2.54 * pxPerCm;
+    const fh = hIn * 2.54 * pxPerCm;
+    const m  = ROOM.mouldingCm * pxPerCm;
+    const fx = sofaMidX - fw / 2;
+    const fy = sofaTop - ROOM.hangGapCm * pxPerCm - fh;
+    const ix = fx + m, iy = fy + m, iw = fw - m * 2, ih = fh - m * 2;
+
+    // ── Soft drop shadow on the wall (not an outline) ──
+    ctx.save();
+    ctx.shadowColor = 'rgba(0,0,0,0.32)';
+    ctx.shadowBlur = 18 * scale * 2.2;
+    ctx.shadowOffsetX = 2 * scale;
+    ctx.shadowOffsetY = 8 * scale;
     ctx.fillStyle = frameCol;
-    ctx.fillRect(0, 0, W, H);
+    ctx.fillRect(fx, fy, fw, fh);
+    ctx.restore();
 
-    // Wood grain lines
-    if (state.style === 'Wood') {
-      ctx.save();
-      for (let i = 0; i < 24; i++) {
-        ctx.strokeStyle = 'rgba(0,0,0,0.05)';
-        ctx.lineWidth = 1;
-        ctx.beginPath(); ctx.moveTo(i*(W/24), 0); ctx.lineTo(i*(W/24), H); ctx.stroke();
-      }
-      ctx.restore();
-    }
-
-    // White frame inner stroke
-    if (state.style === 'White') {
-      ctx.save();
-      ctx.strokeStyle = '#c8c8c8'; ctx.lineWidth = 2;
-      ctx.strokeRect(2, 2, W-4, H-4);
-      ctx.restore();
-    }
-
-    // ── Mat board ──
-    ctx.fillStyle = '#f8f5f0';
-    ctx.fillRect(frameW, frameW, W - frameW*2, H - frameW*2);
-
-    // ── Image area ──
-    const ix = frameW + matW;
-    const iy = frameW + matW;
-    const iw = W - (frameW + matW) * 2;
-    const ih = H - (frameW + matW) * 2;
-
+    // ── Artwork, cover-fit, no mat ──
     if (imgEl) {
-      // cover-fit: scale to fill the box, centre the crop
-      const imgRatio  = imgEl.naturalWidth / imgEl.naturalHeight;
-      const boxRatio  = iw / ih;
-      let sx, sy, sw, sh;
-      if (imgRatio > boxRatio) {
-        // image is wider than box — crop sides
-        sh = imgEl.naturalHeight;
-        sw = sh * boxRatio;
-        sx = (imgEl.naturalWidth - sw) / 2;
-        sy = 0;
-      } else {
-        // image is taller than box — crop top/bottom
-        sw = imgEl.naturalWidth;
-        sh = sw / boxRatio;
-        sx = 0;
-        sy = (imgEl.naturalHeight - sh) / 2;
-      }
-      ctx.drawImage(imgEl, sx, sy, sw, sh, ix, iy, iw, ih);
+      const s = coverFitSource(imgEl, iw, ih);
+      ctx.drawImage(imgEl, s.sx, s.sy, s.sw, s.sh, ix, iy, iw, ih);
     } else {
       ctx.fillStyle = '#e8e3dc';
       ctx.fillRect(ix, iy, iw, ih);
     }
 
-    // ── Size label ──
-    if (state.size) label.textContent = `Preview: ${state.size}" · ${state.style} Frame`;
+    // ── Moulding only (even-odd ring), then subtle shading ──
+    if (style === 'Wood') {
+      drawWoodMoulding(ctx, fx, fy, fw, fh, m);
+    } else {
+      ctx.save();
+      mouldingPath(ctx, fx, fy, fw, fh, m);
+      ctx.fillStyle = frameCol;
+      ctx.fill('evenodd');
+      ctx.restore();
+    }
+    shadeMoulding(ctx, fx, fy, fw, fh, m, style);
+
+    if (sizeChosen) {
+      label.textContent = `Preview: ${state.size}" · ${style} Frame`;
+    } else {
+      label.textContent = `Preview: ${style} Frame · 16×20" shown for scale`;
+    }
+    if (scaleNote) scaleNote.textContent = 'Shown at real scale on a 200 cm sofa.';
   };
 
   if (state.imageData) {
     const img = new Image();
-    img.onload = () => drawFrame(img);
+    img.onload = () => drawScene(img);
     img.src = state.imageData;
   } else {
-    drawFrame(null);
+    drawScene(null);
   }
 }
 

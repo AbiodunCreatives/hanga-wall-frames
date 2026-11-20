@@ -50,3 +50,11 @@ high-resolution file from `print_image_url` in `data/collection-credits.json` (a
 Total works: 36.
 
 A machine-readable copy of this table, including official museum titles, lives in `data/collection-credits.json`.
+
+## Room preview background
+
+The Customise page room mockup uses a living-room photograph from Unsplash, used as a site background under the [Unsplash License](https://unsplash.com/license) (free for commercial use; the photograph itself is not sold).
+
+- Image: [images.unsplash.com/photo-1555041469-a586c61ea9bc](https://images.unsplash.com/photo-1555041469-a586c61ea9bc)
+- Local file: `images/room/living-room.jpg` (wall extended slightly at the top so a 24×36" frame still fits at true scale above the sofa)
+- Scale reference: the sofa is treated as 200 cm wide

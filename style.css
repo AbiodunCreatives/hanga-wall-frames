@@ -599,26 +599,17 @@ section.section {
 .pv-frame {
   flex-shrink: 0;
   border: 4px solid var(--black);
-  box-shadow: 2px 2px 0 rgba(0,0,0,0.1), 0 6px 20px rgba(0,0,0,0.15);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.16);
   overflow: hidden;
   position: relative;
-  background: #f8f5f0;
+  background: var(--black);
+  box-sizing: border-box;
 }
 .pv-frame img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
-}
-
-/* inner mat line */
-.pv-frame::before {
-  content: "";
-  position: absolute;
-  inset: 3px;
-  border: 1px solid rgba(255,255,255,0.25);
-  pointer-events: none;
-  z-index: 1;
 }
 
 /* Per-size dimensions (width × height at 4px/inch) */
@@ -683,7 +674,7 @@ section.section {
 /* ─── Customize Page ────────────────────────────────────────── */
 .customize-layout {
   display: grid;
-  grid-template-columns: 1fr 400px;
+  grid-template-columns: 1fr minmax(340px, 460px);
   grid-template-areas: "config preview";
   gap: 40px;
   align-items: start;
@@ -701,30 +692,45 @@ section.section {
 .config-panel { grid-area: config; }
 
 .frame-preview-wrap {
-  background: var(--cream);
+  background: #e9e4dc;
   border-radius: var(--radius);
-  padding: clamp(16px, 3vw, 32px);
+  padding: 12px 12px 16px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 16px;
-  min-height: 420px;
+  gap: 10px;
+  min-height: 0;
 }
 
 .frame-preview-wrap canvas {
   width: 100% !important;
   height: auto !important;
-  max-width: 320px;
-  border-radius: 2px;
-  box-shadow: 0 8px 40px rgba(0,0,0,0.18);
+  max-width: none;
+  border-radius: 6px;
+  box-shadow: 0 8px 28px rgba(0,0,0,0.14);
+}
+
+.preview-label {
+  font-size: 12px;
+  color: var(--muted);
+  text-align: center;
+  margin: 0;
+}
+
+.preview-scale-note {
+  font-size: 11px;
+  color: #999;
+  text-align: center;
+  margin: 0;
+  letter-spacing: 0.02em;
 }
 
 .canvas-placeholder {
   width: 100%;
-  max-width: 320px;
-  aspect-ratio: 2/3;
+  max-width: none;
+  aspect-ratio: 1600 / 1517;
   background: linear-gradient(135deg, #e8e3dc 0%, #d4ccbf 100%);
-  border-radius: var(--radius);
+  border-radius: 6px;
   display: flex;
   flex-direction: column;
   align-items: center;
