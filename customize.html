@@ -135,13 +135,13 @@
     <!-- Step 2 -->
     <div class="config-section">
       <h3>Step 2 — Frame Size</h3>
-      <div class="option-chips" id="sizeChips">
-        <button class="chip" data-size="12×16"  data-price="8000"  onclick="selectSize(this)">12×16 — ₦8,000</button>
-        <button class="chip" data-size="16×20"  data-price="9500"  onclick="selectSize(this)">16×20 — ₦9,500</button>
-        <button class="chip" data-size="16×24"  data-price="11000" onclick="selectSize(this)">16×24 — ₦11,000</button>
-        <button class="chip" data-size="20×24"  data-price="14000" onclick="selectSize(this)">20×24 — ₦14,000</button>
-        <button class="chip" data-size="20×30"  data-price="17500" onclick="selectSize(this)">20×30 — ₦17,500</button>
-        <button class="chip" data-size="24×36"  data-price="20000" onclick="selectSize(this)">24×36 — ₦20,000</button>
+      <div class="option-chips size-grid" id="sizeChips">
+        <button class="chip" data-size="12×16"  data-price="8000"  onclick="selectSize(this)"><span class="chip-size">12×16"</span><span class="chip-price">₦8,000</span></button>
+        <button class="chip" data-size="16×20"  data-price="9500"  onclick="selectSize(this)"><span class="chip-size">16×20"</span><span class="chip-price">₦9,500</span></button>
+        <button class="chip" data-size="16×24"  data-price="11000" onclick="selectSize(this)"><span class="chip-size">16×24"</span><span class="chip-price">₦11,000</span></button>
+        <button class="chip" data-size="20×24"  data-price="14000" onclick="selectSize(this)"><span class="chip-size">20×24"</span><span class="chip-price">₦14,000</span></button>
+        <button class="chip" data-size="20×30"  data-price="17500" onclick="selectSize(this)"><span class="chip-size">20×30"</span><span class="chip-price">₦17,500</span></button>
+        <button class="chip" data-size="24×36"  data-price="20000" onclick="selectSize(this)"><span class="chip-size">24×36"</span><span class="chip-price">₦20,000</span></button>
       </div>
     </div>
 
@@ -338,7 +338,7 @@ function handleFileUpload(event) {
 
 // ── Size ───────────────────────────────────────────────────────
 function selectSize(el) {
-  document.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
+  document.querySelectorAll('#sizeChips .chip').forEach(c => c.classList.remove('selected'));
   el.classList.add('selected');
   state.size  = el.dataset.size;
   state.price = parseInt(el.dataset.price, 10);
