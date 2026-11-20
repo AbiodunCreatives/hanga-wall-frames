@@ -257,29 +257,107 @@ section.section {
 }
 
 /* ─── How It Works ──────────────────────────────────────────── */
-.steps {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 32px;
+.hiw-section {
+  background: var(--cream);
   text-align: center;
-  margin-top: 56px;
 }
 
-.step-icon {
-  width: 64px;
-  height: 64px;
+.hiw-header {
+  margin-bottom: 64px;
+}
+
+.hiw-steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  position: relative;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* horizontal connector line between steps */
+.hiw-connector {
+  position: absolute;
+  top: 52px;             /* vertically centered through the icon circles */
+  left: calc(16.667% + 36px);
+  right: calc(16.667% + 36px);
+  height: 1px;
+  background: linear-gradient(to right, var(--gold), rgba(200,169,110,0.3), var(--gold));
+  pointer-events: none;
+  z-index: 0;
+}
+
+.hiw-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 24px;
+  position: relative;
+  z-index: 1;
+}
+
+.hiw-step-top {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 24px;
+  gap: 0;
+}
+
+/* step number */
+.hiw-num {
+  font-family: "Playfair Display", serif;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  color: var(--gold);
+  margin-bottom: 14px;
+  font-weight: 400;
+}
+
+/* icon circle */
+.hiw-icon-wrap {
+  width: 76px;
+  height: 76px;
   border-radius: 50%;
   background: var(--white);
-  border: 2px solid var(--gold);
+  border: 1.5px solid var(--border);
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto 16px;
-  font-size: 26px;
+  color: var(--black);
+  transition: border-color 0.3s, background 0.3s, color 0.3s, box-shadow 0.3s;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
 }
 
-.step h3 { font-size: 16px; margin-bottom: 10px; }
-.step p  { font-size: 14px; color: var(--muted); line-height: 1.65; }
+.hiw-icon-wrap svg {
+  width: 30px;
+  height: 30px;
+}
+
+.hiw-step:hover .hiw-icon-wrap {
+  background: var(--black);
+  border-color: var(--black);
+  color: var(--gold);
+  box-shadow: 0 8px 28px rgba(0,0,0,0.14);
+}
+
+.hiw-step h3 {
+  font-size: 17px;
+  margin-bottom: 12px;
+  color: var(--black);
+  letter-spacing: 0.01em;
+}
+
+.hiw-step p {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.75;
+  max-width: 220px;
+  margin: 0 auto;
+}
+
+/* keep old .steps / .step-icon for safety — hidden */
+.steps { display: none; }
 
 /* ─── Gallery section (dark) ────────────────────────────────── */
 .gallery-section {
@@ -1029,6 +1107,14 @@ footer {
 
   /* Steps single col */
   .steps { grid-template-columns: 1fr; gap: 28px; }
+
+  /* HIW single col on mobile */
+  .hiw-steps {
+    grid-template-columns: 1fr;
+    gap: 48px;
+  }
+  .hiw-connector { display: none; }
+  .hiw-step { padding: 0; }
 
   /* Form rows single col */
   .form-row { grid-template-columns: 1fr; }
