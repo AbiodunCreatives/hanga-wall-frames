@@ -300,8 +300,8 @@ function renderPreview() {
   const ctx = canvas.getContext('2d');
   ctx.scale(dpr, dpr);
 
-  const frameW = 18;   // outer frame border thickness
-  const matW   = 10;   // inner mat/mount thickness
+  const frameW = 10;   // outer frame border thickness
+  const matW   = 7;    // inner mat/mount thickness
   const frameCol = FRAME_COLOURS[state.style] || '#1a1a1a';
 
   const drawFrame = imgEl => {
