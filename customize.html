@@ -56,21 +56,68 @@
       </div>
 
       <div id="tab-gallery">
+        <div class="gallery-filters mini-filters" role="tablist" aria-label="Filter gallery">
+          <button type="button" class="filter-chip active" data-filter="all" onclick="filterMiniGallery('all', this)">All</button>
+          <button type="button" class="filter-chip" data-filter="motivational" onclick="filterMiniGallery('motivational', this)">Motivational</button>
+          <button type="button" class="filter-chip" data-filter="classic-art" onclick="filterMiniGallery('classic-art', this)">Classic Art</button>
+          <button type="button" class="filter-chip" data-filter="nature" onclick="filterMiniGallery('nature', this)">Nature &amp; Botanical</button>
+          <button type="button" class="filter-chip" data-filter="landscapes" onclick="filterMiniGallery('landscapes', this)">Landscapes</button>
+          <button type="button" class="filter-chip" data-filter="japanese" onclick="filterMiniGallery('japanese', this)">Japanese</button>
+          <button type="button" class="filter-chip" data-filter="abstract" onclick="filterMiniGallery('abstract', this)">Abstract</button>
+          <button type="button" class="filter-chip" data-filter="portraits" onclick="filterMiniGallery('portraits', this)">Portraits</button>
+          <button type="button" class="filter-chip" data-filter="urban" onclick="filterMiniGallery('urban', this)">Urban</button>
+        </div>
         <div class="mini-gallery" id="miniGallery">
-          <div class="mini-thumb" data-id="build-in-silence"  data-src="images/build-in-silence.jpg"   onclick="selectGalleryImage(this,'Build in Silence')"><img src="images/build-in-silence.jpg"   alt="Build in Silence" loading="lazy"></div>
-          <div class="mini-thumb" data-id="iron-mike"          data-src="images/iron-mike.jpg"           onclick="selectGalleryImage(this,'Iron Mike')"><img src="images/iron-mike.jpg"           alt="Iron Mike" loading="lazy"></div>
-          <div class="mini-thumb" data-id="alpine-bloom"       data-src="images/alpine-bloom.jpg"        onclick="selectGalleryImage(this,'Alpine Bloom')"><img src="images/alpine-bloom.jpg"        alt="Alpine Bloom" loading="lazy"></div>
-          <div class="mini-thumb" data-id="one-percent"        data-src="images/one-percent.jpg"         onclick="selectGalleryImage(this,'1% Better Every Day')"><img src="images/one-percent.jpg"         alt="1% Better Every Day" loading="lazy"></div>
-          <div class="mini-thumb" data-id="city-architecture"  data-src="images/city-architecture.jpg"   onclick="selectGalleryImage(this,'City Architecture')"><img src="images/city-architecture.jpg"   alt="City Architecture" loading="lazy"></div>
-          <div class="mini-thumb" data-id="joyful-soul"        data-src="images/joyful-soul.jpg"         onclick="selectGalleryImage(this,'Joyful Soul')"><img src="images/joyful-soul.jpg"         alt="Joyful Soul" loading="lazy"></div>
-          <div class="mini-thumb" data-id="burna-boy"          data-src="images/burna-boy.jpg"           onclick="selectGalleryImage(this,'Burna Boy')"><img src="images/burna-boy.jpg"           alt="Burna Boy" loading="lazy"></div>
-          <div class="mini-thumb" data-id="classic-roadster"   data-src="images/classic-roadster.jpg"    onclick="selectGalleryImage(this,'Classic Roadster')"><img src="images/classic-roadster.jpg"    alt="Classic Roadster" loading="lazy"></div>
-          <div class="mini-thumb" data-id="he-left-99"         data-src="images/he-left-99.jpg"          onclick="selectGalleryImage(this,'He Left the 99')"><img src="images/he-left-99.jpg"          alt="He Left the 99" loading="lazy"></div>
-          <div class="mini-thumb" data-id="alpine-meadow"      data-src="images/alpine-meadow.jpg"       onclick="selectGalleryImage(this,'Alpine Meadow')"><img src="images/alpine-meadow.jpg"       alt="Alpine Meadow" loading="lazy"></div>
-          <div class="mini-thumb" data-id="dont-overthink"     data-src="images/dont-overthink.jpg"      onclick="selectGalleryImage(this,"Don't Overthink It")"><img src="images/dont-overthink.jpg"      alt="Don't Overthink It" loading="lazy"></div>
-          <div class="mini-thumb" data-id="if-you-want"        data-src="images/if-you-want.jpg"         onclick="selectGalleryImage(this,'If You Want, You Can')"><img src="images/if-you-want.jpg"         alt="If You Want You Can" loading="lazy"></div>
-          <div class="mini-thumb" data-id="zen-balance"        data-src="images/zen-balance.jpg"         onclick="selectGalleryImage(this,'Zen Balance')"><img src="images/zen-balance.jpg"         alt="Zen Balance" loading="lazy"></div>
-          <div class="mini-thumb" data-id="raleigh-bike"       data-src="images/raleigh-bike.jpg"        onclick="selectGalleryImage(this,'Raleigh Classic')"><img src="images/raleigh-bike.jpg"        alt="Raleigh Classic" loading="lazy"></div>
+          <div class="mini-thumb" data-id="build-in-silence" data-name="Build in Silence" data-category="motivational" data-src="images/build-in-silence.jpg" onclick="selectGalleryImage(this,'Build in Silence')"><img src="images/build-in-silence.jpg"   alt="Build in Silence" loading="lazy"></div>
+          <div class="mini-thumb" data-id="iron-mike" data-name="Iron Mike" data-category="portraits" data-src="images/iron-mike.jpg" onclick="selectGalleryImage(this,'Iron Mike')"><img src="images/iron-mike.jpg"           alt="Iron Mike" loading="lazy"></div>
+          <div class="mini-thumb" data-id="alpine-bloom" data-name="Alpine Bloom" data-category="nature" data-src="images/alpine-bloom.jpg" onclick="selectGalleryImage(this,'Alpine Bloom')"><img src="images/alpine-bloom.jpg"        alt="Alpine Bloom" loading="lazy"></div>
+          <div class="mini-thumb" data-id="one-percent" data-name="1% Better Every Day" data-category="motivational" data-src="images/one-percent.jpg" onclick="selectGalleryImage(this,'1% Better Every Day')"><img src="images/one-percent.jpg"         alt="1% Better Every Day" loading="lazy"></div>
+          <div class="mini-thumb" data-id="city-architecture" data-name="City Architecture" data-category="urban" data-src="images/city-architecture.jpg" onclick="selectGalleryImage(this,'City Architecture')"><img src="images/city-architecture.jpg"   alt="City Architecture" loading="lazy"></div>
+          <div class="mini-thumb" data-id="joyful-soul" data-name="Joyful Soul" data-category="portraits" data-src="images/joyful-soul.jpg" onclick="selectGalleryImage(this,'Joyful Soul')"><img src="images/joyful-soul.jpg"         alt="Joyful Soul" loading="lazy"></div>
+          <div class="mini-thumb" data-id="burna-boy" data-name="Burna Boy" data-category="portraits" data-src="images/burna-boy.jpg" onclick="selectGalleryImage(this,'Burna Boy')"><img src="images/burna-boy.jpg"           alt="Burna Boy" loading="lazy"></div>
+          <div class="mini-thumb" data-id="classic-roadster" data-name="Classic Roadster" data-category="urban" data-src="images/classic-roadster.jpg" onclick="selectGalleryImage(this,'Classic Roadster')"><img src="images/classic-roadster.jpg"    alt="Classic Roadster" loading="lazy"></div>
+          <div class="mini-thumb" data-id="he-left-99" data-name="He Left the 99" data-category="motivational" data-src="images/he-left-99.jpg" onclick="selectGalleryImage(this,'He Left the 99')"><img src="images/he-left-99.jpg"          alt="He Left the 99" loading="lazy"></div>
+          <div class="mini-thumb" data-id="alpine-meadow" data-name="Alpine Meadow" data-category="landscapes nature" data-src="images/alpine-meadow.jpg" onclick="selectGalleryImage(this,'Alpine Meadow')"><img src="images/alpine-meadow.jpg"       alt="Alpine Meadow" loading="lazy"></div>
+          <div class="mini-thumb" data-id="dont-overthink" data-name="Don't Overthink It" data-category="motivational" data-src="images/dont-overthink.jpg" onclick="selectGalleryImage(this,'Don\'t Overthink It')"><img src="images/dont-overthink.jpg"      alt="Don't Overthink It" loading="lazy"></div>
+          <div class="mini-thumb" data-id="if-you-want" data-name="If You Want, You Can" data-category="motivational" data-src="images/if-you-want.jpg" onclick="selectGalleryImage(this,'If You Want, You Can')"><img src="images/if-you-want.jpg"         alt="If You Want You Can" loading="lazy"></div>
+          <div class="mini-thumb" data-id="zen-balance" data-name="Zen Balance" data-category="abstract" data-src="images/zen-balance.jpg" onclick="selectGalleryImage(this,'Zen Balance')"><img src="images/zen-balance.jpg"         alt="Zen Balance" loading="lazy"></div>
+          <div class="mini-thumb" data-id="raleigh-bike" data-name="Raleigh Classic" data-category="urban" data-src="images/raleigh-bike.jpg" onclick="selectGalleryImage(this,'Raleigh Classic')"><img src="images/raleigh-bike.jpg"        alt="Raleigh Classic" loading="lazy"></div>
+          <div class="mini-thumb" data-id="hokusai-great-wave" data-name="The Great Wave" data-category="japanese landscapes" data-src="images/collection/hokusai-great-wave.jpg" onclick="selectGalleryImage(this,'The Great Wave')"><img src="images/collection/hokusai-great-wave.jpg" alt="The Great Wave" loading="lazy"></div>
+          <div class="mini-thumb" data-id="van-gogh-self-portrait" data-name="Self-Portrait" data-category="portraits classic-art" data-src="images/collection/van-gogh-self-portrait.jpg" onclick="selectGalleryImage(this,'Self-Portrait')"><img src="images/collection/van-gogh-self-portrait.jpg" alt="Self-Portrait" loading="lazy"></div>
+          <div class="mini-thumb" data-id="monet-water-lilies" data-name="Water Lilies" data-category="nature classic-art" data-src="images/collection/monet-water-lilies.jpg" onclick="selectGalleryImage(this,'Water Lilies')"><img src="images/collection/monet-water-lilies.jpg" alt="Water Lilies" loading="lazy"></div>
+          <div class="mini-thumb" data-id="van-gogh-straw-hat" data-name="Self-Portrait with a Straw Hat" data-category="portraits classic-art" data-src="images/collection/van-gogh-straw-hat.jpg" onclick="selectGalleryImage(this,'Self-Portrait with a Straw Hat')"><img src="images/collection/van-gogh-straw-hat.jpg" alt="Self-Portrait with a Straw Hat" loading="lazy"></div>
+          <div class="mini-thumb" data-id="hokusai-red-fuji" data-name="Red Fuji" data-category="japanese landscapes" data-src="images/collection/hokusai-red-fuji.jpg" onclick="selectGalleryImage(this,'Red Fuji')"><img src="images/collection/hokusai-red-fuji.jpg" alt="Red Fuji" loading="lazy"></div>
+          <div class="mini-thumb" data-id="van-gogh-roses" data-name="Roses" data-category="nature classic-art" data-src="images/collection/van-gogh-roses.jpg" onclick="selectGalleryImage(this,'Roses')"><img src="images/collection/van-gogh-roses.jpg" alt="Roses" loading="lazy"></div>
+          <div class="mini-thumb" data-id="renoir-two-sisters" data-name="Two Sisters" data-category="portraits classic-art" data-src="images/collection/renoir-two-sisters.jpg" onclick="selectGalleryImage(this,'Two Sisters')"><img src="images/collection/renoir-two-sisters.jpg" alt="Two Sisters" loading="lazy"></div>
+          <div class="mini-thumb" data-id="vermeer-water-pitcher" data-name="Woman with a Water Pitcher" data-category="portraits classic-art" data-src="images/collection/vermeer-water-pitcher.jpg" onclick="selectGalleryImage(this,'Woman with a Water Pitcher')"><img src="images/collection/vermeer-water-pitcher.jpg" alt="Woman with a Water Pitcher" loading="lazy"></div>
+          <div class="mini-thumb" data-id="van-gogh-bedroom" data-name="The Bedroom" data-category="classic-art" data-src="images/collection/van-gogh-bedroom.jpg" onclick="selectGalleryImage(this,'The Bedroom')"><img src="images/collection/van-gogh-bedroom.jpg" alt="The Bedroom" loading="lazy"></div>
+          <div class="mini-thumb" data-id="van-gogh-irises" data-name="Irises" data-category="nature classic-art" data-src="images/collection/van-gogh-irises.jpg" onclick="selectGalleryImage(this,'Irises')"><img src="images/collection/van-gogh-irises.jpg" alt="Irises" loading="lazy"></div>
+          <div class="mini-thumb" data-id="hiroshige-sudden-shower" data-name="Sudden Shower over Shin-Ōhashi" data-category="japanese urban landscapes" data-src="images/collection/hiroshige-sudden-shower.jpg" onclick="selectGalleryImage(this,'Sudden Shower over Shin-Ōhashi')"><img src="images/collection/hiroshige-sudden-shower.jpg" alt="Sudden Shower over Shin-Ōhashi" loading="lazy"></div>
+          <div class="mini-thumb" data-id="van-gogh-cypresses" data-name="Cypresses" data-category="landscapes nature classic-art" data-src="images/collection/van-gogh-cypresses.jpg" onclick="selectGalleryImage(this,'Cypresses')"><img src="images/collection/van-gogh-cypresses.jpg" alt="Cypresses" loading="lazy"></div>
+          <div class="mini-thumb" data-id="redoute-empress-rose" data-name="Empress Josephine Rose" data-category="nature" data-src="images/collection/redoute-empress-rose.jpg" onclick="selectGalleryImage(this,'Empress Josephine Rose')"><img src="images/collection/redoute-empress-rose.jpg" alt="Empress Josephine Rose" loading="lazy"></div>
+          <div class="mini-thumb" data-id="van-gogh-sunflowers" data-name="Sunflowers" data-category="nature classic-art" data-src="images/collection/van-gogh-sunflowers.jpg" onclick="selectGalleryImage(this,'Sunflowers')"><img src="images/collection/van-gogh-sunflowers.jpg" alt="Sunflowers" loading="lazy"></div>
+          <div class="mini-thumb" data-id="van-gogh-wheat-field" data-name="Wheat Field with Cypresses" data-category="landscapes classic-art" data-src="images/collection/van-gogh-wheat-field.jpg" onclick="selectGalleryImage(this,'Wheat Field with Cypresses')"><img src="images/collection/van-gogh-wheat-field.jpg" alt="Wheat Field with Cypresses" loading="lazy"></div>
+          <div class="mini-thumb" data-id="mucha-zodiac" data-name="The Zodiac" data-category="classic-art portraits" data-src="images/collection/mucha-zodiac.jpg" onclick="selectGalleryImage(this,'The Zodiac')"><img src="images/collection/mucha-zodiac.jpg" alt="The Zodiac" loading="lazy"></div>
+          <div class="mini-thumb" data-id="gauguin-tehamana" data-name="Tehamana" data-category="portraits classic-art" data-src="images/collection/gauguin-tehamana.jpg" onclick="selectGalleryImage(this,'Tehamana')"><img src="images/collection/gauguin-tehamana.jpg" alt="Tehamana" loading="lazy"></div>
+          <div class="mini-thumb" data-id="caillebotte-paris-street" data-name="Paris Street, Rainy Day" data-category="urban classic-art landscapes" data-src="images/collection/caillebotte-paris-street.jpg" onclick="selectGalleryImage(this,'Paris Street, Rainy Day')"><img src="images/collection/caillebotte-paris-street.jpg" alt="Paris Street, Rainy Day" loading="lazy"></div>
+          <div class="mini-thumb" data-id="van-gogh-orchard" data-name="The Flowering Orchard" data-category="nature landscapes classic-art" data-src="images/collection/van-gogh-orchard.jpg" onclick="selectGalleryImage(this,'The Flowering Orchard')"><img src="images/collection/van-gogh-orchard.jpg" alt="The Flowering Orchard" loading="lazy"></div>
+          <div class="mini-thumb" data-id="monet-lily-pond" data-name="Water Lily Pond" data-category="nature landscapes classic-art" data-src="images/collection/monet-lily-pond.jpg" onclick="selectGalleryImage(this,'Water Lily Pond')"><img src="images/collection/monet-lily-pond.jpg" alt="Water Lily Pond" loading="lazy"></div>
+          <div class="mini-thumb" data-id="hokusai-cranes" data-name="Cranes on a Pine" data-category="japanese nature" data-src="images/collection/hokusai-cranes.jpg" onclick="selectGalleryImage(this,'Cranes on a Pine')"><img src="images/collection/hokusai-cranes.jpg" alt="Cranes on a Pine" loading="lazy"></div>
+          <div class="mini-thumb" data-id="rembrandt-gold-chain" data-name="Old Man with a Gold Chain" data-category="portraits classic-art" data-src="images/collection/rembrandt-gold-chain.jpg" onclick="selectGalleryImage(this,'Old Man with a Gold Chain')"><img src="images/collection/rembrandt-gold-chain.jpg" alt="Old Man with a Gold Chain" loading="lazy"></div>
+          <div class="mini-thumb" data-id="monet-stacks-of-wheat" data-name="Stacks of Wheat" data-category="landscapes classic-art" data-src="images/collection/monet-stacks-of-wheat.jpg" onclick="selectGalleryImage(this,'Stacks of Wheat')"><img src="images/collection/monet-stacks-of-wheat.jpg" alt="Stacks of Wheat" loading="lazy"></div>
+          <div class="mini-thumb" data-id="vermeer-young-woman" data-name="Study of a Young Woman" data-category="portraits classic-art" data-src="images/collection/vermeer-young-woman.jpg" onclick="selectGalleryImage(this,'Study of a Young Woman')"><img src="images/collection/vermeer-young-woman.jpg" alt="Study of a Young Woman" loading="lazy"></div>
+          <div class="mini-thumb" data-id="monet-cliff-walk" data-name="Cliff Walk at Pourville" data-category="landscapes classic-art" data-src="images/collection/monet-cliff-walk.jpg" onclick="selectGalleryImage(this,'Cliff Walk at Pourville')"><img src="images/collection/monet-cliff-walk.jpg" alt="Cliff Walk at Pourville" loading="lazy"></div>
+          <div class="mini-thumb" data-id="cezanne-tulips" data-name="The Vase of Tulips" data-category="nature classic-art" data-src="images/collection/cezanne-tulips.jpg" onclick="selectGalleryImage(this,'The Vase of Tulips')"><img src="images/collection/cezanne-tulips.jpg" alt="The Vase of Tulips" loading="lazy"></div>
+          <div class="mini-thumb" data-id="hiroshige-fireworks" data-name="Fireworks at Ryōgoku" data-category="japanese urban" data-src="images/collection/hiroshige-fireworks.jpg" onclick="selectGalleryImage(this,'Fireworks at Ryōgoku')"><img src="images/collection/hiroshige-fireworks.jpg" alt="Fireworks at Ryōgoku" loading="lazy"></div>
+          <div class="mini-thumb" data-id="monet-saint-lazare" data-name="Gare Saint-Lazare" data-category="urban classic-art" data-src="images/collection/monet-saint-lazare.jpg" onclick="selectGalleryImage(this,'Gare Saint-Lazare')"><img src="images/collection/monet-saint-lazare.jpg" alt="Gare Saint-Lazare" loading="lazy"></div>
+          <div class="mini-thumb" data-id="hiroshige-jumantsubo" data-name="Eagle over the Jumantsubo Plain" data-category="japanese landscapes" data-src="images/collection/hiroshige-jumantsubo.jpg" onclick="selectGalleryImage(this,'Eagle over the Jumantsubo Plain')"><img src="images/collection/hiroshige-jumantsubo.jpg" alt="Eagle over the Jumantsubo Plain" loading="lazy"></div>
+          <div class="mini-thumb" data-id="redoute-crown-imperial" data-name="Crown Imperial" data-category="nature" data-src="images/collection/redoute-crown-imperial.jpg" onclick="selectGalleryImage(this,'Crown Imperial')"><img src="images/collection/redoute-crown-imperial.jpg" alt="Crown Imperial" loading="lazy"></div>
+          <div class="mini-thumb" data-id="hokusai-storm-fuji" data-name="Storm below Mount Fuji" data-category="japanese landscapes" data-src="images/collection/hokusai-storm-fuji.jpg" onclick="selectGalleryImage(this,'Storm below Mount Fuji')"><img src="images/collection/hokusai-storm-fuji.jpg" alt="Storm below Mount Fuji" loading="lazy"></div>
+          <div class="mini-thumb" data-id="seurat-grande-jatte" data-name="A Sunday on La Grande Jatte" data-category="classic-art landscapes" data-src="images/collection/seurat-grande-jatte.jpg" onclick="selectGalleryImage(this,'A Sunday on La Grande Jatte')"><img src="images/collection/seurat-grande-jatte.jpg" alt="A Sunday on La Grande Jatte" loading="lazy"></div>
+          <div class="mini-thumb" data-id="kandinsky-improvisation-30" data-name="Improvisation No. 30" data-category="abstract" data-src="images/collection/kandinsky-improvisation-30.jpg" onclick="selectGalleryImage(this,'Improvisation No. 30')"><img src="images/collection/kandinsky-improvisation-30.jpg" alt="Improvisation No. 30" loading="lazy"></div>
+          <div class="mini-thumb" data-id="redoute-gloriosa" data-name="Gloriosa Superba" data-category="nature" data-src="images/collection/redoute-gloriosa.jpg" onclick="selectGalleryImage(this,'Gloriosa Superba')"><img src="images/collection/redoute-gloriosa.jpg" alt="Gloriosa Superba" loading="lazy"></div>
+          <div class="mini-thumb" data-id="fayum-woman-in-red" data-name="Woman in Red" data-category="portraits" data-src="images/collection/fayum-woman-in-red.jpg" onclick="selectGalleryImage(this,'Woman in Red')"><img src="images/collection/fayum-woman-in-red.jpg" alt="Woman in Red" loading="lazy"></div>
+          <div class="mini-thumb" data-id="mondrian-lozenge" data-name="Lozenge Composition" data-category="abstract" data-src="images/collection/mondrian-lozenge.jpg" onclick="selectGalleryImage(this,'Lozenge Composition')"><img src="images/collection/mondrian-lozenge.jpg" alt="Lozenge Composition" loading="lazy"></div>
         </div>
       </div>
 
@@ -191,7 +238,11 @@ drawer.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
   const img = new URLSearchParams(window.location.search).get('image');
   if (img) {
     const thumb = document.querySelector(`[data-id="${img}"]`);
-    if (thumb) selectGalleryImage(thumb, thumb.dataset.id.replace(/-/g,' ').replace(/\b\w/g, c => c.toUpperCase()));
+    if (thumb) {
+      const name = thumb.dataset.name || thumb.dataset.id.replace(/-/g,' ').replace(/\b\w/g, c => c.toUpperCase());
+      selectGalleryImage(thumb, name);
+      thumb.scrollIntoView({ block: 'nearest' });
+    }
   }
 })();
 
@@ -215,9 +266,22 @@ function selectGalleryImage(el, name) {
   document.querySelectorAll('.mini-thumb').forEach(t => t.classList.remove('selected'));
   el.classList.add('selected');
   const src = el.dataset.src || '';
+  name = name || el.dataset.name || el.dataset.id;
   Object.assign(state, { isUpload: false, imageId: el.dataset.id, imageName: name, imageEmoji: null, imageData: src });
   updateSummary(); renderPreview();
   showToast('Image selected: ' + name);
+}
+
+// ── Mini-gallery filter ────────────────────────────────────────
+function filterMiniGallery(category, btn) {
+  const wrap = document.getElementById('tab-gallery');
+  wrap.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  wrap.querySelectorAll('.mini-thumb').forEach(thumb => {
+    const cats = (thumb.dataset.category || '').split(/\s+/);
+    const show = category === 'all' || cats.includes(category);
+    thumb.hidden = !show;
+  });
 }
 
 // ── File upload ────────────────────────────────────────────────

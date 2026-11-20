@@ -466,6 +466,69 @@ section.section {
   font-size: clamp(32px, 6vw, 52px);
 }
 
+
+.gallery-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 28px 0 32px;
+}
+
+.filter-chip {
+  font-family: "Lato", sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+  line-height: 1;
+}
+
+.filter-chip:hover {
+  border-color: var(--gold);
+  color: var(--black);
+}
+
+.filter-chip.active {
+  background: var(--black);
+  border-color: var(--black);
+  color: var(--white);
+}
+
+.gallery-section .filter-chip {
+  border-color: rgba(255,255,255,0.2);
+  color: rgba(255,255,255,0.7);
+}
+
+.gallery-section .filter-chip:hover {
+  border-color: var(--gold);
+  color: var(--white);
+}
+
+.gallery-section .filter-chip.active {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: #111;
+}
+
+.gallery-card[hidden],
+.mini-thumb[hidden] {
+  display: none !important;
+}
+
+.collection-credit {
+  text-align: center;
+  margin-top: 28px;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: rgba(255,255,255,0.35);
+}
+
 /* ─── Pricing (old simple grid kept for reference) ─────────── */
 .pricing-grid {
   display: grid;
@@ -714,9 +777,19 @@ section.section {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 8px;
-  max-height: 240px;
+  max-height: 320px;
   overflow-y: auto;
   padding-right: 2px;
+}
+
+.mini-filters {
+  margin: 0 0 12px;
+  gap: 6px;
+}
+
+.mini-filters .filter-chip {
+  font-size: 10px;
+  padding: 6px 10px;
 }
 .mini-gallery::-webkit-scrollbar { width: 4px; }
 .mini-gallery::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
@@ -1149,6 +1222,7 @@ footer {
 
   /* Chips smaller text */
   .chip { font-size: 12px; padding: 7px 13px; }
+  .filter-chip { font-size: 10px; padding: 7px 11px; }
 
   /* Mini gallery 3 col */
   .mini-gallery { grid-template-columns: repeat(3, 1fr); }

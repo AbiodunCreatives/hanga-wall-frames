@@ -127,56 +127,213 @@
   <h2 class="section-title">Browse & Customise</h2>
   <p class="section-sub">Every image is available in any size and frame style. Click one to start customising.</p>
 
+  <div class="gallery-filters" role="tablist" aria-label="Filter gallery">
+    <button type="button" class="filter-chip active" data-filter="all" onclick="filterGallery('all', this)">All</button>
+    <button type="button" class="filter-chip" data-filter="motivational" onclick="filterGallery('motivational', this)">Motivational</button>
+    <button type="button" class="filter-chip" data-filter="classic-art" onclick="filterGallery('classic-art', this)">Classic Art</button>
+    <button type="button" class="filter-chip" data-filter="nature" onclick="filterGallery('nature', this)">Nature &amp; Botanical</button>
+    <button type="button" class="filter-chip" data-filter="landscapes" onclick="filterGallery('landscapes', this)">Landscapes</button>
+    <button type="button" class="filter-chip" data-filter="japanese" onclick="filterGallery('japanese', this)">Japanese</button>
+    <button type="button" class="filter-chip" data-filter="abstract" onclick="filterGallery('abstract', this)">Abstract</button>
+    <button type="button" class="filter-chip" data-filter="portraits" onclick="filterGallery('portraits', this)">Portraits</button>
+    <button type="button" class="filter-chip" data-filter="urban" onclick="filterGallery('urban', this)">Urban</button>
+  </div>
+
   <div class="gallery-grid">
-    <div class="gallery-card" onclick="goCustomize('build-in-silence')">
+    <div class="gallery-card" data-category="motivational" onclick="goCustomize('build-in-silence')">
       <img class="gallery-card-img" src="images/build-in-silence.jpg" alt="Build in Silence – motivational mountain quote print" loading="lazy">
       <div class="gallery-card-body"><h3>Build in Silence</h3><p>Motivational · Monochrome</p></div>
     </div>
-    <div class="gallery-card" onclick="goCustomize('iron-mike')">
+    <div class="gallery-card" data-category="portraits" onclick="goCustomize('iron-mike')">
       <img class="gallery-card-img" src="images/iron-mike.jpg" alt="Iron Mike – dramatic B&W portrait print" loading="lazy">
       <div class="gallery-card-body"><h3>Iron Mike</h3><p>Bold portrait · B&amp;W</p></div>
     </div>
-    <div class="gallery-card" onclick="goCustomize('alpine-bloom')">
+    <div class="gallery-card" data-category="nature" onclick="goCustomize('alpine-bloom')">
       <img class="gallery-card-img" src="images/alpine-bloom.jpg" alt="Alpine Bloom – blue flowers and mountain landscape" loading="lazy">
       <div class="gallery-card-body"><h3>Alpine Bloom</h3><p>Nature · Floral</p></div>
     </div>
-    <div class="gallery-card" onclick="goCustomize('one-percent')">
+    <div class="gallery-card" data-category="motivational" onclick="goCustomize('one-percent')">
       <img class="gallery-card-img" src="images/one-percent.jpg" alt="1% Better Every Day – motivational typography print" loading="lazy">
       <div class="gallery-card-body"><h3>1% Better Every Day</h3><p>Typography · Motivational</p></div>
     </div>
-    <div class="gallery-card" onclick="goCustomize('city-architecture')">
+    <div class="gallery-card" data-category="urban" onclick="goCustomize('city-architecture')">
       <img class="gallery-card-img" src="images/city-architecture.jpg" alt="City Architecture – dark ornate building facade" loading="lazy">
       <div class="gallery-card-body"><h3>City Architecture</h3><p>Urban · Dark aesthetic</p></div>
     </div>
-    <div class="gallery-card" onclick="goCustomize('joyful-soul')">
+    <div class="gallery-card" data-category="portraits" onclick="goCustomize('joyful-soul')">
       <img class="gallery-card-img" src="images/joyful-soul.jpg" alt="Joyful Soul – B&W portrait of man laughing" loading="lazy">
       <div class="gallery-card-body"><h3>Joyful Soul</h3><p>Portrait · B&amp;W</p></div>
     </div>
-    <div class="gallery-card" onclick="goCustomize('burna-boy')">
+    <div class="gallery-card" data-category="portraits" onclick="goCustomize('burna-boy')">
       <img class="gallery-card-img" src="images/burna-boy.jpg" alt="Burna Boy – in blue supercar" loading="lazy">
       <div class="gallery-card-body"><h3>Burna Boy</h3><p>Celebrity · Vibrant</p></div>
     </div>
-    <div class="gallery-card" onclick="goCustomize('classic-roadster')">
+    <div class="gallery-card" data-category="urban" onclick="goCustomize('classic-roadster')">
       <img class="gallery-card-img" src="images/classic-roadster.jpg" alt="Classic Roadster – black bicycle minimal photography" loading="lazy">
       <div class="gallery-card-body"><h3>Classic Roadster</h3><p>Minimal · B&amp;W</p></div>
     </div>
-    <div class="gallery-card" onclick="goCustomize('he-left-99')">
+    <div class="gallery-card" data-category="motivational" onclick="goCustomize('he-left-99')">
       <img class="gallery-card-img" src="images/he-left-99.jpg" alt="He Left the 99 – Luke 15 scripture art" loading="lazy">
       <div class="gallery-card-body"><h3>He Left the 99</h3><p>Scripture · Faith art</p></div>
     </div>
-    <div class="gallery-card" onclick="goCustomize('alpine-meadow')">
+    <div class="gallery-card" data-category="landscapes nature" onclick="goCustomize('alpine-meadow')">
       <img class="gallery-card-img" src="images/alpine-meadow.jpg" alt="Alpine Meadow – vibrant green valley and mountains" loading="lazy">
       <div class="gallery-card-body"><h3>Alpine Meadow</h3><p>Nature · Landscape</p></div>
     </div>
-    <div class="gallery-card" onclick="goCustomize('dont-overthink')">
+    <div class="gallery-card" data-category="motivational" onclick="goCustomize('dont-overthink')">
       <img class="gallery-card-img" src="images/dont-overthink.jpg" alt="Don't Overthink It – bold graphic poster" loading="lazy">
       <div class="gallery-card-body"><h3>Don't Overthink It</h3><p>Graphic art · Bold</p></div>
     </div>
-    <div class="gallery-card" onclick="goCustomize('if-you-want')">
+    <div class="gallery-card" data-category="motivational" onclick="goCustomize('if-you-want')">
       <img class="gallery-card-img" src="images/if-you-want.jpg" alt="If You Want You Can – boho motivational art" loading="lazy">
       <div class="gallery-card-body"><h3>If You Want, You Can</h3><p>Boho · Motivational</p></div>
     </div>
+    <div class="gallery-card" data-category="japanese landscapes" onclick="goCustomize('hokusai-great-wave')">
+      <img class="gallery-card-img" src="images/collection/hokusai-great-wave.jpg" alt="The Great Wave – Katsushika Hokusai" loading="lazy">
+      <div class="gallery-card-body"><h3>The Great Wave</h3><p>Katsushika Hokusai · Japanese</p></div>
+    </div>
+    <div class="gallery-card" data-category="portraits classic-art" onclick="goCustomize('van-gogh-self-portrait')">
+      <img class="gallery-card-img" src="images/collection/van-gogh-self-portrait.jpg" alt="Self-Portrait – Vincent van Gogh" loading="lazy">
+      <div class="gallery-card-body"><h3>Self-Portrait</h3><p>Vincent van Gogh · Portraits</p></div>
+    </div>
+    <div class="gallery-card" data-category="nature classic-art" onclick="goCustomize('monet-water-lilies')">
+      <img class="gallery-card-img" src="images/collection/monet-water-lilies.jpg" alt="Water Lilies – Claude Monet" loading="lazy">
+      <div class="gallery-card-body"><h3>Water Lilies</h3><p>Claude Monet · Nature &amp; Botanical</p></div>
+    </div>
+    <div class="gallery-card" data-category="portraits classic-art" onclick="goCustomize('van-gogh-straw-hat')">
+      <img class="gallery-card-img" src="images/collection/van-gogh-straw-hat.jpg" alt="Self-Portrait with a Straw Hat – Vincent van Gogh" loading="lazy">
+      <div class="gallery-card-body"><h3>Self-Portrait with a Straw Hat</h3><p>Vincent van Gogh · Portraits</p></div>
+    </div>
+    <div class="gallery-card" data-category="japanese landscapes" onclick="goCustomize('hokusai-red-fuji')">
+      <img class="gallery-card-img" src="images/collection/hokusai-red-fuji.jpg" alt="Red Fuji – Katsushika Hokusai" loading="lazy">
+      <div class="gallery-card-body"><h3>Red Fuji</h3><p>Katsushika Hokusai · Japanese</p></div>
+    </div>
+    <div class="gallery-card" data-category="nature classic-art" onclick="goCustomize('van-gogh-roses')">
+      <img class="gallery-card-img" src="images/collection/van-gogh-roses.jpg" alt="Roses – Vincent van Gogh" loading="lazy">
+      <div class="gallery-card-body"><h3>Roses</h3><p>Vincent van Gogh · Nature &amp; Botanical</p></div>
+    </div>
+    <div class="gallery-card" data-category="portraits classic-art" onclick="goCustomize('renoir-two-sisters')">
+      <img class="gallery-card-img" src="images/collection/renoir-two-sisters.jpg" alt="Two Sisters – Pierre-Auguste Renoir" loading="lazy">
+      <div class="gallery-card-body"><h3>Two Sisters</h3><p>Pierre-Auguste Renoir · Portraits</p></div>
+    </div>
+    <div class="gallery-card" data-category="portraits classic-art" onclick="goCustomize('vermeer-water-pitcher')">
+      <img class="gallery-card-img" src="images/collection/vermeer-water-pitcher.jpg" alt="Woman with a Water Pitcher – Johannes Vermeer" loading="lazy">
+      <div class="gallery-card-body"><h3>Woman with a Water Pitcher</h3><p>Johannes Vermeer · Portraits</p></div>
+    </div>
+    <div class="gallery-card" data-category="classic-art" onclick="goCustomize('van-gogh-bedroom')">
+      <img class="gallery-card-img" src="images/collection/van-gogh-bedroom.jpg" alt="The Bedroom – Vincent van Gogh" loading="lazy">
+      <div class="gallery-card-body"><h3>The Bedroom</h3><p>Vincent van Gogh · Classic Art</p></div>
+    </div>
+    <div class="gallery-card" data-category="nature classic-art" onclick="goCustomize('van-gogh-irises')">
+      <img class="gallery-card-img" src="images/collection/van-gogh-irises.jpg" alt="Irises – Vincent van Gogh" loading="lazy">
+      <div class="gallery-card-body"><h3>Irises</h3><p>Vincent van Gogh · Nature &amp; Botanical</p></div>
+    </div>
+    <div class="gallery-card" data-category="japanese urban landscapes" onclick="goCustomize('hiroshige-sudden-shower')">
+      <img class="gallery-card-img" src="images/collection/hiroshige-sudden-shower.jpg" alt="Sudden Shower over Shin-Ōhashi – Utagawa Hiroshige" loading="lazy">
+      <div class="gallery-card-body"><h3>Sudden Shower over Shin-Ōhashi</h3><p>Utagawa Hiroshige · Japanese</p></div>
+    </div>
+    <div class="gallery-card" data-category="landscapes nature classic-art" onclick="goCustomize('van-gogh-cypresses')">
+      <img class="gallery-card-img" src="images/collection/van-gogh-cypresses.jpg" alt="Cypresses – Vincent van Gogh" loading="lazy">
+      <div class="gallery-card-body"><h3>Cypresses</h3><p>Vincent van Gogh · Landscapes</p></div>
+    </div>
+    <div class="gallery-card" data-category="nature" onclick="goCustomize('redoute-empress-rose')">
+      <img class="gallery-card-img" src="images/collection/redoute-empress-rose.jpg" alt="Empress Josephine Rose – Pierre-Joseph Redouté" loading="lazy">
+      <div class="gallery-card-body"><h3>Empress Josephine Rose</h3><p>Pierre-Joseph Redouté · Nature &amp; Botanical</p></div>
+    </div>
+    <div class="gallery-card" data-category="nature classic-art" onclick="goCustomize('van-gogh-sunflowers')">
+      <img class="gallery-card-img" src="images/collection/van-gogh-sunflowers.jpg" alt="Sunflowers – Vincent van Gogh" loading="lazy">
+      <div class="gallery-card-body"><h3>Sunflowers</h3><p>Vincent van Gogh · Nature &amp; Botanical</p></div>
+    </div>
+    <div class="gallery-card" data-category="landscapes classic-art" onclick="goCustomize('van-gogh-wheat-field')">
+      <img class="gallery-card-img" src="images/collection/van-gogh-wheat-field.jpg" alt="Wheat Field with Cypresses – Vincent van Gogh" loading="lazy">
+      <div class="gallery-card-body"><h3>Wheat Field with Cypresses</h3><p>Vincent van Gogh · Landscapes</p></div>
+    </div>
+    <div class="gallery-card" data-category="classic-art portraits" onclick="goCustomize('mucha-zodiac')">
+      <img class="gallery-card-img" src="images/collection/mucha-zodiac.jpg" alt="The Zodiac – Alphonse Mucha" loading="lazy">
+      <div class="gallery-card-body"><h3>The Zodiac</h3><p>Alphonse Mucha · Classic Art</p></div>
+    </div>
+    <div class="gallery-card" data-category="portraits classic-art" onclick="goCustomize('gauguin-tehamana')">
+      <img class="gallery-card-img" src="images/collection/gauguin-tehamana.jpg" alt="Tehamana – Paul Gauguin" loading="lazy">
+      <div class="gallery-card-body"><h3>Tehamana</h3><p>Paul Gauguin · Portraits</p></div>
+    </div>
+    <div class="gallery-card" data-category="urban classic-art landscapes" onclick="goCustomize('caillebotte-paris-street')">
+      <img class="gallery-card-img" src="images/collection/caillebotte-paris-street.jpg" alt="Paris Street, Rainy Day – Gustave Caillebotte" loading="lazy">
+      <div class="gallery-card-body"><h3>Paris Street, Rainy Day</h3><p>Gustave Caillebotte · Urban</p></div>
+    </div>
+    <div class="gallery-card" data-category="nature landscapes classic-art" onclick="goCustomize('van-gogh-orchard')">
+      <img class="gallery-card-img" src="images/collection/van-gogh-orchard.jpg" alt="The Flowering Orchard – Vincent van Gogh" loading="lazy">
+      <div class="gallery-card-body"><h3>The Flowering Orchard</h3><p>Vincent van Gogh · Nature &amp; Botanical</p></div>
+    </div>
+    <div class="gallery-card" data-category="nature landscapes classic-art" onclick="goCustomize('monet-lily-pond')">
+      <img class="gallery-card-img" src="images/collection/monet-lily-pond.jpg" alt="Water Lily Pond – Claude Monet" loading="lazy">
+      <div class="gallery-card-body"><h3>Water Lily Pond</h3><p>Claude Monet · Nature &amp; Botanical</p></div>
+    </div>
+    <div class="gallery-card" data-category="japanese nature" onclick="goCustomize('hokusai-cranes')">
+      <img class="gallery-card-img" src="images/collection/hokusai-cranes.jpg" alt="Cranes on a Pine – Katsushika Hokusai" loading="lazy">
+      <div class="gallery-card-body"><h3>Cranes on a Pine</h3><p>Katsushika Hokusai · Japanese</p></div>
+    </div>
+    <div class="gallery-card" data-category="portraits classic-art" onclick="goCustomize('rembrandt-gold-chain')">
+      <img class="gallery-card-img" src="images/collection/rembrandt-gold-chain.jpg" alt="Old Man with a Gold Chain – Rembrandt" loading="lazy">
+      <div class="gallery-card-body"><h3>Old Man with a Gold Chain</h3><p>Rembrandt · Portraits</p></div>
+    </div>
+    <div class="gallery-card" data-category="landscapes classic-art" onclick="goCustomize('monet-stacks-of-wheat')">
+      <img class="gallery-card-img" src="images/collection/monet-stacks-of-wheat.jpg" alt="Stacks of Wheat – Claude Monet" loading="lazy">
+      <div class="gallery-card-body"><h3>Stacks of Wheat</h3><p>Claude Monet · Landscapes</p></div>
+    </div>
+    <div class="gallery-card" data-category="portraits classic-art" onclick="goCustomize('vermeer-young-woman')">
+      <img class="gallery-card-img" src="images/collection/vermeer-young-woman.jpg" alt="Study of a Young Woman – Johannes Vermeer" loading="lazy">
+      <div class="gallery-card-body"><h3>Study of a Young Woman</h3><p>Johannes Vermeer · Portraits</p></div>
+    </div>
+    <div class="gallery-card" data-category="landscapes classic-art" onclick="goCustomize('monet-cliff-walk')">
+      <img class="gallery-card-img" src="images/collection/monet-cliff-walk.jpg" alt="Cliff Walk at Pourville – Claude Monet" loading="lazy">
+      <div class="gallery-card-body"><h3>Cliff Walk at Pourville</h3><p>Claude Monet · Landscapes</p></div>
+    </div>
+    <div class="gallery-card" data-category="nature classic-art" onclick="goCustomize('cezanne-tulips')">
+      <img class="gallery-card-img" src="images/collection/cezanne-tulips.jpg" alt="The Vase of Tulips – Paul Cézanne" loading="lazy">
+      <div class="gallery-card-body"><h3>The Vase of Tulips</h3><p>Paul Cézanne · Nature &amp; Botanical</p></div>
+    </div>
+    <div class="gallery-card" data-category="japanese urban" onclick="goCustomize('hiroshige-fireworks')">
+      <img class="gallery-card-img" src="images/collection/hiroshige-fireworks.jpg" alt="Fireworks at Ryōgoku – Utagawa Hiroshige" loading="lazy">
+      <div class="gallery-card-body"><h3>Fireworks at Ryōgoku</h3><p>Utagawa Hiroshige · Japanese</p></div>
+    </div>
+    <div class="gallery-card" data-category="urban classic-art" onclick="goCustomize('monet-saint-lazare')">
+      <img class="gallery-card-img" src="images/collection/monet-saint-lazare.jpg" alt="Gare Saint-Lazare – Claude Monet" loading="lazy">
+      <div class="gallery-card-body"><h3>Gare Saint-Lazare</h3><p>Claude Monet · Urban</p></div>
+    </div>
+    <div class="gallery-card" data-category="japanese landscapes" onclick="goCustomize('hiroshige-jumantsubo')">
+      <img class="gallery-card-img" src="images/collection/hiroshige-jumantsubo.jpg" alt="Eagle over the Jumantsubo Plain – Utagawa Hiroshige" loading="lazy">
+      <div class="gallery-card-body"><h3>Eagle over the Jumantsubo Plain</h3><p>Utagawa Hiroshige · Japanese</p></div>
+    </div>
+    <div class="gallery-card" data-category="nature" onclick="goCustomize('redoute-crown-imperial')">
+      <img class="gallery-card-img" src="images/collection/redoute-crown-imperial.jpg" alt="Crown Imperial – Pierre-Joseph Redouté" loading="lazy">
+      <div class="gallery-card-body"><h3>Crown Imperial</h3><p>Pierre-Joseph Redouté · Nature &amp; Botanical</p></div>
+    </div>
+    <div class="gallery-card" data-category="japanese landscapes" onclick="goCustomize('hokusai-storm-fuji')">
+      <img class="gallery-card-img" src="images/collection/hokusai-storm-fuji.jpg" alt="Storm below Mount Fuji – Katsushika Hokusai" loading="lazy">
+      <div class="gallery-card-body"><h3>Storm below Mount Fuji</h3><p>Katsushika Hokusai · Japanese</p></div>
+    </div>
+    <div class="gallery-card" data-category="classic-art landscapes" onclick="goCustomize('seurat-grande-jatte')">
+      <img class="gallery-card-img" src="images/collection/seurat-grande-jatte.jpg" alt="A Sunday on La Grande Jatte – Georges Seurat" loading="lazy">
+      <div class="gallery-card-body"><h3>A Sunday on La Grande Jatte</h3><p>Georges Seurat · Classic Art</p></div>
+    </div>
+    <div class="gallery-card" data-category="abstract" onclick="goCustomize('kandinsky-improvisation-30')">
+      <img class="gallery-card-img" src="images/collection/kandinsky-improvisation-30.jpg" alt="Improvisation No. 30 – Vasily Kandinsky" loading="lazy">
+      <div class="gallery-card-body"><h3>Improvisation No. 30</h3><p>Vasily Kandinsky · Abstract</p></div>
+    </div>
+    <div class="gallery-card" data-category="nature" onclick="goCustomize('redoute-gloriosa')">
+      <img class="gallery-card-img" src="images/collection/redoute-gloriosa.jpg" alt="Gloriosa Superba – Pierre-Joseph Redouté" loading="lazy">
+      <div class="gallery-card-body"><h3>Gloriosa Superba</h3><p>Pierre-Joseph Redouté · Nature &amp; Botanical</p></div>
+    </div>
+    <div class="gallery-card" data-category="portraits" onclick="goCustomize('fayum-woman-in-red')">
+      <img class="gallery-card-img" src="images/collection/fayum-woman-in-red.jpg" alt="Woman in Red – Fayum, Roman Egypt" loading="lazy">
+      <div class="gallery-card-body"><h3>Woman in Red</h3><p>Fayum, Roman Egypt · Portraits</p></div>
+    </div>
+    <div class="gallery-card" data-category="abstract" onclick="goCustomize('mondrian-lozenge')">
+      <img class="gallery-card-img" src="images/collection/mondrian-lozenge.jpg" alt="Lozenge Composition – Piet Mondrian" loading="lazy">
+      <div class="gallery-card-body"><h3>Lozenge Composition</h3><p>Piet Mondrian · Abstract</p></div>
+    </div>
   </div>
+  <p class="collection-credit">Classic works from The Met and the Art Institute of Chicago. Public domain.</p>
 
   <div style="text-align:center; margin-top:44px">
     <p style="color:rgba(255,255,255,0.55); margin-bottom:14px; font-size:15px">Have a personal photo in mind?</p>
@@ -364,6 +521,19 @@
 
 <script>
 function goCustomize(id) { window.location.href = 'customize.html?image=' + id; }
+
+function filterGallery(category, btn) {
+  const root = btn.closest('.gallery-section') || document;
+  root.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  let shown = 0;
+  root.querySelectorAll('.gallery-card').forEach(card => {
+    const cats = (card.dataset.category || '').split(/\s+/);
+    const show = category === 'all' || cats.includes(category);
+    card.hidden = !show;
+    if (show) shown += 1;
+  });
+}
 
 // Hamburger
 const toggle = document.getElementById('navToggle');
