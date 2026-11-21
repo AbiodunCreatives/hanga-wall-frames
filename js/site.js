@@ -8,10 +8,10 @@ window.HANGA = {
 
   // TODO(owner): your WhatsApp number in international format, digits only,
   // e.g. '2348012345678'. Leave '' to hide every WhatsApp button and link.
-  whatsappNumber: '',
+  whatsappNumber: '2348100048838',
 
   // TODO(owner): your Instagram handle without the @, e.g. 'hanga.ng'.
-  instagramHandle: '',
+  instagramHandle: 'hangaframes_',
 
   // TODO(owner): Paystack PUBLIC key (starts with pk_live_ or pk_test_).
   // Public keys are safe to put here; never put the secret key (sk_...) in this file.
