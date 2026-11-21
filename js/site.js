@@ -15,8 +15,9 @@ window.HANGA = {
 
   // TODO(owner): Paystack PUBLIC key (starts with pk_live_ or pk_test_).
   // Public keys are safe to put here; never put the secret key (sk_...) in this file.
-  // While this is empty, card payment is hidden and orders are sent to you
-  // as order requests that you confirm by WhatsApp or email.
+  // NOTE: checkout currently ignores this key. Paystack needs a customer email
+  // and the order form only asks for name, phone and delivery address, so card
+  // payment stays off until an email approach is decided (see checkout.html).
   paystackPublicKey: '',
 
   // TODO(owner): the bank account customers should pay into.

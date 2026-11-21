@@ -137,9 +137,7 @@ const summary = [
   '',
   'Name: ' + (orderData.name || ''),
   'Phone: ' + (orderData.phone || ''),
-  'Email: ' + (orderData.email || ''),
-  'Delivery address: ' + [orderData.address, orderData.city, orderData.state].filter(Boolean).join(', '),
-  orderData.note ? 'Note: ' + orderData.note : ''
+  'Delivery address: ' + (orderData.address || '')
 ].filter((l, i, a) => l !== '' || i === 6).join('\n');
 
 document.getElementById('sendEmail').href = HANGA.mailtoLink('New Hanga order ' + ref, 'Hi Hanga,\n\nHere is my order:\n\n' + summary + '\n');

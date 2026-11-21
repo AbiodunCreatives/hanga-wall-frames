@@ -10,7 +10,7 @@ Live: https://hanga-frames.vercel.app
 | --- | --- |
 | `index.html` | Home: hero, how it works, gallery, sizes & prices, reviews, delivery & FAQs |
 | `customize.html` | Frame builder with live room preview (`?image=<id>`, `?size=16x20`, `?tab=upload`) |
-| `checkout.html` | Contact + delivery details and payment |
+| `checkout.html` | Name, phone and delivery address, then place order |
 | `confirmation.html` | Order reference + "send us your order" (WhatsApp / email) |
 | `about.html` | Brand story and values |
 | `404.html` | Not-found page (served automatically by Vercel) |
@@ -21,12 +21,12 @@ All contact and payment details live in one place, `window.HANGA` at the top of 
 
 - `whatsappNumber` – international format, digits only (e.g. `2348012345678`). Turns on the WhatsApp footer link, "Order on WhatsApp" in the builder and "Send on WhatsApp" on the confirmation page.
 - `instagramHandle` – turns on the Instagram footer link.
-- `paystackPublicKey` – your Paystack **public** key (`pk_live_…`). Turns on card payment at checkout. Never put the secret key in this repo.
+- `paystackPublicKey` – your Paystack **public** key (`pk_live_…`). Not used yet: the order form only asks for name, phone and delivery address, and Paystack needs a customer email, so card payment is off until that's decided. Never put the secret key in this repo.
 - `bank` – account details for manual transfer; shown only when `confirmed: true`.
 
 Anything left empty is hidden, so the site never shows a dead link or fake payment.
 
-> The site has no backend. Orders reach Hanga when the customer taps **Send on WhatsApp** or **Send by Email** on the confirmation page (or pays through Paystack, which records the order in your Paystack dashboard).
+> The site has no backend. Orders reach Hanga when the customer taps **Send on WhatsApp** or **Send by Email** on the confirmation page .
 
 ## Images
 

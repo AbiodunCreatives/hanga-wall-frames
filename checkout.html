@@ -69,71 +69,25 @@
   <div class="checkout-form-col">
     <h2>Complete Your Order</h2>
 
-    <!-- Contact -->
+    <!-- Your details: kept to the three things we need to deliver -->
     <div class="form-section">
-      <h3>Contact Information</h3>
-      <div class="form-row">
-        <div class="form-group">
-          <label for="firstName">First Name</label>
-          <input type="text" id="firstName" autocomplete="given-name" placeholder="Adaeze" required>
-        </div>
-        <div class="form-group">
-          <label for="lastName">Last Name</label>
-          <input type="text" id="lastName" autocomplete="family-name" placeholder="Okafor" required>
-        </div>
-      </div>
+      <h3>Your Details</h3>
       <div class="form-row full">
         <div class="form-group">
-          <label for="email">Email Address</label>
-          <input type="email" id="email" autocomplete="email" placeholder="adaeze@example.com" required>
+          <label for="name">Full Name</label>
+          <input type="text" id="name" autocomplete="name" placeholder="Adaeze Okafor" required>
         </div>
       </div>
       <div class="form-row full">
         <div class="form-group">
           <label for="phone">Phone Number</label>
-          <input type="tel" id="phone" autocomplete="tel" placeholder="+234 800 000 0000" required>
-        </div>
-      </div>
-    </div>
-
-    <!-- Shipping -->
-    <div class="form-section">
-      <h3>Delivery Address</h3>
-      <div class="form-row full">
-        <div class="form-group">
-          <label for="address">Street Address</label>
-          <input type="text" id="address" autocomplete="address-line1" placeholder="12 Admiralty Way" required>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label for="city">City</label>
-          <input type="text" id="city" autocomplete="address-level2" placeholder="Lagos" required>
-        </div>
-        <div class="form-group">
-          <label for="state">State</label>
-          <select id="state" autocomplete="address-level1" required>
-            <option value="">Select state</option>
-            <option>Abia</option><option>Adamawa</option><option>Akwa Ibom</option>
-            <option>Anambra</option><option>Bauchi</option><option>Bayelsa</option>
-            <option>Benue</option><option>Borno</option><option>Cross River</option>
-            <option>Delta</option><option>Ebonyi</option><option>Edo</option>
-            <option>Ekiti</option><option>Enugu</option><option>FCT – Abuja</option>
-            <option>Gombe</option><option>Imo</option><option>Jigawa</option>
-            <option>Kaduna</option><option>Kano</option><option>Katsina</option>
-            <option>Kebbi</option><option>Kogi</option><option>Kwara</option>
-            <option>Lagos</option><option>Nasarawa</option><option>Niger</option>
-            <option>Ogun</option><option>Ondo</option><option>Osun</option>
-            <option>Oyo</option><option>Plateau</option><option>Rivers</option>
-            <option>Sokoto</option><option>Taraba</option><option>Yobe</option>
-            <option>Zamfara</option>
-          </select>
+          <input type="tel" id="phone" autocomplete="tel" inputmode="tel" placeholder="0801 234 5678" required>
         </div>
       </div>
       <div class="form-row full">
         <div class="form-group">
-          <label for="note">Delivery Note (optional)</label>
-          <input type="text" id="note" placeholder="Landmark, instructions, etc.">
+          <label for="address">Delivery Address</label>
+          <textarea id="address" autocomplete="street-address" rows="3" placeholder="House number, street, area, city and state" required></textarea>
         </div>
       </div>
     </div>
@@ -242,12 +196,10 @@ if (order.imageData) {
 
 // ── Payment toggle ─────────────────────────────────────────────
 // Which payment options are switched on is set in js/site.js.
-if (HANGA.paystackPublicKey) {
-  const ps = document.createElement('script');
-  ps.src = 'https://js.paystack.co/v1/inline.js';
-  document.head.appendChild(ps);
-}
-const PAYSTACK_ON = !!HANGA.paystackPublicKey;
+// Card payment (Paystack) is OFF at checkout for now: Paystack needs a customer
+// email and the form only asks for name, phone and address. Even if a Paystack
+// key is set in js/site.js it is ignored here until an email approach is chosen.
+const PAYSTACK_ON = false;
 const BANK_ON     = !!(HANGA.bank && HANGA.bank.confirmed);
 document.querySelectorAll('[data-bank]').forEach(el => { el.textContent = (HANGA.bank || {})[el.dataset.bank] || ''; });
 
@@ -271,7 +223,7 @@ selectPayMethod(activePayMethod);
 
 // ── Validation ─────────────────────────────────────────────────
 function validate() {
-  for (const id of ['firstName','lastName','email','phone','address','city','state']) {
+  for (const id of ['name','phone','address']) {
     const el = document.getElementById(id);
     if (!el.value.trim()) {
       el.style.borderColor = '#e55';
@@ -280,11 +232,6 @@ function validate() {
       el.addEventListener('input', () => el.style.borderColor = '', { once: true });
       return false;
     }
-  }
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(document.getElementById('email').value)) {
-    showToast('Please enter a valid email address.');
-    document.getElementById('email').focus();
-    return false;
   }
   if (document.getElementById('phone').value.replace(/\D/g, '').length < 10) {
     showToast('Please enter a valid phone number.');
@@ -300,9 +247,7 @@ function genRef() { return 'HNG-' + Date.now().toString(36).toUpperCase(); }
 function customerDetails() {
   const v = id => document.getElementById(id).value.trim();
   return {
-    name: v('firstName') + ' ' + v('lastName'),
-    email: v('email'), phone: v('phone'),
-    address: v('address'), city: v('city'), state: v('state'), note: v('note')
+    name: v('name'), phone: v('phone'), address: v('address')
   };
 }
 
@@ -316,26 +261,9 @@ function saveAndConfirm(ref, method) {
 
 function placeOrder() {
   if (!validate()) return;
-  const c   = customerDetails();
-  const ref = genRef();
-
-  if (activePayMethod !== 'paystack' || !PAYSTACK_ON || typeof PaystackPop === 'undefined') {
-    saveAndConfirm(ref, activePayMethod === 'transfer' ? 'transfer' : 'request');
-    return;
-  }
-
-  PaystackPop.setup({
-    key: HANGA.paystackPublicKey, email: c.email, amount: (order.price || 0) * 100, currency: 'NGN', ref,
-    metadata: { custom_fields: [
-      { display_name: 'Customer Name', variable_name: 'customer_name', value: c.name },
-      { display_name: 'Phone',         variable_name: 'phone',         value: c.phone },
-      { display_name: 'Frame Size',    variable_name: 'frame_size',    value: order.size  || '—' },
-      { display_name: 'Frame Style',   variable_name: 'frame_style',   value: order.style || '—' },
-      { display_name: 'Image',         variable_name: 'image_name',    value: order.imageName || '—' }
-    ]},
-    onClose: () => showToast('Payment window closed. Your order was not placed.'),
-    callback: response => saveAndConfirm(response.reference, 'paystack')
-  }).openIframe();
+  // Paystack is switched off (see note above), so every order is saved and the
+  // customer sends it to Hanga from the confirmation page.
+  saveAndConfirm(genRef(), activePayMethod === 'transfer' ? 'transfer' : 'request');
 }
 
 function showToast(msg) {
