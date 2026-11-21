@@ -5,16 +5,37 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Hanga – Make Your Wall Speak</title>
   <meta name="description" content="Custom wall frames designed by you. Choose from our curated gallery or upload your own image — framed to perfection and delivered to your door.">
+  <meta name="theme-color" content="#1a1a1a">
+  <link rel="canonical" href="https://hanga-frames.vercel.app/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Hanga">
+  <meta property="og:title" content="Hanga – Make Your Wall Speak">
+  <meta property="og:description" content="Custom wall frames designed by you. Choose from our curated gallery or upload your own image — framed to perfection and delivered to your door.">
+  <meta property="og:url" content="https://hanga-frames.vercel.app/">
+  <meta property="og:image" content="https://hanga-frames.vercel.app/images/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="en_NG">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Hanga – Make Your Wall Speak">
+  <meta name="twitter:description" content="Custom wall frames designed by you. Choose from our curated gallery or upload your own image — framed to perfection and delivered to your door.">
+  <meta name="twitter:image" content="https://hanga-frames.vercel.app/images/og-image.jpg">
+  <link rel="icon" href="images/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="images/favicon-32.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Lato:wght@300;400;700&display=swap">
   <link rel="stylesheet" href="style.css">
-  <link rel="icon" href="images/favicon.png" type="image/x-icon">
 </head>
 <body>
+<a class="skip-link" href="#main">Skip to content</a>
 
 <!-- ─── Header ─────────────────────────────────────────────── -->
 <header>
   <a href="index.html" class="logo">HANGA<span>.</span></a>
   <nav class="nav-links">
-    <a href="index.html">Home</a>
+    <a href="index.html" aria-current="page">Home</a>
     <a href="about.html">About</a>
     <a href="customize.html" class="btn-nav">Create Your Frame</a>
   </nav>
@@ -23,21 +44,26 @@
   </button>
 </header>
 <nav class="nav-drawer" id="navDrawer">
-  <a href="index.html">Home</a>
+  <a href="index.html" aria-current="page">Home</a>
   <a href="about.html">About</a>
   <a href="customize.html" class="btn-nav-mobile">Create Your Frame</a>
 </nav>
 
 <!-- ─── Hero ───────────────────────────────────────────────── -->
-<section class="hero">
+<section class="hero" id="main" tabindex="-1">
   <div class="hero-content">
     <p class="hero-eyebrow">Custom Wall Frames · Handcrafted in Nigeria</p>
     <h1>Make Your<br>Wall Speak.</h1>
-    <p>Turn any photo, memory, or artwork into a beautifully framed piece that transforms your space. You pick the image. We handle the rest.</p>
+    <p>Turn any photo, memory, or artwork into a beautifully framed piece for your space. You pick the image — we print it, frame it and deliver it to your door.</p>
     <div class="hero-actions">
       <a href="customize.html" class="btn btn-primary">Start Customising</a>
       <a href="#gallery" class="btn btn-outline">Browse Gallery</a>
     </div>
+    <ul class="hero-facts" aria-label="Why Hanga">
+      <li>From ₦8,000</li>
+      <li>6 sizes · black, white or wood</li>
+      <li>Delivered in 2–5 business days</li>
+    </ul>
   </div>
 </section>
 
@@ -125,9 +151,9 @@
 <section class="section gallery-section" id="gallery">
   <span class="section-label">Our collection</span>
   <h2 class="section-title">Browse & Customise</h2>
-  <p class="section-sub">Every image is available in any size and frame style. Click one to start customising.</p>
+  <p class="section-sub">Every image comes in all six sizes and all three frame styles. Tap one to see it framed on a wall.</p>
 
-  <div class="gallery-filters" role="tablist" aria-label="Filter gallery">
+  <div class="gallery-filters" role="group" aria-label="Filter gallery by category">
     <button type="button" class="filter-chip active" data-filter="all" onclick="filterGallery('all', this)">All</button>
     <button type="button" class="filter-chip" data-filter="motivational" onclick="filterGallery('motivational', this)">Motivational</button>
     <button type="button" class="filter-chip" data-filter="classic-art" onclick="filterGallery('classic-art', this)">Classic Art</button>
@@ -140,204 +166,204 @@
   </div>
 
   <div class="gallery-grid">
-    <div class="gallery-card" data-category="motivational" onclick="goCustomize('build-in-silence')">
-      <img class="gallery-card-img" src="images/build-in-silence.jpg" alt="Build in Silence – motivational mountain quote print" loading="lazy">
+    <a class="gallery-card" href="customize.html?image=build-in-silence" data-category="motivational">
+      <img class="gallery-card-img" src="images/thumbs/build-in-silence.jpg" alt="Build in Silence – motivational mountain quote print" loading="lazy" decoding="async">
       <div class="gallery-card-body"><h3>Build in Silence</h3><p>Motivational · Monochrome</p></div>
-    </div>
-    <div class="gallery-card" data-category="portraits" onclick="goCustomize('iron-mike')">
-      <img class="gallery-card-img" src="images/iron-mike.jpg" alt="Iron Mike – dramatic B&W portrait print" loading="lazy">
-      <div class="gallery-card-body"><h3>Iron Mike</h3><p>Bold portrait · B&amp;W</p></div>
-    </div>
-    <div class="gallery-card" data-category="nature" onclick="goCustomize('alpine-bloom')">
-      <img class="gallery-card-img" src="images/alpine-bloom.jpg" alt="Alpine Bloom – blue flowers and mountain landscape" loading="lazy">
+    </a>
+    <a class="gallery-card" href="customize.html?image=iron-mike" data-category="portraits">
+      <img class="gallery-card-img" src="images/thumbs/iron-mike.jpg" alt="Iron Mike – dramatic B&W portrait print" loading="lazy" decoding="async">
+      <div class="gallery-card-body"><h3>Iron Mike</h3><p>Portraits · B&amp;W</p></div>
+    </a>
+    <a class="gallery-card" href="customize.html?image=alpine-bloom" data-category="nature">
+      <img class="gallery-card-img" src="images/thumbs/alpine-bloom.jpg" alt="Alpine Bloom – blue flowers and mountain landscape" loading="lazy" decoding="async">
       <div class="gallery-card-body"><h3>Alpine Bloom</h3><p>Nature · Floral</p></div>
-    </div>
-    <div class="gallery-card" data-category="motivational" onclick="goCustomize('one-percent')">
-      <img class="gallery-card-img" src="images/one-percent.jpg" alt="1% Better Every Day – motivational typography print" loading="lazy">
-      <div class="gallery-card-body"><h3>1% Better Every Day</h3><p>Typography · Motivational</p></div>
-    </div>
-    <div class="gallery-card" data-category="urban" onclick="goCustomize('city-architecture')">
-      <img class="gallery-card-img" src="images/city-architecture.jpg" alt="City Architecture – dark ornate building facade" loading="lazy">
+    </a>
+    <a class="gallery-card" href="customize.html?image=one-percent" data-category="motivational">
+      <img class="gallery-card-img" src="images/thumbs/one-percent.jpg" alt="1% Better Every Day – motivational typography print" loading="lazy" decoding="async">
+      <div class="gallery-card-body"><h3>1% Better Every Day</h3><p>Motivational · Typography</p></div>
+    </a>
+    <a class="gallery-card" href="customize.html?image=city-architecture" data-category="urban">
+      <img class="gallery-card-img" src="images/thumbs/city-architecture.jpg" alt="City Architecture – dark ornate building facade" loading="lazy" decoding="async">
       <div class="gallery-card-body"><h3>City Architecture</h3><p>Urban · Dark aesthetic</p></div>
-    </div>
-    <div class="gallery-card" data-category="portraits" onclick="goCustomize('joyful-soul')">
-      <img class="gallery-card-img" src="images/joyful-soul.jpg" alt="Joyful Soul – B&W portrait of man laughing" loading="lazy">
-      <div class="gallery-card-body"><h3>Joyful Soul</h3><p>Portrait · B&amp;W</p></div>
-    </div>
-    <div class="gallery-card" data-category="portraits" onclick="goCustomize('burna-boy')">
-      <img class="gallery-card-img" src="images/burna-boy.jpg" alt="Burna Boy – in blue supercar" loading="lazy">
-      <div class="gallery-card-body"><h3>Burna Boy</h3><p>Celebrity · Vibrant</p></div>
-    </div>
-    <div class="gallery-card" data-category="urban" onclick="goCustomize('classic-roadster')">
-      <img class="gallery-card-img" src="images/classic-roadster.jpg" alt="Classic Roadster – black bicycle minimal photography" loading="lazy">
-      <div class="gallery-card-body"><h3>Classic Roadster</h3><p>Minimal · B&amp;W</p></div>
-    </div>
-    <div class="gallery-card" data-category="motivational" onclick="goCustomize('he-left-99')">
-      <img class="gallery-card-img" src="images/he-left-99.jpg" alt="He Left the 99 – Luke 15 scripture art" loading="lazy">
-      <div class="gallery-card-body"><h3>He Left the 99</h3><p>Scripture · Faith art</p></div>
-    </div>
-    <div class="gallery-card" data-category="landscapes nature" onclick="goCustomize('alpine-meadow')">
-      <img class="gallery-card-img" src="images/alpine-meadow.jpg" alt="Alpine Meadow – vibrant green valley and mountains" loading="lazy">
-      <div class="gallery-card-body"><h3>Alpine Meadow</h3><p>Nature · Landscape</p></div>
-    </div>
-    <div class="gallery-card" data-category="motivational" onclick="goCustomize('dont-overthink')">
-      <img class="gallery-card-img" src="images/dont-overthink.jpg" alt="Don't Overthink It – bold graphic poster" loading="lazy">
-      <div class="gallery-card-body"><h3>Don't Overthink It</h3><p>Graphic art · Bold</p></div>
-    </div>
-    <div class="gallery-card" data-category="motivational" onclick="goCustomize('if-you-want')">
-      <img class="gallery-card-img" src="images/if-you-want.jpg" alt="If You Want You Can – boho motivational art" loading="lazy">
-      <div class="gallery-card-body"><h3>If You Want, You Can</h3><p>Boho · Motivational</p></div>
-    </div>
-    <div class="gallery-card" data-category="japanese landscapes" onclick="goCustomize('hokusai-great-wave')">
-      <img class="gallery-card-img" src="images/collection/hokusai-great-wave.jpg" alt="The Great Wave – Katsushika Hokusai" loading="lazy">
+    </a>
+    <a class="gallery-card" href="customize.html?image=joyful-soul" data-category="portraits">
+      <img class="gallery-card-img" src="images/thumbs/joyful-soul.jpg" alt="Joyful Soul – B&W portrait of man laughing" loading="lazy" decoding="async">
+      <div class="gallery-card-body"><h3>Joyful Soul</h3><p>Portraits · B&amp;W</p></div>
+    </a>
+    <a class="gallery-card" href="customize.html?image=burna-boy" data-category="portraits">
+      <img class="gallery-card-img" src="images/thumbs/burna-boy.jpg" alt="Burna Boy – in blue supercar" loading="lazy" decoding="async">
+      <div class="gallery-card-body"><h3>Burna Boy</h3><p>Portraits · Vibrant</p></div>
+    </a>
+    <a class="gallery-card" href="customize.html?image=classic-roadster" data-category="urban">
+      <img class="gallery-card-img" src="images/thumbs/classic-roadster.jpg" alt="Classic Roadster – black bicycle minimal photography" loading="lazy" decoding="async">
+      <div class="gallery-card-body"><h3>Classic Roadster</h3><p>Urban · Minimal B&amp;W</p></div>
+    </a>
+    <a class="gallery-card" href="customize.html?image=he-left-99" data-category="motivational">
+      <img class="gallery-card-img" src="images/thumbs/he-left-99.jpg" alt="He Left the 99 – Luke 15 scripture art" loading="lazy" decoding="async">
+      <div class="gallery-card-body"><h3>He Left the 99</h3><p>Motivational · Scripture</p></div>
+    </a>
+    <a class="gallery-card" href="customize.html?image=alpine-meadow" data-category="landscapes nature">
+      <img class="gallery-card-img" src="images/thumbs/alpine-meadow.jpg" alt="Alpine Meadow – vibrant green valley and mountains" loading="lazy" decoding="async">
+      <div class="gallery-card-body"><h3>Alpine Meadow</h3><p>Landscapes · Nature</p></div>
+    </a>
+    <a class="gallery-card" href="customize.html?image=dont-overthink" data-category="motivational">
+      <img class="gallery-card-img" src="images/thumbs/dont-overthink.jpg" alt="Don't Overthink It – bold graphic poster" loading="lazy" decoding="async">
+      <div class="gallery-card-body"><h3>Don't Overthink It</h3><p>Motivational · Graphic art</p></div>
+    </a>
+    <a class="gallery-card" href="customize.html?image=if-you-want" data-category="motivational">
+      <img class="gallery-card-img" src="images/thumbs/if-you-want.jpg" alt="If You Want You Can – boho motivational art" loading="lazy" decoding="async">
+      <div class="gallery-card-body"><h3>If You Want, You Can</h3><p>Motivational · Boho</p></div>
+    </a>
+    <a class="gallery-card" href="customize.html?image=hokusai-great-wave" data-category="japanese landscapes">
+      <img class="gallery-card-img" src="images/thumbs/hokusai-great-wave.jpg" alt="The Great Wave – Katsushika Hokusai" loading="lazy" decoding="async">
       <div class="gallery-card-body"><h3>The Great Wave</h3><p>Katsushika Hokusai · Japanese</p></div>
-    </div>
-    <div class="gallery-card" data-category="portraits classic-art" onclick="goCustomize('van-gogh-self-portrait')">
-      <img class="gallery-card-img" src="images/collection/van-gogh-self-portrait.jpg" alt="Self-Portrait – Vincent van Gogh" loading="lazy">
+    </a>
+    <a class="gallery-card" href="customize.html?image=van-gogh-self-portrait" data-category="portraits classic-art">
+      <img class="gallery-card-img" src="images/thumbs/van-gogh-self-portrait.jpg" alt="Self-Portrait – Vincent van Gogh" loading="lazy" decoding="async">
       <div class="gallery-card-body"><h3>Self-Portrait</h3><p>Vincent van Gogh · Portraits</p></div>
-    </div>
-    <div class="gallery-card" data-category="nature classic-art" onclick="goCustomize('monet-water-lilies')">
-      <img class="gallery-card-img" src="images/collection/monet-water-lilies.jpg" alt="Water Lilies – Claude Monet" loading="lazy">
+    </a>
+    <a class="gallery-card" href="customize.html?image=monet-water-lilies" data-category="nature classic-art">
+      <img class="gallery-card-img" src="images/thumbs/monet-water-lilies.jpg" alt="Water Lilies – Claude Monet" loading="lazy" decoding="async">
       <div class="gallery-card-body"><h3>Water Lilies</h3><p>Claude Monet · Nature &amp; Botanical</p></div>
-    </div>
-    <div class="gallery-card" data-category="portraits classic-art" onclick="goCustomize('van-gogh-straw-hat')">
-      <img class="gallery-card-img" src="images/collection/van-gogh-straw-hat.jpg" alt="Self-Portrait with a Straw Hat – Vincent van Gogh" loading="lazy">
+    </a>
+    <a class="gallery-card" href="customize.html?image=van-gogh-straw-hat" data-category="portraits classic-art">
+      <img class="gallery-card-img" src="images/thumbs/van-gogh-straw-hat.jpg" alt="Self-Portrait with a Straw Hat – Vincent van Gogh" loading="lazy" decoding="async">
       <div class="gallery-card-body"><h3>Self-Portrait with a Straw Hat</h3><p>Vincent van Gogh · Portraits</p></div>
-    </div>
-    <div class="gallery-card" data-category="japanese landscapes" onclick="goCustomize('hokusai-red-fuji')">
-      <img class="gallery-card-img" src="images/collection/hokusai-red-fuji.jpg" alt="Red Fuji – Katsushika Hokusai" loading="lazy">
+    </a>
+    <a class="gallery-card" href="customize.html?image=hokusai-red-fuji" data-category="japanese landscapes">
+      <img class="gallery-card-img" src="images/thumbs/hokusai-red-fuji.jpg" alt="Red Fuji – Katsushika Hokusai" loading="lazy" decoding="async">
       <div class="gallery-card-body"><h3>Red Fuji</h3><p>Katsushika Hokusai · Japanese</p></div>
-    </div>
-    <div class="gallery-card" data-category="nature classic-art" onclick="goCustomize('van-gogh-roses')">
-      <img class="gallery-card-img" src="images/collection/van-gogh-roses.jpg" alt="Roses – Vincent van Gogh" loading="lazy">
+    </a>
+    <a class="gallery-card" href="customize.html?image=van-gogh-roses" data-category="nature classic-art">
+      <img class="gallery-card-img" src="images/thumbs/van-gogh-roses.jpg" alt="Roses – Vincent van Gogh" loading="lazy" decoding="async">
       <div class="gallery-card-body"><h3>Roses</h3><p>Vincent van Gogh · Nature &amp; Botanical</p></div>
-    </div>
-    <div class="gallery-card" data-category="portraits classic-art" onclick="goCustomize('renoir-two-sisters')">
-      <img class="gallery-card-img" src="images/collection/renoir-two-sisters.jpg" alt="Two Sisters – Pierre-Auguste Renoir" loading="lazy">
+    </a>
+    <a class="gallery-card" href="customize.html?image=renoir-two-sisters" data-category="portraits classic-art">
+      <img class="gallery-card-img" src="images/thumbs/renoir-two-sisters.jpg" alt="Two Sisters – Pierre-Auguste Renoir" loading="lazy" decoding="async">
       <div class="gallery-card-body"><h3>Two Sisters</h3><p>Pierre-Auguste Renoir · Portraits</p></div>
-    </div>
-    <div class="gallery-card" data-category="portraits classic-art" onclick="goCustomize('vermeer-water-pitcher')">
-      <img class="gallery-card-img" src="images/collection/vermeer-water-pitcher.jpg" alt="Woman with a Water Pitcher – Johannes Vermeer" loading="lazy">
+    </a>
+    <a class="gallery-card" href="customize.html?image=vermeer-water-pitcher" data-category="portraits classic-art">
+      <img class="gallery-card-img" src="images/thumbs/vermeer-water-pitcher.jpg" alt="Woman with a Water Pitcher – Johannes Vermeer" loading="lazy" decoding="async">
       <div class="gallery-card-body"><h3>Woman with a Water Pitcher</h3><p>Johannes Vermeer · Portraits</p></div>
-    </div>
-    <div class="gallery-card" data-category="classic-art" onclick="goCustomize('van-gogh-bedroom')">
-      <img class="gallery-card-img" src="images/collection/van-gogh-bedroom.jpg" alt="The Bedroom – Vincent van Gogh" loading="lazy">
+    </a>
+    <a class="gallery-card" href="customize.html?image=van-gogh-bedroom" data-category="classic-art">
+      <img class="gallery-card-img" src="images/thumbs/van-gogh-bedroom.jpg" alt="The Bedroom – Vincent van Gogh" loading="lazy" decoding="async">
       <div class="gallery-card-body"><h3>The Bedroom</h3><p>Vincent van Gogh · Classic Art</p></div>
-    </div>
-    <div class="gallery-card" data-category="nature classic-art" onclick="goCustomize('van-gogh-irises')">
-      <img class="gallery-card-img" src="images/collection/van-gogh-irises.jpg" alt="Irises – Vincent van Gogh" loading="lazy">
+    </a>
+    <a class="gallery-card" href="customize.html?image=van-gogh-irises" data-category="nature classic-art">
+      <img class="gallery-card-img" src="images/thumbs/van-gogh-irises.jpg" alt="Irises – Vincent van Gogh" loading="lazy" decoding="async">
       <div class="gallery-card-body"><h3>Irises</h3><p>Vincent van Gogh · Nature &amp; Botanical</p></div>
-    </div>
-    <div class="gallery-card" data-category="japanese urban landscapes" onclick="goCustomize('hiroshige-sudden-shower')">
-      <img class="gallery-card-img" src="images/collection/hiroshige-sudden-shower.jpg" alt="Sudden Shower over Shin-Ōhashi – Utagawa Hiroshige" loading="lazy">
+    </a>
+    <a class="gallery-card" href="customize.html?image=hiroshige-sudden-shower" data-category="japanese urban landscapes">
+      <img class="gallery-card-img" src="images/thumbs/hiroshige-sudden-shower.jpg" alt="Sudden Shower over Shin-Ōhashi – Utagawa Hiroshige" loading="lazy" decoding="async">
       <div class="gallery-card-body"><h3>Sudden Shower over Shin-Ōhashi</h3><p>Utagawa Hiroshige · Japanese</p></div>
-    </div>
-    <div class="gallery-card" data-category="landscapes nature classic-art" onclick="goCustomize('van-gogh-cypresses')">
-      <img class="gallery-card-img" src="images/collection/van-gogh-cypresses.jpg" alt="Cypresses – Vincent van Gogh" loading="lazy">
+    </a>
+    <a class="gallery-card" href="customize.html?image=van-gogh-cypresses" data-category="landscapes nature classic-art">
+      <img class="gallery-card-img" src="images/thumbs/van-gogh-cypresses.jpg" alt="Cypresses – Vincent van Gogh" loading="lazy" decoding="async">
       <div class="gallery-card-body"><h3>Cypresses</h3><p>Vincent van Gogh · Landscapes</p></div>
-    </div>
-    <div class="gallery-card" data-category="nature" onclick="goCustomize('redoute-empress-rose')">
-      <img class="gallery-card-img" src="images/collection/redoute-empress-rose.jpg" alt="Empress Josephine Rose – Pierre-Joseph Redouté" loading="lazy">
+    </a>
+    <a class="gallery-card" href="customize.html?image=redoute-empress-rose" data-category="nature">
+      <img class="gallery-card-img" src="images/thumbs/redoute-empress-rose.jpg" alt="Empress Josephine Rose – Pierre-Joseph Redouté" loading="lazy" decoding="async">
       <div class="gallery-card-body"><h3>Empress Josephine Rose</h3><p>Pierre-Joseph Redouté · Nature &amp; Botanical</p></div>
-    </div>
-    <div class="gallery-card" data-category="nature classic-art" onclick="goCustomize('van-gogh-sunflowers')">
-      <img class="gallery-card-img" src="images/collection/van-gogh-sunflowers.jpg" alt="Sunflowers – Vincent van Gogh" loading="lazy">
+    </a>
+    <a class="gallery-card" href="customize.html?image=van-gogh-sunflowers" data-category="nature classic-art">
+      <img class="gallery-card-img" src="images/thumbs/van-gogh-sunflowers.jpg" alt="Sunflowers – Vincent van Gogh" loading="lazy" decoding="async">
       <div class="gallery-card-body"><h3>Sunflowers</h3><p>Vincent van Gogh · Nature &amp; Botanical</p></div>
-    </div>
-    <div class="gallery-card" data-category="landscapes classic-art" onclick="goCustomize('van-gogh-wheat-field')">
-      <img class="gallery-card-img" src="images/collection/van-gogh-wheat-field.jpg" alt="Wheat Field with Cypresses – Vincent van Gogh" loading="lazy">
+    </a>
+    <a class="gallery-card" href="customize.html?image=van-gogh-wheat-field" data-category="landscapes classic-art">
+      <img class="gallery-card-img" src="images/thumbs/van-gogh-wheat-field.jpg" alt="Wheat Field with Cypresses – Vincent van Gogh" loading="lazy" decoding="async">
       <div class="gallery-card-body"><h3>Wheat Field with Cypresses</h3><p>Vincent van Gogh · Landscapes</p></div>
-    </div>
-    <div class="gallery-card" data-category="classic-art portraits" onclick="goCustomize('mucha-zodiac')">
-      <img class="gallery-card-img" src="images/collection/mucha-zodiac.jpg" alt="The Zodiac – Alphonse Mucha" loading="lazy">
+    </a>
+    <a class="gallery-card" href="customize.html?image=mucha-zodiac" data-category="classic-art portraits">
+      <img class="gallery-card-img" src="images/thumbs/mucha-zodiac.jpg" alt="The Zodiac – Alphonse Mucha" loading="lazy" decoding="async">
       <div class="gallery-card-body"><h3>The Zodiac</h3><p>Alphonse Mucha · Classic Art</p></div>
-    </div>
-    <div class="gallery-card" data-category="portraits classic-art" onclick="goCustomize('gauguin-tehamana')">
-      <img class="gallery-card-img" src="images/collection/gauguin-tehamana.jpg" alt="Tehamana – Paul Gauguin" loading="lazy">
+    </a>
+    <a class="gallery-card" href="customize.html?image=gauguin-tehamana" data-category="portraits classic-art">
+      <img class="gallery-card-img" src="images/thumbs/gauguin-tehamana.jpg" alt="Tehamana – Paul Gauguin" loading="lazy" decoding="async">
       <div class="gallery-card-body"><h3>Tehamana</h3><p>Paul Gauguin · Portraits</p></div>
-    </div>
-    <div class="gallery-card" data-category="urban classic-art landscapes" onclick="goCustomize('caillebotte-paris-street')">
-      <img class="gallery-card-img" src="images/collection/caillebotte-paris-street.jpg" alt="Paris Street, Rainy Day – Gustave Caillebotte" loading="lazy">
+    </a>
+    <a class="gallery-card" href="customize.html?image=caillebotte-paris-street" data-category="urban classic-art landscapes">
+      <img class="gallery-card-img" src="images/thumbs/caillebotte-paris-street.jpg" alt="Paris Street, Rainy Day – Gustave Caillebotte" loading="lazy" decoding="async">
       <div class="gallery-card-body"><h3>Paris Street, Rainy Day</h3><p>Gustave Caillebotte · Urban</p></div>
-    </div>
-    <div class="gallery-card" data-category="nature landscapes classic-art" onclick="goCustomize('van-gogh-orchard')">
-      <img class="gallery-card-img" src="images/collection/van-gogh-orchard.jpg" alt="The Flowering Orchard – Vincent van Gogh" loading="lazy">
+    </a>
+    <a class="gallery-card" href="customize.html?image=van-gogh-orchard" data-category="nature landscapes classic-art">
+      <img class="gallery-card-img" src="images/thumbs/van-gogh-orchard.jpg" alt="The Flowering Orchard – Vincent van Gogh" loading="lazy" decoding="async">
       <div class="gallery-card-body"><h3>The Flowering Orchard</h3><p>Vincent van Gogh · Nature &amp; Botanical</p></div>
-    </div>
-    <div class="gallery-card" data-category="nature landscapes classic-art" onclick="goCustomize('monet-lily-pond')">
-      <img class="gallery-card-img" src="images/collection/monet-lily-pond.jpg" alt="Water Lily Pond – Claude Monet" loading="lazy">
+    </a>
+    <a class="gallery-card" href="customize.html?image=monet-lily-pond" data-category="nature landscapes classic-art">
+      <img class="gallery-card-img" src="images/thumbs/monet-lily-pond.jpg" alt="Water Lily Pond – Claude Monet" loading="lazy" decoding="async">
       <div class="gallery-card-body"><h3>Water Lily Pond</h3><p>Claude Monet · Nature &amp; Botanical</p></div>
-    </div>
-    <div class="gallery-card" data-category="japanese nature" onclick="goCustomize('hokusai-cranes')">
-      <img class="gallery-card-img" src="images/collection/hokusai-cranes.jpg" alt="Cranes on a Pine – Katsushika Hokusai" loading="lazy">
+    </a>
+    <a class="gallery-card" href="customize.html?image=hokusai-cranes" data-category="japanese nature">
+      <img class="gallery-card-img" src="images/thumbs/hokusai-cranes.jpg" alt="Cranes on a Pine – Katsushika Hokusai" loading="lazy" decoding="async">
       <div class="gallery-card-body"><h3>Cranes on a Pine</h3><p>Katsushika Hokusai · Japanese</p></div>
-    </div>
-    <div class="gallery-card" data-category="portraits classic-art" onclick="goCustomize('rembrandt-gold-chain')">
-      <img class="gallery-card-img" src="images/collection/rembrandt-gold-chain.jpg" alt="Old Man with a Gold Chain – Rembrandt" loading="lazy">
+    </a>
+    <a class="gallery-card" href="customize.html?image=rembrandt-gold-chain" data-category="portraits classic-art">
+      <img class="gallery-card-img" src="images/thumbs/rembrandt-gold-chain.jpg" alt="Old Man with a Gold Chain – Rembrandt" loading="lazy" decoding="async">
       <div class="gallery-card-body"><h3>Old Man with a Gold Chain</h3><p>Rembrandt · Portraits</p></div>
-    </div>
-    <div class="gallery-card" data-category="landscapes classic-art" onclick="goCustomize('monet-stacks-of-wheat')">
-      <img class="gallery-card-img" src="images/collection/monet-stacks-of-wheat.jpg" alt="Stacks of Wheat – Claude Monet" loading="lazy">
+    </a>
+    <a class="gallery-card" href="customize.html?image=monet-stacks-of-wheat" data-category="landscapes classic-art">
+      <img class="gallery-card-img" src="images/thumbs/monet-stacks-of-wheat.jpg" alt="Stacks of Wheat – Claude Monet" loading="lazy" decoding="async">
       <div class="gallery-card-body"><h3>Stacks of Wheat</h3><p>Claude Monet · Landscapes</p></div>
-    </div>
-    <div class="gallery-card" data-category="portraits classic-art" onclick="goCustomize('vermeer-young-woman')">
-      <img class="gallery-card-img" src="images/collection/vermeer-young-woman.jpg" alt="Study of a Young Woman – Johannes Vermeer" loading="lazy">
+    </a>
+    <a class="gallery-card" href="customize.html?image=vermeer-young-woman" data-category="portraits classic-art">
+      <img class="gallery-card-img" src="images/thumbs/vermeer-young-woman.jpg" alt="Study of a Young Woman – Johannes Vermeer" loading="lazy" decoding="async">
       <div class="gallery-card-body"><h3>Study of a Young Woman</h3><p>Johannes Vermeer · Portraits</p></div>
-    </div>
-    <div class="gallery-card" data-category="landscapes classic-art" onclick="goCustomize('monet-cliff-walk')">
-      <img class="gallery-card-img" src="images/collection/monet-cliff-walk.jpg" alt="Cliff Walk at Pourville – Claude Monet" loading="lazy">
+    </a>
+    <a class="gallery-card" href="customize.html?image=monet-cliff-walk" data-category="landscapes classic-art">
+      <img class="gallery-card-img" src="images/thumbs/monet-cliff-walk.jpg" alt="Cliff Walk at Pourville – Claude Monet" loading="lazy" decoding="async">
       <div class="gallery-card-body"><h3>Cliff Walk at Pourville</h3><p>Claude Monet · Landscapes</p></div>
-    </div>
-    <div class="gallery-card" data-category="nature classic-art" onclick="goCustomize('cezanne-tulips')">
-      <img class="gallery-card-img" src="images/collection/cezanne-tulips.jpg" alt="The Vase of Tulips – Paul Cézanne" loading="lazy">
+    </a>
+    <a class="gallery-card" href="customize.html?image=cezanne-tulips" data-category="nature classic-art">
+      <img class="gallery-card-img" src="images/thumbs/cezanne-tulips.jpg" alt="The Vase of Tulips – Paul Cézanne" loading="lazy" decoding="async">
       <div class="gallery-card-body"><h3>The Vase of Tulips</h3><p>Paul Cézanne · Nature &amp; Botanical</p></div>
-    </div>
-    <div class="gallery-card" data-category="japanese urban" onclick="goCustomize('hiroshige-fireworks')">
-      <img class="gallery-card-img" src="images/collection/hiroshige-fireworks.jpg" alt="Fireworks at Ryōgoku – Utagawa Hiroshige" loading="lazy">
+    </a>
+    <a class="gallery-card" href="customize.html?image=hiroshige-fireworks" data-category="japanese urban">
+      <img class="gallery-card-img" src="images/thumbs/hiroshige-fireworks.jpg" alt="Fireworks at Ryōgoku – Utagawa Hiroshige" loading="lazy" decoding="async">
       <div class="gallery-card-body"><h3>Fireworks at Ryōgoku</h3><p>Utagawa Hiroshige · Japanese</p></div>
-    </div>
-    <div class="gallery-card" data-category="urban classic-art" onclick="goCustomize('monet-saint-lazare')">
-      <img class="gallery-card-img" src="images/collection/monet-saint-lazare.jpg" alt="Gare Saint-Lazare – Claude Monet" loading="lazy">
+    </a>
+    <a class="gallery-card" href="customize.html?image=monet-saint-lazare" data-category="urban classic-art">
+      <img class="gallery-card-img" src="images/thumbs/monet-saint-lazare.jpg" alt="Gare Saint-Lazare – Claude Monet" loading="lazy" decoding="async">
       <div class="gallery-card-body"><h3>Gare Saint-Lazare</h3><p>Claude Monet · Urban</p></div>
-    </div>
-    <div class="gallery-card" data-category="japanese landscapes" onclick="goCustomize('hiroshige-jumantsubo')">
-      <img class="gallery-card-img" src="images/collection/hiroshige-jumantsubo.jpg" alt="Eagle over the Jumantsubo Plain – Utagawa Hiroshige" loading="lazy">
+    </a>
+    <a class="gallery-card" href="customize.html?image=hiroshige-jumantsubo" data-category="japanese landscapes">
+      <img class="gallery-card-img" src="images/thumbs/hiroshige-jumantsubo.jpg" alt="Eagle over the Jumantsubo Plain – Utagawa Hiroshige" loading="lazy" decoding="async">
       <div class="gallery-card-body"><h3>Eagle over the Jumantsubo Plain</h3><p>Utagawa Hiroshige · Japanese</p></div>
-    </div>
-    <div class="gallery-card" data-category="nature" onclick="goCustomize('redoute-crown-imperial')">
-      <img class="gallery-card-img" src="images/collection/redoute-crown-imperial.jpg" alt="Crown Imperial – Pierre-Joseph Redouté" loading="lazy">
+    </a>
+    <a class="gallery-card" href="customize.html?image=redoute-crown-imperial" data-category="nature">
+      <img class="gallery-card-img" src="images/thumbs/redoute-crown-imperial.jpg" alt="Crown Imperial – Pierre-Joseph Redouté" loading="lazy" decoding="async">
       <div class="gallery-card-body"><h3>Crown Imperial</h3><p>Pierre-Joseph Redouté · Nature &amp; Botanical</p></div>
-    </div>
-    <div class="gallery-card" data-category="japanese landscapes" onclick="goCustomize('hokusai-storm-fuji')">
-      <img class="gallery-card-img" src="images/collection/hokusai-storm-fuji.jpg" alt="Storm below Mount Fuji – Katsushika Hokusai" loading="lazy">
+    </a>
+    <a class="gallery-card" href="customize.html?image=hokusai-storm-fuji" data-category="japanese landscapes">
+      <img class="gallery-card-img" src="images/thumbs/hokusai-storm-fuji.jpg" alt="Storm below Mount Fuji – Katsushika Hokusai" loading="lazy" decoding="async">
       <div class="gallery-card-body"><h3>Storm below Mount Fuji</h3><p>Katsushika Hokusai · Japanese</p></div>
-    </div>
-    <div class="gallery-card" data-category="classic-art landscapes" onclick="goCustomize('seurat-grande-jatte')">
-      <img class="gallery-card-img" src="images/collection/seurat-grande-jatte.jpg" alt="A Sunday on La Grande Jatte – Georges Seurat" loading="lazy">
+    </a>
+    <a class="gallery-card" href="customize.html?image=seurat-grande-jatte" data-category="classic-art landscapes">
+      <img class="gallery-card-img" src="images/thumbs/seurat-grande-jatte.jpg" alt="A Sunday on La Grande Jatte – Georges Seurat" loading="lazy" decoding="async">
       <div class="gallery-card-body"><h3>A Sunday on La Grande Jatte</h3><p>Georges Seurat · Classic Art</p></div>
-    </div>
-    <div class="gallery-card" data-category="abstract" onclick="goCustomize('kandinsky-improvisation-30')">
-      <img class="gallery-card-img" src="images/collection/kandinsky-improvisation-30.jpg" alt="Improvisation No. 30 – Vasily Kandinsky" loading="lazy">
+    </a>
+    <a class="gallery-card" href="customize.html?image=kandinsky-improvisation-30" data-category="abstract">
+      <img class="gallery-card-img" src="images/thumbs/kandinsky-improvisation-30.jpg" alt="Improvisation No. 30 – Vasily Kandinsky" loading="lazy" decoding="async">
       <div class="gallery-card-body"><h3>Improvisation No. 30</h3><p>Vasily Kandinsky · Abstract</p></div>
-    </div>
-    <div class="gallery-card" data-category="nature" onclick="goCustomize('redoute-gloriosa')">
-      <img class="gallery-card-img" src="images/collection/redoute-gloriosa.jpg" alt="Gloriosa Superba – Pierre-Joseph Redouté" loading="lazy">
+    </a>
+    <a class="gallery-card" href="customize.html?image=redoute-gloriosa" data-category="nature">
+      <img class="gallery-card-img" src="images/thumbs/redoute-gloriosa.jpg" alt="Gloriosa Superba – Pierre-Joseph Redouté" loading="lazy" decoding="async">
       <div class="gallery-card-body"><h3>Gloriosa Superba</h3><p>Pierre-Joseph Redouté · Nature &amp; Botanical</p></div>
-    </div>
-    <div class="gallery-card" data-category="portraits" onclick="goCustomize('fayum-woman-in-red')">
-      <img class="gallery-card-img" src="images/collection/fayum-woman-in-red.jpg" alt="Woman in Red – Fayum, Roman Egypt" loading="lazy">
+    </a>
+    <a class="gallery-card" href="customize.html?image=fayum-woman-in-red" data-category="portraits">
+      <img class="gallery-card-img" src="images/thumbs/fayum-woman-in-red.jpg" alt="Woman in Red – Fayum, Roman Egypt" loading="lazy" decoding="async">
       <div class="gallery-card-body"><h3>Woman in Red</h3><p>Fayum, Roman Egypt · Portraits</p></div>
-    </div>
-    <div class="gallery-card" data-category="abstract" onclick="goCustomize('mondrian-lozenge')">
-      <img class="gallery-card-img" src="images/collection/mondrian-lozenge.jpg" alt="Lozenge Composition – Piet Mondrian" loading="lazy">
+    </a>
+    <a class="gallery-card" href="customize.html?image=mondrian-lozenge" data-category="abstract">
+      <img class="gallery-card-img" src="images/thumbs/mondrian-lozenge.jpg" alt="Lozenge Composition – Piet Mondrian" loading="lazy" decoding="async">
       <div class="gallery-card-body"><h3>Lozenge Composition</h3><p>Piet Mondrian · Abstract</p></div>
-    </div>
+    </a>
   </div>
   <p class="collection-credit">Classic works from The Met and the Art Institute of Chicago. Public domain.</p>
 
-  <div style="text-align:center; margin-top:44px">
-    <p style="color:rgba(255,255,255,0.55); margin-bottom:14px; font-size:15px">Have a personal photo in mind?</p>
-    <a href="customize.html" class="btn btn-gold">Upload Your Own Image →</a>
+  <div class="gallery-upload-wrap">
+    <p class="gallery-upload-prompt">Have a personal photo in mind? Wedding, family, graduation — we'll frame it.</p>
+    <a href="customize.html?tab=upload" class="btn btn-gold">Upload Your Own Image →</a>
   </div>
 </section>
 
@@ -350,13 +376,13 @@
   <div class="pricing-visual-grid">
 
     <!-- 12×16 -->
-    <div class="pv-card" onclick="window.location.href='customize.html'">
+    <a class="pv-card" href="customize.html?size=12x16" aria-label="Choose the 12 × 16 inch frame, ₦8,000">
       <div class="pv-frames">
         <div class="pv-frame pv-s1">
-          <img src="images/build-in-silence.jpg" alt="Build in Silence" loading="lazy">
+          <img src="images/thumbs/build-in-silence.jpg" alt="" loading="lazy" decoding="async">
         </div>
         <div class="pv-frame pv-s1">
-          <img src="images/one-percent.jpg" alt="1% Better Every Day" loading="lazy">
+          <img src="images/thumbs/one-percent.jpg" alt="" loading="lazy" decoding="async">
         </div>
       </div>
       <div class="pv-info">
@@ -364,16 +390,16 @@
         <span class="pv-cm">30 × 40 cm</span>
         <span class="pv-price">₦8,000</span>
       </div>
-    </div>
+    </a>
 
     <!-- 16×20 -->
-    <div class="pv-card" onclick="window.location.href='customize.html'">
+    <a class="pv-card" href="customize.html?size=16x20" aria-label="Choose the 16 × 20 inch frame, ₦9,500">
       <div class="pv-frames">
         <div class="pv-frame pv-s2">
-          <img src="images/iron-mike.jpg" alt="Iron Mike" loading="lazy">
+          <img src="images/thumbs/iron-mike.jpg" alt="" loading="lazy" decoding="async">
         </div>
         <div class="pv-frame pv-s2">
-          <img src="images/joyful-soul.jpg" alt="Joyful Soul" loading="lazy">
+          <img src="images/thumbs/joyful-soul.jpg" alt="" loading="lazy" decoding="async">
         </div>
       </div>
       <div class="pv-info">
@@ -381,16 +407,16 @@
         <span class="pv-cm">40 × 50 cm</span>
         <span class="pv-price">₦9,500</span>
       </div>
-    </div>
+    </a>
 
     <!-- 16×24 -->
-    <div class="pv-card" onclick="window.location.href='customize.html'">
+    <a class="pv-card" href="customize.html?size=16x24" aria-label="Choose the 16 × 24 inch frame, ₦11,000">
       <div class="pv-frames">
         <div class="pv-frame pv-s3">
-          <img src="images/alpine-bloom.jpg" alt="Alpine Bloom" loading="lazy">
+          <img src="images/thumbs/alpine-bloom.jpg" alt="" loading="lazy" decoding="async">
         </div>
         <div class="pv-frame pv-s3">
-          <img src="images/if-you-want.jpg" alt="If You Want You Can" loading="lazy">
+          <img src="images/thumbs/if-you-want.jpg" alt="" loading="lazy" decoding="async">
         </div>
       </div>
       <div class="pv-info">
@@ -398,16 +424,16 @@
         <span class="pv-cm">40 × 60 cm</span>
         <span class="pv-price">₦11,000</span>
       </div>
-    </div>
+    </a>
 
     <!-- 20×24 -->
-    <div class="pv-card" onclick="window.location.href='customize.html'">
+    <a class="pv-card" href="customize.html?size=20x24" aria-label="Choose the 20 × 24 inch frame, ₦14,000">
       <div class="pv-frames">
         <div class="pv-frame pv-s4">
-          <img src="images/burna-boy.jpg" alt="Burna Boy" loading="lazy">
+          <img src="images/thumbs/burna-boy.jpg" alt="" loading="lazy" decoding="async">
         </div>
         <div class="pv-frame pv-s4">
-          <img src="images/dont-overthink.jpg" alt="Don't Overthink It" loading="lazy">
+          <img src="images/thumbs/dont-overthink.jpg" alt="" loading="lazy" decoding="async">
         </div>
       </div>
       <div class="pv-info">
@@ -415,16 +441,16 @@
         <span class="pv-cm">50 × 60 cm</span>
         <span class="pv-price">₦14,000</span>
       </div>
-    </div>
+    </a>
 
     <!-- 20×30 -->
-    <div class="pv-card" onclick="window.location.href='customize.html'">
+    <a class="pv-card" href="customize.html?size=20x30" aria-label="Choose the 20 × 30 inch frame, ₦17,500">
       <div class="pv-frames">
         <div class="pv-frame pv-s5">
-          <img src="images/classic-roadster.jpg" alt="Classic Roadster" loading="lazy">
+          <img src="images/thumbs/classic-roadster.jpg" alt="" loading="lazy" decoding="async">
         </div>
         <div class="pv-frame pv-s5">
-          <img src="images/he-left-99.jpg" alt="He Left the 99" loading="lazy">
+          <img src="images/thumbs/he-left-99.jpg" alt="" loading="lazy" decoding="async">
         </div>
       </div>
       <div class="pv-info">
@@ -432,16 +458,16 @@
         <span class="pv-cm">50 × 75 cm</span>
         <span class="pv-price">₦17,500</span>
       </div>
-    </div>
+    </a>
 
     <!-- 24×36 -->
-    <div class="pv-card" onclick="window.location.href='customize.html'">
+    <a class="pv-card" href="customize.html?size=24x36" aria-label="Choose the 24 × 36 inch frame, ₦20,000">
       <div class="pv-frames">
         <div class="pv-frame pv-s6">
-          <img src="images/city-architecture.jpg" alt="City Architecture" loading="lazy">
+          <img src="images/thumbs/city-architecture.jpg" alt="" loading="lazy" decoding="async">
         </div>
         <div class="pv-frame pv-s6">
-          <img src="images/alpine-meadow.jpg" alt="Alpine Meadow" loading="lazy">
+          <img src="images/thumbs/alpine-meadow.jpg" alt="" loading="lazy" decoding="async">
         </div>
       </div>
       <div class="pv-info">
@@ -449,7 +475,7 @@
         <span class="pv-cm">60 × 90 cm</span>
         <span class="pv-price">₦20,000</span>
       </div>
-    </div>
+    </a>
 
   </div>
 
@@ -459,6 +485,9 @@
 </section>
 
 <!-- ─── Testimonials ────────────────────────────────────────── -->
+<!-- TODO(owner): these three reviews read like template placeholders.
+     Replace them with real customer reviews (with permission), ideally with a
+     photo of the frame on their wall. Remove this section if you have none yet. -->
 <section class="section">
   <span class="section-label">Customer love</span>
   <h2 class="section-title">What People Say</h2>
@@ -481,6 +510,41 @@
   </div>
 </section>
 
+<!-- ─── Delivery & FAQ ─────────────────────────────────────── -->
+<section class="section faq-section" id="faq">
+  <span class="section-label">Good to know</span>
+  <h2 class="section-title">Delivery &amp; FAQs</h2>
+  <div class="faq-list">
+    <details>
+      <summary>Where do you deliver, and how long does it take?</summary>
+      <p>We deliver across Nigeria. Lagos orders arrive in 2–3 business days, and other states in 3–5 business days.</p>
+    </details>
+    <details>
+      <summary>How much is delivery?</summary>
+      <!-- TODO(owner): if you have fixed delivery fees (e.g. Lagos vs other states), list them here. -->
+      <p>Delivery depends on where you are. We confirm your delivery fee with you after you place your order.</p>
+    </details>
+    <details>
+      <summary>How do I pay?</summary>
+      <!-- TODO(owner): update this once card payment (Paystack) or bank transfer is switched on in js/site.js. -->
+      <p>Place your order at checkout and you'll get an order reference. We then confirm your total (frame + delivery) and payment details with you before we start framing.</p>
+    </details>
+    <details>
+      <summary>Do the black, white and wood frames cost different amounts?</summary>
+      <p>No. All three frame styles are the same price — you only pay for the size.</p>
+    </details>
+    <details>
+      <summary>Can I frame my own photo?</summary>
+      <p>Yes. Upload a JPG, PNG or WEBP (up to 10 MB) in the customiser. For the sharpest print, use the original photo rather than a screenshot or a copy sent over WhatsApp.</p>
+    </details>
+    <details>
+      <summary>Still have a question?</summary>
+      <p>Email us at <a href="mailto:hello@hanga.ng" data-contact="email">hello@hanga.ng</a><span data-show-if="whatsapp"> or <a href="#" data-contact="whatsapp">chat with us on WhatsApp</a></span>.</p>
+    </details>
+    <!-- TODO(owner): add your returns / damaged-in-delivery policy here once decided. -->
+  </div>
+</section>
+
 <!-- ─── CTA Banner ───────────────────────────────────────────── -->
 <section class="cta-banner">
   <span class="section-label">Your story, framed</span>
@@ -499,29 +563,29 @@
     <div class="footer-col">
       <h4>Navigate</h4>
       <ul>
-        <li><a href="index.html">Home</a></li>
+        <li><a href="index.html" aria-current="page">Home</a></li>
         <li><a href="customize.html">Customise</a></li>
         <li><a href="about.html">About Us</a></li>
+        <li><a href="index.html#faq">Delivery &amp; FAQs</a></li>
       </ul>
     </div>
     <div class="footer-col">
       <h4>Contact</h4>
       <ul>
-        <li><a href="mailto:hello@hanga.ng">hello@hanga.ng</a></li>
-        <li><a href="#">Instagram</a></li>
-        <li><a href="#">WhatsApp</a></li>
+        <li><a href="mailto:hello@hanga.ng" data-contact="email">hello@hanga.ng</a></li>
+        <li><a href="#" data-contact="instagram">Instagram</a></li>
+        <li><a href="#" data-contact="whatsapp">WhatsApp</a></li>
       </ul>
     </div>
   </div>
   <div class="footer-bottom">
-    <span>&copy; 2026 Hanga. All rights reserved.</span>
+    <span>&copy; <span data-year>2026</span> Hanga. All rights reserved.</span>
     <span>Made with love in Nigeria 🇳🇬</span>
   </div>
 </footer>
 
+<script src="js/site.js"></script>
 <script>
-function goCustomize(id) { window.location.href = 'customize.html?image=' + id; }
-
 function filterGallery(category, btn) {
   const root = btn.closest('.gallery-section') || document;
   root.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
@@ -534,21 +598,6 @@ function filterGallery(category, btn) {
     if (show) shown += 1;
   });
 }
-
-// Hamburger
-const toggle = document.getElementById('navToggle');
-const drawer = document.getElementById('navDrawer');
-toggle.addEventListener('click', () => {
-  const open = drawer.classList.toggle('open');
-  toggle.classList.toggle('open', open);
-  toggle.setAttribute('aria-expanded', open);
-});
-// Close drawer when a link is clicked
-drawer.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
-  drawer.classList.remove('open');
-  toggle.classList.remove('open');
-  toggle.setAttribute('aria-expanded', false);
-}));
 </script>
 
 </body>

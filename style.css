@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Lato:wght@300;400;700&display=swap');
+/* Fonts are loaded with <link> tags in each page's <head> (faster than @import). */
 
 /* ─── Reset & Base ─────────────────────────────────────────── */
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -441,7 +441,7 @@ section.section {
 
 .gallery-card-body { padding: 16px 18px; background: #1c1c1c; }
 .gallery-card-body h3 { font-size: 15px; margin-bottom: 5px; color: var(--white); }
-.gallery-card-body p  { font-size: 13px; color: rgba(255,255,255,0.45); }
+.gallery-card-body p  { font-size: 13px; color: rgba(255,255,255,0.62); }
 .gallery-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -526,7 +526,7 @@ section.section {
   margin-top: 28px;
   font-size: 12px;
   letter-spacing: 0.04em;
-  color: rgba(255,255,255,0.35);
+  color: rgba(255,255,255,0.6);
 }
 
 /* ─── Pricing (old simple grid kept for reference) ─────────── */
@@ -1116,7 +1116,7 @@ footer {
 }
 
 .footer-brand .logo { color: var(--white); font-size: 20px; }
-.footer-brand p { font-size: 14px; color: rgba(255,255,255,0.5); margin-top: 12px; line-height: 1.7; max-width: 260px; }
+.footer-brand p { font-size: 14px; color: rgba(255,255,255,0.65); margin-top: 12px; line-height: 1.7; max-width: 260px; }
 
 .footer-col h4 {
   font-size: 11px;
@@ -1134,7 +1134,7 @@ footer {
   border-top: 1px solid rgba(255,255,255,0.1);
   padding-top: 20px;
   font-size: 12px;
-  color: rgba(255,255,255,0.35);
+  color: rgba(255,255,255,0.6);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -1283,3 +1283,66 @@ footer {
   .size-grid .chip-size { font-size: 14px; }
   .size-grid .chip-price { font-size: 12px; }
 }
+
+/* ─── Accessibility & polish (audit) ───────────────────────── */
+.skip-link {
+  position: absolute; left: 12px; top: -60px; z-index: 1000;
+  background: var(--gold); color: var(--black); padding: 10px 16px;
+  border-radius: var(--radius); font-weight: 700; text-decoration: none;
+  transition: top 0.2s;
+}
+.skip-link:focus { top: 12px; }
+[tabindex="-1"]:focus { outline: none; }
+
+a:focus-visible,
+button:focus-visible,
+select:focus-visible,
+input:focus-visible,
+[role="button"]:focus-visible,
+.gallery-card:focus-visible,
+.pv-card:focus-visible {
+  outline: 3px solid var(--gold);
+  outline-offset: 3px;
+}
+.swatch:focus-visible { outline-offset: 4px; border-radius: 50%; }
+.mini-thumb:focus-visible { outline-offset: 1px; }
+
+a.gallery-card, a.pv-card { display: block; color: inherit; text-decoration: none; }
+a.pv-card { display: flex; }
+.gallery-card:focus-visible { border-color: var(--gold); }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+}
+
+/* Hero quick facts */
+.hero-facts {
+  list-style: none; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 22px;
+  margin-top: 28px; font-size: 13px; letter-spacing: 0.04em;
+  color: rgba(255,255,255,0.85);
+}
+.hero-facts li::before { content: "✓"; color: var(--gold); margin-right: 8px; font-weight: 700; }
+
+.gallery-upload-prompt { color: rgba(255,255,255,0.7); margin-bottom: 14px; font-size: 15px; }
+.gallery-upload-wrap { text-align: center; margin-top: 44px; }
+
+.about-grid img { height: auto; }
+
+/* Delivery & FAQ */
+.faq-section { background: var(--cream); }
+.faq-list { max-width: 760px; margin-top: 36px; }
+.faq-list details {
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: var(--radius); margin-bottom: 12px;
+}
+.faq-list summary {
+  cursor: pointer; padding: 18px 22px; font-weight: 700; font-size: 15px;
+  list-style: none; display: flex; justify-content: space-between; gap: 16px;
+}
+.faq-list summary::-webkit-details-marker { display: none; }
+.faq-list summary::after { content: "+"; color: var(--gold); font-size: 20px; line-height: 1; }
+.faq-list details[open] summary::after { content: "–"; }
+.faq-list details p { padding: 0 22px 18px; color: var(--muted); line-height: 1.75; font-size: 15px; }
+.faq-list a { color: var(--black); }
+

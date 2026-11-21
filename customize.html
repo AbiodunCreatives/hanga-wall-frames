@@ -4,10 +4,32 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Customise Your Frame – Hanga</title>
+  <meta name="description" content="Build your custom wall frame: choose a print or upload your own photo, pick one of six sizes from ₦8,000 and a black, white or wood frame, and see it on a real wall.">
+  <meta name="theme-color" content="#1a1a1a">
+  <link rel="canonical" href="https://hanga-frames.vercel.app/customize.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Hanga">
+  <meta property="og:title" content="Customise Your Frame – Hanga">
+  <meta property="og:description" content="Build your custom wall frame: choose a print or upload your own photo, pick one of six sizes from ₦8,000 and a black, white or wood frame, and see it on a real wall.">
+  <meta property="og:url" content="https://hanga-frames.vercel.app/customize.html">
+  <meta property="og:image" content="https://hanga-frames.vercel.app/images/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="en_NG">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Customise Your Frame – Hanga">
+  <meta name="twitter:description" content="Build your custom wall frame: choose a print or upload your own photo, pick one of six sizes from ₦8,000 and a black, white or wood frame, and see it on a real wall.">
+  <meta name="twitter:image" content="https://hanga-frames.vercel.app/images/og-image.jpg">
+  <link rel="icon" href="images/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="images/favicon-32.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Lato:wght@300;400;700&display=swap">
   <link rel="stylesheet" href="style.css">
-  <link rel="icon" href="images/favicon.png" type="image/x-icon">
 </head>
 <body>
+<a class="skip-link" href="#main">Skip to content</a>
 
 <!-- ─── Header ─────────────────────────────────────────────── -->
 <header>
@@ -28,7 +50,7 @@
 </nav>
 
 <!-- ─── Customiser Layout ───────────────────────────────────── -->
-<div class="customize-layout">
+<div class="customize-layout" id="main" tabindex="-1">
 
   <!-- ── Preview Panel (shown first on mobile) ──────────────── -->
   <div class="preview-panel">
@@ -194,23 +216,25 @@
         <li><a href="index.html">Home</a></li>
         <li><a href="customize.html">Customise</a></li>
         <li><a href="about.html">About Us</a></li>
+        <li><a href="index.html#faq">Delivery &amp; FAQs</a></li>
       </ul>
     </div>
     <div class="footer-col">
       <h4>Contact</h4>
       <ul>
-        <li><a href="mailto:hello@hanga.ng">hello@hanga.ng</a></li>
-        <li><a href="#">Instagram</a></li>
-        <li><a href="#">WhatsApp</a></li>
+        <li><a href="mailto:hello@hanga.ng" data-contact="email">hello@hanga.ng</a></li>
+        <li><a href="#" data-contact="instagram">Instagram</a></li>
+        <li><a href="#" data-contact="whatsapp">WhatsApp</a></li>
       </ul>
     </div>
   </div>
   <div class="footer-bottom">
-    <span>&copy; 2026 Hanga. All rights reserved.</span>
+    <span>&copy; <span data-year>2026</span> Hanga. All rights reserved.</span>
     <span>Made with love in Nigeria 🇳🇬</span>
   </div>
 </footer>
 
+<script src="js/site.js"></script>
 <script>
 // ── State ──────────────────────────────────────────────────────
 const state = {
@@ -241,20 +265,6 @@ function parseFrameSize(size) {
   const m = String(size || '').match(/(\d+)\s*[×x]\s*(\d+)/);
   return m ? { wIn: Number(m[1]), hIn: Number(m[2]) } : { wIn: 16, hIn: 20 };
 }
-
-// ── Hamburger ──────────────────────────────────────────────────
-const toggle = document.getElementById('navToggle');
-const drawer = document.getElementById('navDrawer');
-toggle.addEventListener('click', () => {
-  const open = drawer.classList.toggle('open');
-  toggle.classList.toggle('open', open);
-  toggle.setAttribute('aria-expanded', open);
-});
-drawer.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
-  drawer.classList.remove('open');
-  toggle.classList.remove('open');
-  toggle.setAttribute('aria-expanded', false);
-}));
 
 // ── Load from query param ──────────────────────────────────────
 (function() {
