@@ -34,6 +34,7 @@ Anything left empty is hidden, so the site never shows a dead link or fake payme
 - `images/thumbs/` – small copies used for gallery thumbnails. Re-generate when you add a print, e.g. with ImageMagick:
   `magick images/collection/new-print.jpg -resize 400x560 -quality 76 images/thumbs/new-print.jpg`
 - `images/og-image.jpg` – the picture shown when the site is shared on WhatsApp, X, etc.
+- `images/hero-bg.jpg` – homepage background. Photo by **Mateusz Pielech** on Pexels, "Stylish Living Room with Red Sofa and Art Prints" (https://www.pexels.com/photo/stylish-living-room-with-red-sofa-and-art-prints-29252569/), used under the Pexels License (free for commercial use, no attribution required — credited here as thanks). Resized to 1920×1280.
 
 ## Run locally
 
