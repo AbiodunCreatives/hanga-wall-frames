@@ -1,66 +1,49 @@
-# Clothing Brand Website Template
+# Hanga – Custom Wall Frames
 
-A responsive and stylish template designed for showcasing clothing brands. This project is perfect for small businesses or individuals looking to establish an online presence for their clothing line.
+Static website for **Hanga**, a Nigerian custom wall-frame shop. Customers pick a print from the gallery (or upload their own photo), choose one of six sizes and a black, white or natural-wood frame, preview it on a real wall, and place an order.
 
-## Features
+Live: https://hanga-frames.vercel.app
 
-- **Responsive Design**: Optimized for all devices, including desktops, tablets, and smartphones.
-- **Clean Layout**: A modern and minimalistic design with a focus on user experience.
-- **Multiple Pages**:
-  - `index.html`: The homepage with a hero section and featured products.
-  - `about.html`: A dedicated page to share your brand's story.
-- **Customizable**: Easy to adapt to your brand's identity with editable HTML and CSS files.
-- **Hover Effects**: Interactive and smooth hover animations for links and buttons.
+## Pages
 
-## File Structure
+| File | What it is |
+| --- | --- |
+| `index.html` | Home: hero, how it works, gallery, sizes & prices, reviews, delivery & FAQs |
+| `customize.html` | Frame builder with live room preview (`?image=<id>`, `?size=16x20`, `?tab=upload`) |
+| `checkout.html` | Contact + delivery details and payment |
+| `confirmation.html` | Order reference + "send us your order" (WhatsApp / email) |
+| `about.html` | Brand story and values |
+| `404.html` | Not-found page (served automatically by Vercel) |
 
+## Business settings — edit `js/site.js`
+
+All contact and payment details live in one place, `window.HANGA` at the top of `js/site.js`:
+
+- `whatsappNumber` – international format, digits only (e.g. `2348012345678`). Turns on the WhatsApp footer link, "Order on WhatsApp" in the builder and "Send on WhatsApp" on the confirmation page.
+- `instagramHandle` – turns on the Instagram footer link.
+- `paystackPublicKey` – your Paystack **public** key (`pk_live_…`). Turns on card payment at checkout. Never put the secret key in this repo.
+- `bank` – account details for manual transfer; shown only when `confirmed: true`.
+
+Anything left empty is hidden, so the site never shows a dead link or fake payment.
+
+> The site has no backend. Orders reach Hanga when the customer taps **Send on WhatsApp** or **Send by Email** on the confirmation page (or pays through Paystack, which records the order in your Paystack dashboard).
+
+## Images
+
+- `images/` – original prints; `images/collection/` – public-domain museum works (see `CREDITS.md`).
+- `images/thumbs/` – small copies used for gallery thumbnails. Re-generate when you add a print, e.g. with ImageMagick:
+  `magick images/collection/new-print.jpg -resize 400x560 -quality 76 images/thumbs/new-print.jpg`
+- `images/og-image.jpg` – the picture shown when the site is shared on WhatsApp, X, etc.
+
+## Run locally
+
+Any static server works:
+
+```bash
+python3 -m http.server 8080
+# open http://localhost:8080
 ```
-clothing-brand-website-template/
-|-- images/
-|   |-- background.jpg
-|   |-- favicon.png
-|   |-- white-hoodie.png
-|   |-- black-hoodie.png
-|   |-- black-tshirt.png
-|   |-- about-us.jpg
-|-- index.html
-|-- about.html
-|-- style.css
-|-- README.md
-|-- LICENSE.txt
-```
-
-## Getting Started
-
-### Prerequisites
-
-To view or edit this template, you will need:
-
-- A code editor (e.g., [VS Code](https://code.visualstudio.com/))
-- A modern web browser (e.g., Chrome, Firefox, Safari)
-
-### Usage
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/giblecdg/clothing-brand-website-template.git
-   ```
-2. Navigate to the project folder:
-   ```bash
-   cd clothing-brand-website-template
-   ```
-3. Open `index.html` in your browser to view the site.
-
-### Customization
-
-- **Colors and Fonts**: Modify `style.css` to change the appearance.
-- **Images**: Replace files in the `images/` folder with your own assets.
-- **Content**: Update text and links in `index.html` and `about.html`.
-
-## Contribution
-
-Feel free to fork the repository and submit pull requests for improvements or additional features. Any contributions are welcome!
 
 ## License
 
-This project is licensed under the [MIT License](LICENSE).
+MIT — see `LICENSE`.

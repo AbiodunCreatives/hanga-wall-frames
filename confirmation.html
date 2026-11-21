@@ -10,6 +10,7 @@
   <link rel="icon" href="images/favicon.svg" type="image/svg+xml">
   <link rel="icon" href="images/favicon-32.png" type="image/png" sizes="32x32">
   <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Lato:wght@300;400;700&display=swap">
@@ -25,7 +26,7 @@
     <a href="index.html">Home</a>
     <a href="customize.html">Create Another Frame</a>
   </nav>
-  <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false">
+  <button type="button" class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false">
     <span></span><span></span><span></span>
   </button>
 </header>
@@ -36,24 +37,34 @@
 
 <!-- ─── Confirmation ────────────────────────────────────────── -->
 <div class="confirm-wrap" id="main" tabindex="-1">
-  <div class="confirm-icon">🎉</div>
+  <div class="confirm-icon" aria-hidden="true">🎉</div>
   <h1 id="confirmTitle">Order Placed!</h1>
   <p id="confirmMsg">Thank you for your order. We've received your request and will begin crafting your frame right away.</p>
   <div class="confirm-ref" id="confirmRef">—</div>
-  <p id="confirmEmail" style="font-size:14px; color:var(--muted)"></p>
 
-  <div id="transferNote" class="hidden" style="background:var(--cream);border-radius:var(--radius);padding:20px 24px;margin:20px 0;font-size:14px;color:var(--muted);line-height:1.85;max-width:460px;text-align:left;width:100%">
-    <strong style="color:var(--black)">📋 Next Steps for Bank Transfer</strong><br>
+  <!-- The site has no server, so the order details only reach Hanga when the customer sends them. -->
+  <div class="confirm-send" id="sendBox">
+    <strong>One last step: send us your order</strong>
+    <p id="sendMsg">Tap below to send your order details to Hanga so we can confirm your delivery fee and get started.</p>
+    <p id="uploadMsg" class="hidden"><strong>Framing your own photo?</strong> Please attach the original image file (not a screenshot) so it prints sharply.</p>
+    <div class="confirm-send-actions">
+      <a href="#" class="btn btn-gold" id="sendWhatsApp" hidden target="_blank" rel="noopener">Send on WhatsApp</a>
+      <a href="#" class="btn btn-primary" id="sendEmail">Send by Email</a>
+    </div>
+  </div>
+
+  <div id="transferNote" class="hidden confirm-transfer">
+    <strong>📋 Next Steps for Bank Transfer</strong><br>
     Please transfer <strong id="transferAmount">—</strong> to:<br><br>
-    Bank: <strong>Zenith Bank</strong><br>
-    Account: <strong>2234567890</strong><br>
-    Name: <strong>Hanga Frames Ltd</strong><br><br>
+    Bank: <strong data-bank="bankName"></strong><br>
+    Account: <strong data-bank="accountNumber"></strong><br>
+    Name: <strong data-bank="accountName"></strong><br><br>
     Use your order reference as the payment description, then send your receipt to <strong>hello@hanga.ng</strong>. We'll confirm and begin production within 2 hours.
   </div>
 
   <div class="confirm-actions">
     <a href="customize.html" class="btn btn-primary">Create Another Frame</a>
-    <a href="index.html" class="btn btn-outline">Back to Home</a>
+    <a href="index.html" class="btn btn-outline-dark">Back to Home</a>
   </div>
 </div>
 
@@ -93,20 +104,49 @@
 
 const params    = new URLSearchParams(window.location.search);
 const ref       = params.get('ref')    || '—';
-const method    = params.get('method') || 'paystack';
-const orderData = JSON.parse(sessionStorage.getItem('hangaOrderData') || '{}');
+const method    = params.get('method') || 'request';
+let orderData = {};
+try { orderData = JSON.parse(sessionStorage.getItem('hangaOrderData') || '{}'); } catch (e) { orderData = {}; }
 
 document.getElementById('confirmRef').textContent = 'Order Reference: ' + ref;
-if (orderData.email) {
-  document.getElementById('confirmEmail').textContent = 'A confirmation will be sent to ' + orderData.email;
-}
+document.querySelectorAll('[data-bank]').forEach(el => { el.textContent = (HANGA.bank || {})[el.dataset.bank] || ''; });
+
 if (method === 'transfer') {
   document.getElementById('confirmTitle').textContent = 'Order Received!';
   document.getElementById('confirmMsg').textContent   = "We've received your order details. Please complete your bank transfer to confirm production.";
-  document.getElementById('transferNote').classList.remove('hidden');
-  if (orderData.price) {
-    document.getElementById('transferAmount').textContent = '₦' + orderData.price.toLocaleString();
-  }
+  if (HANGA.bank && HANGA.bank.confirmed) document.getElementById('transferNote').classList.remove('hidden');
+  if (orderData.price) document.getElementById('transferAmount').textContent = HANGA.formatNaira(orderData.price);
+} else if (method === 'request') {
+  document.getElementById('confirmTitle').textContent = 'Almost done!';
+  document.getElementById('confirmMsg').textContent   = "Your order reference is below. Send us your order and we'll confirm your total (frame + delivery) and how to pay before we start framing.";
+} else {
+  document.getElementById('confirmTitle').textContent = 'Payment received — thank you!';
+  document.getElementById('confirmMsg').textContent   = "We've received your order and will start crafting your frame.";
+  document.getElementById('sendMsg').textContent      = 'Send us your order details so we can confirm delivery to your address.';
+}
+
+if (orderData.isUpload) document.getElementById('uploadMsg').classList.remove('hidden');
+
+const summary = [
+  'Order reference: ' + ref,
+  'Image: ' + (orderData.imageName || '—') + (orderData.isUpload ? ' (my own photo — attached)' : ''),
+  'Size: ' + (orderData.size ? orderData.size + '"' : '—'),
+  'Frame: ' + (orderData.style || '—'),
+  'Frame price: ' + (orderData.price ? HANGA.formatNaira(orderData.price) : '—') + ' + delivery',
+  'Payment: ' + (method === 'paystack' ? 'Paid online (Paystack)' : method === 'transfer' ? 'Bank transfer' : 'To be confirmed'),
+  '',
+  'Name: ' + (orderData.name || ''),
+  'Phone: ' + (orderData.phone || ''),
+  'Email: ' + (orderData.email || ''),
+  'Delivery address: ' + [orderData.address, orderData.city, orderData.state].filter(Boolean).join(', '),
+  orderData.note ? 'Note: ' + orderData.note : ''
+].filter((l, i, a) => l !== '' || i === 6).join('\n');
+
+document.getElementById('sendEmail').href = HANGA.mailtoLink('New Hanga order ' + ref, 'Hi Hanga,\n\nHere is my order:\n\n' + summary + '\n');
+if (HANGA.whatsappNumber) {
+  const wa = document.getElementById('sendWhatsApp');
+  wa.href = HANGA.whatsappLink('Hi Hanga! Here is my order:\n\n' + summary);
+  wa.hidden = false;
 }
 </script>
 

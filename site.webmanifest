@@ -1,0 +1,12 @@
+{
+  "name": "Hanga – Custom Wall Frames",
+  "short_name": "Hanga",
+  "icons": [
+    { "src": "/images/apple-touch-icon.png", "sizes": "180x180", "type": "image/png" },
+    { "src": "/images/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ],
+  "theme_color": "#1a1a1a",
+  "background_color": "#ffffff",
+  "display": "standalone",
+  "start_url": "/"
+}

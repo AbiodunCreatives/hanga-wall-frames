@@ -1346,3 +1346,32 @@ a.pv-card { display: flex; }
 .faq-list details p { padding: 0 22px 18px; color: var(--muted); line-height: 1.75; font-size: 15px; }
 .faq-list a { color: var(--black); }
 
+
+/* Outline button for light backgrounds */
+.btn-outline-dark { background: transparent; color: var(--black); border: 1.5px solid var(--black); }
+.btn-outline-dark:hover { background: var(--black); color: var(--white); }
+.whatsapp-order-btn { display: block; width: 100%; margin-top: 10px; text-align: center; padding: 13px; font-size: 13px; }
+.whatsapp-order-btn[hidden] { display: none; }
+.summary-note { font-size: 12px; color: var(--muted); margin-top: 12px; line-height: 1.6; text-align: center; }
+.confirm-ref { color: #8a6d2e; }
+
+/* Checkout payment options */
+button.pay-method { font: inherit; color: inherit; background: var(--white); }
+.pay-method[hidden], .payment-methods[hidden] { display: none; }
+.pay-method-sub { font-size: 11px; color: var(--muted); margin-top: 4px; }
+.pay-panel { background: var(--cream); border-radius: 6px; padding: 16px; font-size: 14px; color: var(--muted); line-height: 1.8; }
+.pay-panel strong { color: var(--black); }
+.pay-panel--paystack { background: rgba(0,195,247,0.06); border: 1px solid rgba(0,195,247,0.2); }
+
+/* Confirmation: send order */
+.confirm-send, .confirm-transfer {
+  background: var(--cream); border-radius: var(--radius); padding: 20px 24px; margin: 4px 0 24px;
+  font-size: 14px; color: var(--muted); line-height: 1.8; max-width: 460px; width: 100%; text-align: left;
+}
+.confirm-send > strong, .confirm-transfer > strong { color: var(--black); }
+.confirm-send p { margin: 6px 0 0; font-size: 14px; }
+.confirm-send-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+.confirm-send-actions .btn { flex: 1; text-align: center; min-width: 160px; }
+.confirm-send-actions .btn[hidden] { display: none; }
+.paystack-logo, .pay-method-sub, .pay-method-title { display: block; }
+.pay-method-title { font-weight: 700; }

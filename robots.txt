@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /checkout.html
+Disallow: /confirmation.html
+
+Sitemap: https://hanga-frames.vercel.app/sitemap.xml
