@@ -11,9 +11,8 @@ Live: https://hanga-frames.vercel.app
 | `index.html` | Home: hero, how it works, gallery, sizes & prices, reviews, delivery & FAQs |
 | `customize.html` | Frame builder with live room preview (`?image=<id>`, `?size=16x20`, `?tab=upload`) |
 | `checkout.html` | Name, phone, email and delivery address, then place order |
-| `confirmation.html` | Printable receipt, Pay with Paystack, WhatsApp/email send (`js/receipt.js`, `js/receipt-page.js`) |
+| `confirmation.html` | Receipt, Pay with Paystack, Send on WhatsApp (`js/receipt.js`, `js/receipt-page.js`) |
 | `api/` | Vercel functions: `config` (public key), `verify` (payment check), `paystack-webhook` (owner email) |
-| `confirmation.html` | Order reference + "send us your order" (WhatsApp / email) |
 | `about.html` | Brand story and values |
 | `404.html` | Not-found page (served automatically by Vercel) |
 

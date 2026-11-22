@@ -44,22 +44,18 @@
 
   <article class="receipt" id="receipt" aria-label="Order receipt"></article>
 
-  <div class="rc-alert no-print" id="payAlert" role="status" hidden></div>
-
-  <!-- Actions sit below the receipt -->
+  <!-- Actions: receipt first, then ONE primary button, then secondary actions -->
   <section class="rc-actions no-print" aria-label="Next steps">
-    <button type="button" class="btn rc-btn rc-btn-pay" id="payBtn" hidden>Pay <span id="payAmt"></span> with Paystack</button>
+    <div class="rc-primary" id="primarySlot">
+      <button type="button" class="btn rc-btn rc-btn-pay" id="payBtn" hidden>Pay <span id="payAmt"></span> with Paystack</button>
+    </div>
     <p class="rc-pay-note" id="payNote" hidden>Card, bank transfer or USSD · secured by Paystack</p>
-    <p class="rc-or" id="sendLead">Send your order to Hanga:</p>
-    <div class="rc-send">
-      <a href="#" class="btn rc-btn rc-btn-wa" id="sendWhatsApp" hidden target="_blank" rel="noopener">Send on WhatsApp</a>
-      <a href="#" class="btn rc-btn rc-btn-mail" id="sendEmail">Send by Email</a>
+    <div class="rc-alert" id="payAlert" role="status" hidden></div>
+    <div class="rc-secondary1" id="secondarySlot">
+      <a href="#" class="btn rc-btn rc-btn-sec" id="sendWhatsApp" hidden target="_blank" rel="noopener">Send on WhatsApp</a>
     </div>
     <p id="uploadMsg" class="rc-upload" hidden><strong>Framing your own photo or artwork?</strong> Please send us the original file (PDF or full-size image, not a screenshot) so it prints sharply.</p>
-    <div class="rc-secondary">
-      <button type="button" class="btn rc-btn rc-btn-ghost" id="printBtn">Print / Save PDF</button>
-      <a href="customize.html" class="btn rc-btn rc-btn-ghost">Continue shopping</a>
-    </div>
+    <a href="customize.html" class="rc-continue">Continue shopping →</a>
   </section>
 
   <div id="transferNote" class="hidden confirm-transfer no-print">

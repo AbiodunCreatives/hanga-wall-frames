@@ -22,11 +22,14 @@
     $('confirmTitle').textContent = paid ? 'Payment received, thank you!' : 'Your receipt';
     $('confirmMsg').textContent = paid
       ? 'Hanga has your paid order and will be in touch about delivery. We will confirm your delivery fee after your order.'
-      : (pk && order.email ? 'Your order is saved. Pay below, or send it to us on WhatsApp or email.' : 'Your order is saved. Send it to us on WhatsApp or email to finish, and we will confirm your total and how to pay.');
+      : (pk && order.email ? 'Your order is saved. Pay below, or send it to us on WhatsApp.' : 'Your order is saved. Send it to us on WhatsApp to finish, and we will confirm your total and how to pay.');
     var hidePay = paid || !pk || !order.price || !order.email;
     $('payBtn').hidden = hidePay; $('payNote').hidden = hidePay;
     $('payAmt').textContent = order.price ? H.formatNaira(order.price) : '';
-    $('sendLead').textContent = paid ? 'Anything to add? Message us:' : (hidePay ? 'Send your order to Hanga to finish:' : 'Or send your order to Hanga instead:');
+    // One primary action under the receipt: Paystack, or WhatsApp when payments are off.
+    var wa = $('sendWhatsApp'), waPrimary = hidePay && !paid && !!H.whatsappNumber;
+    if (waPrimary) { $('primarySlot').appendChild(wa); wa.className = 'btn rc-btn rc-btn-wa'; wa.textContent = 'Send order on WhatsApp'; }
+    else { $('secondarySlot').appendChild(wa); wa.className = 'btn rc-btn rc-btn-sec'; wa.textContent = paid ? 'Message us on WhatsApp' : 'Send on WhatsApp'; }
     if (method === 'transfer' && H.bank && H.bank.confirmed && !paid) { $('transferNote').classList.remove('hidden'); $('transferAmount').textContent = H.formatNaira(order.price); }
   }
 
@@ -44,12 +47,11 @@
     return lines.join('\n');
   }
   function wireSend() {
-    $('sendEmail').href = H.mailtoLink('Hanga order ' + ref, 'Hi Hanga,\n\nHere is my order:\n\n' + summaryText() + '\n');
     if (H.whatsappNumber) { $('sendWhatsApp').href = H.whatsappLink('Hi Hanga! Here is my order:\n\n' + summaryText()); $('sendWhatsApp').hidden = false; }
     $('uploadMsg').hidden = !H.orderPieces(order).some(function (p) { return p.isUpload; });
   }
   function alertBox(msg, kind, retry) {
-    var a = $('payAlert'); a.textContent = ''; a.className = 'rc-alert no-print ' + (kind || '');
+    var a = $('payAlert'); a.textContent = ''; a.className = 'rc-alert ' + (kind || '');
     a.appendChild(document.createTextNode(msg + ' '));
     if (retry) { var b = document.createElement('button'); b.type = 'button'; b.className = 'rc-link'; b.textContent = 'Retry payment'; b.onclick = pay; a.appendChild(b); }
     if (retry && H.whatsappNumber) { var w = document.createElement('a'); w.className = 'rc-link'; w.href = $('sendWhatsApp').href; w.target = '_blank'; w.rel = 'noopener'; w.textContent = 'Order via WhatsApp instead'; a.append(' · ', w); }
@@ -104,7 +106,6 @@
     }).catch(function () { $('payBtn').disabled = false; alertBox('Could not load Paystack. Check your connection.', 'is-warn', true); });
   }
   $('payBtn').addEventListener('click', pay);
-  $('printBtn').addEventListener('click', function () { window.print(); });
 
   render(); wireSend();
   if (psRef) verify(psRef);
