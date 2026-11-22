@@ -131,7 +131,7 @@ const summary = [
   'Order reference: ' + ref,
   'Image: ' + (orderData.imageName || '—') + (orderData.isUpload ? ' (my own photo — attached)' : ''),
   'Size: ' + (orderData.size ? orderData.size + '"' : '—'),
-  'Frame: ' + (orderData.style || '—'),
+  'Style: ' + (orderData.style === 'Borderless' ? 'Borderless (no frame)' : (orderData.style ? orderData.style + ' frame' : '—')),
   'Frame price: ' + (orderData.price ? HANGA.formatNaira(orderData.price) : '—') + ' + delivery',
   'Payment: ' + (method === 'paystack' ? 'Paid online (Paystack)' : method === 'transfer' ? 'Bank transfer' : 'To be confirmed'),
   '',

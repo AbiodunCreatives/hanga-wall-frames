@@ -4,13 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Customise Your Frame – Hanga</title>
-  <meta name="description" content="Build your custom wall frame: choose a print or upload your own photo, pick one of six sizes from ₦8,000 and a black, white or wood frame, and see it on a real wall.">
+  <meta name="description" content="Build your custom wall frame: choose a print or upload your own photo, pick one of six sizes from ₦8,000 and a black or white frame or a borderless finish, and see it on a real wall.">
   <meta name="theme-color" content="#1a1a1a">
   <link rel="canonical" href="https://hanga-frames.vercel.app/customize.html">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Hanga">
   <meta property="og:title" content="Customise Your Frame – Hanga">
-  <meta property="og:description" content="Build your custom wall frame: choose a print or upload your own photo, pick one of six sizes from ₦8,000 and a black, white or wood frame, and see it on a real wall.">
+  <meta property="og:description" content="Build your custom wall frame: choose a print or upload your own photo, pick one of six sizes from ₦8,000 and a black or white frame or a borderless finish, and see it on a real wall.">
   <meta property="og:url" content="https://hanga-frames.vercel.app/customize.html">
   <meta property="og:image" content="https://hanga-frames.vercel.app/images/og-image.jpg">
   <meta property="og:image:width" content="1200">
@@ -18,7 +18,7 @@
   <meta property="og:locale" content="en_NG">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Customise Your Frame – Hanga">
-  <meta name="twitter:description" content="Build your custom wall frame: choose a print or upload your own photo, pick one of six sizes from ₦8,000 and a black, white or wood frame, and see it on a real wall.">
+  <meta name="twitter:description" content="Build your custom wall frame: choose a print or upload your own photo, pick one of six sizes from ₦8,000 and a black or white frame or a borderless finish, and see it on a real wall.">
   <meta name="twitter:image" content="https://hanga-frames.vercel.app/images/og-image.jpg">
   <link rel="icon" href="images/favicon.svg" type="image/svg+xml">
   <link rel="icon" href="images/favicon-32.png" type="image/png" sizes="32x32">
@@ -181,8 +181,8 @@
           <span class="swatch-label">White</span>
         </div>
         <div>
-          <div class="swatch swatch-wood" data-style="Wood" onclick="selectStyle(this,'Wood')"></div>
-          <span class="swatch-label">Natural Wood</span>
+          <div class="swatch swatch-borderless" data-style="Borderless" onclick="selectStyle(this,'Borderless')"></div>
+          <span class="swatch-label">Borderless</span>
         </div>
       </div>
     </div>
@@ -245,7 +245,10 @@ const state = {
   imageData: null, isUpload: false, size: null, price: 0, style: 'Black'
 };
 
-const FRAME_COLOURS = { Black: '#1a1a1a', White: '#f3f3f3', Wood: '#c8a46e' };
+const FRAME_STYLES  = ['Black', 'White', 'Borderless'];
+const FRAME_COLOURS = { Black: '#1a1a1a', White: '#f3f3f3' };
+// 'Borderless' = the print alone, no moulding. Shared label helper:
+function styleLabel(style) { return style === 'Borderless' ? 'Borderless (no frame)' : (style || 'Black') + ' Frame'; }
 
 // Room mockup: Unsplash living-room photo, wall extended for large frames.
 // Coordinates are in the prepared image's pixels (images/room/living-room.jpg).
@@ -451,62 +454,6 @@ function mouldingPath(ctx, fx, fy, fw, fh, m) {
   ctx.rect(fx + m, fy + m, fw - m * 2, fh - m * 2);
 }
 
-function drawWoodMoulding(ctx, fx, fy, fw, fh, m) {
-  const ix = fx + m, iy = fy + m, iw = fw - m * 2, ih = fh - m * 2;
-  // Base moulding colour
-  ctx.save();
-  mouldingPath(ctx, fx, fy, fw, fh, m);
-  ctx.fillStyle = '#c4a06a';
-  ctx.fill('evenodd');
-  ctx.restore();
-
-  const rails = [
-    { // top — grain runs left to right
-      clip() { ctx.moveTo(fx, fy); ctx.lineTo(fx + fw, fy); ctx.lineTo(ix + iw, iy); ctx.lineTo(ix, iy); },
-      horiz: true, x: fx, y: fy, len: fw, thick: m
-    },
-    { // bottom
-      clip() { ctx.moveTo(fx, fy + fh); ctx.lineTo(fx + fw, fy + fh); ctx.lineTo(ix + iw, iy + ih); ctx.lineTo(ix, iy + ih); },
-      horiz: true, x: fx, y: iy + ih, len: fw, thick: m
-    },
-    { // left — grain runs top to bottom
-      clip() { ctx.moveTo(fx, fy); ctx.lineTo(ix, iy); ctx.lineTo(ix, iy + ih); ctx.lineTo(fx, fy + fh); },
-      horiz: false, x: fx, y: fy, len: fh, thick: m
-    },
-    { // right
-      clip() { ctx.moveTo(fx + fw, fy); ctx.lineTo(ix + iw, iy); ctx.lineTo(ix + iw, iy + ih); ctx.lineTo(fx + fw, fy + fh); },
-      horiz: false, x: ix + iw, y: fy, len: fh, thick: m
-    }
-  ];
-
-  rails.forEach((rail, idx) => {
-    ctx.save();
-    ctx.beginPath();
-    rail.clip();
-    ctx.closePath();
-    ctx.clip();
-    const step = Math.max(1.6, rail.thick / 3.2);
-    for (let i = 0, n = 0; i < rail.len + step; i += step, n++) {
-      const jitter = ((idx * 17 + n * 13) % 9) - 4;
-      const t = (n % 5);
-      ctx.strokeStyle = t === 0 ? 'rgba(90,50,18,0.10)' : t === 1 ? 'rgba(255,236,200,0.14)' : 'rgba(120,70,25,0.07)';
-      ctx.lineWidth = t === 0 ? 1.2 : 0.8;
-      ctx.beginPath();
-      if (rail.horiz) {
-        const yy = rail.y + rail.thick * (0.2 + (n % 4) * 0.18);
-        ctx.moveTo(rail.x - 2, yy + jitter * 0.15);
-        ctx.lineTo(rail.x + rail.len + 2, yy - jitter * 0.15);
-      } else {
-        const xx = rail.x + rail.thick * (0.2 + (n % 4) * 0.18);
-        ctx.moveTo(xx + jitter * 0.15, rail.y - 2);
-        ctx.lineTo(xx - jitter * 0.15, rail.y + rail.len + 2);
-      }
-      ctx.stroke();
-    }
-    ctx.restore();
-  });
-}
-
 function shadeMoulding(ctx, fx, fy, fw, fh, m, style) {
   const ix = fx + m, iy = fy + m, iw = fw - m * 2, ih = fh - m * 2;
   const inset = Math.max(1, m * 0.28);
@@ -563,7 +510,8 @@ function renderPreview() {
 
   const sizeChosen = !!state.size;
   const { wIn, hIn } = parseFrameSize(state.size || '16×20');
-  const style = state.style || 'Black';
+  const style = FRAME_STYLES.indexOf(state.style) === -1 ? 'Black' : state.style;
+  const borderless = style === 'Borderless';
   const frameCol = FRAME_COLOURS[style] || '#1a1a1a';
 
   const drawScene = imgEl => {
@@ -583,7 +531,7 @@ function renderPreview() {
     const sofaTop  = ROOM.sofaTop * scale;
     const fw = wIn * 2.54 * pxPerCm;
     const fh = hIn * 2.54 * pxPerCm;
-    const m  = ROOM.mouldingCm * pxPerCm;
+    const m  = borderless ? 0 : ROOM.mouldingCm * pxPerCm;
     const fx = sofaMidX - fw / 2;
     const fy = sofaTop - ROOM.hangGapCm * pxPerCm - fh;
     const ix = fx + m, iy = fy + m, iw = fw - m * 2, ih = fh - m * 2;
@@ -594,7 +542,7 @@ function renderPreview() {
     ctx.shadowBlur = 18 * scale * 2.2;
     ctx.shadowOffsetX = 2 * scale;
     ctx.shadowOffsetY = 8 * scale;
-    ctx.fillStyle = frameCol;
+    ctx.fillStyle = borderless ? '#e8e3dc' : frameCol;
     ctx.fillRect(fx, fy, fw, fh);
     ctx.restore();
 
@@ -608,21 +556,26 @@ function renderPreview() {
     }
 
     // ── Moulding only (even-odd ring), then subtle shading ──
-    if (style === 'Wood') {
-      drawWoodMoulding(ctx, fx, fy, fw, fh, m);
-    } else {
+    if (!borderless) {
       ctx.save();
       mouldingPath(ctx, fx, fy, fw, fh, m);
       ctx.fillStyle = frameCol;
       ctx.fill('evenodd');
       ctx.restore();
+      shadeMoulding(ctx, fx, fy, fw, fh, m, style);
+    } else {
+      // Borderless: a hair-thin edge so the print reads as a mounted panel
+      ctx.save();
+      ctx.strokeStyle = 'rgba(0,0,0,0.12)';
+      ctx.lineWidth = 1;
+      ctx.strokeRect(fx + 0.5, fy + 0.5, fw - 1, fh - 1);
+      ctx.restore();
     }
-    shadeMoulding(ctx, fx, fy, fw, fh, m, style);
 
     if (sizeChosen) {
-      label.textContent = `Preview: ${state.size}" · ${style} Frame`;
+      label.textContent = `Preview: ${state.size}" · ${styleLabel(style)}`;
     } else {
-      label.textContent = `Preview: ${style} Frame · 16×20" shown for scale`;
+      label.textContent = `Preview: ${styleLabel(style)} · 16×20" shown for scale`;
     }
     if (scaleNote) scaleNote.textContent = 'Shown at real scale on a 200 cm sofa.';
   };
@@ -666,7 +619,7 @@ function orderOnWhatsApp() {
     'Hi Hanga! I\'d like to order a frame:',
     '• Image: ' + state.imageName + (state.isUpload ? ' (my own photo — I\'ll send it here)' : ''),
     '• Size: ' + state.size + '"',
-    '• Frame: ' + state.style,
+    '• Style: ' + styleLabel(state.style),
     '• Price: ' + HANGA.formatNaira(state.price) + ' + delivery'
   ];
   window.open(HANGA.whatsappLink(lines.join('\n')), '_blank', 'noopener');

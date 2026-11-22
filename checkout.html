@@ -180,7 +180,8 @@ if (!order.imageName || !order.size) {
 }
 
 document.getElementById('sidebarName').textContent    = order.imageName || 'Custom Frame';
-document.getElementById('sidebarDetails').textContent = `${order.size || '—'} · ${order.style || '—'} Frame`;
+const styleText = order.style === 'Borderless' ? 'Borderless (no frame)' : (order.style || '—') + ' Frame';
+document.getElementById('sidebarDetails').textContent = `${order.size || '—'} · ${styleText}`;
 document.getElementById('sidebarFramePrice').textContent = HANGA.formatNaira(order.price);
 document.getElementById('sidebarTotal').textContent       = HANGA.formatNaira(order.price) + ' + delivery';
 
