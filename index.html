@@ -69,83 +69,67 @@
 </section>
 
 <!-- ─── How It Works ───────────────────────────────────────── -->
-<section class="section hiw-section">
-  <div class="hiw-header">
+<section class="section hiw2-section" aria-labelledby="hiwTitle">
+  <div class="hiw2-header">
     <span class="section-label">Simple process</span>
-    <h2 class="section-title">How It Works</h2>
-    <p class="section-sub" style="margin-left:auto;margin-right:auto">From idea to wall in three easy steps.</p>
+    <h2 class="section-title" id="hiwTitle">How It Works</h2>
+    <p class="section-sub hiw2-sub">From idea to wall in three easy steps.</p>
   </div>
 
-  <div class="hiw-timeline">
-
-    <!-- Step 1 -->
-    <div class="hiw-item">
-      <div class="hiw-trail">
-        <div class="hiw-dot"></div>
-        <div class="hiw-line"></div>
-      </div>
-      <div class="hiw-body">
-        <div class="hiw-icon-wrap">
-          <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <ol class="hiw2-steps">
+    <li class="hiw2-step" style="--i:0">
+      <div class="hiw2-card">
+        <div class="hiw2-badge" aria-hidden="true">
+          <span class="hiw2-icon">
+            <svg focusable="false" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
             <rect x="6" y="10" width="36" height="28" rx="2" stroke="currentColor" stroke-width="1.8"/>
             <circle cx="17" cy="20" r="3.5" stroke="currentColor" stroke-width="1.8"/>
             <path d="M6 32l9-8 7 7 5-5 9 9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
+          </span>
+          <span class="hiw2-num">01</span>
         </div>
-        <div class="hiw-text">
-          <span class="hiw-num">01</span>
-          <h3>Choose Your Image</h3>
-          <p>Browse our curated gallery of prints, or upload a photo that means something to you.</p>
-        </div>
+        <h3 class="hiw2-title"><span class="visually-hidden">Step 1: </span>Choose Your Image</h3>
+        <p class="hiw2-text">Browse our curated gallery of prints, or upload a photo that means something to you.</p>
       </div>
-    </div>
-
-    <!-- Step 2 -->
-    <div class="hiw-item">
-      <div class="hiw-trail">
-        <div class="hiw-dot"></div>
-        <div class="hiw-line"></div>
-      </div>
-      <div class="hiw-body">
-        <div class="hiw-icon-wrap">
-          <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <span class="hiw2-connector" aria-hidden="true"><span class="hiw2-connector-line"></span><svg class="hiw2-arrow" viewBox="0 0 24 24" focusable="false"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+    </li>
+    <li class="hiw2-step" style="--i:1">
+      <div class="hiw2-card">
+        <div class="hiw2-badge" aria-hidden="true">
+          <span class="hiw2-icon">
+            <svg focusable="false" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
             <rect x="8" y="8" width="32" height="32" rx="1.5" stroke="currentColor" stroke-width="1.8"/>
             <rect x="14" y="14" width="20" height="20" rx="1" stroke="currentColor" stroke-width="1.4" stroke-dasharray="3 2"/>
             <path d="M8 16h4M8 24h4M8 32h4M16 8v4M24 8v4M32 8v4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
           </svg>
+          </span>
+          <span class="hiw2-num">02</span>
         </div>
-        <div class="hiw-text">
-          <span class="hiw-num">02</span>
-          <h3>Select Size &amp; Style</h3>
-          <p>Six frame sizes, three finishes — black lacquer, clean white, or natural wood. All at one price.</p>
-        </div>
+        <h3 class="hiw2-title"><span class="visually-hidden">Step 2: </span>Select Size &amp; Style</h3>
+        <p class="hiw2-text">Six frame sizes, three finishes — black lacquer, clean white, or natural wood. All at one price.</p>
       </div>
-    </div>
-
-    <!-- Step 3 -->
-    <div class="hiw-item hiw-item--last">
-      <div class="hiw-trail">
-        <div class="hiw-dot hiw-dot--gold"></div>
-      </div>
-      <div class="hiw-body">
-        <div class="hiw-icon-wrap hiw-icon-wrap--gold">
-          <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <span class="hiw2-connector" aria-hidden="true"><span class="hiw2-connector-line"></span><svg class="hiw2-arrow" viewBox="0 0 24 24" focusable="false"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+    </li>
+    <li class="hiw2-step hiw2-step--last" style="--i:2">
+      <div class="hiw2-card">
+        <div class="hiw2-badge" aria-hidden="true">
+          <span class="hiw2-icon">
+            <svg focusable="false" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
             <path d="M6 14h24v20H6z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
             <path d="M30 18h6l6 7v9h-12V18z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
             <circle cx="13" cy="36" r="3" stroke="currentColor" stroke-width="1.8"/>
             <circle cx="36" cy="36" r="3" stroke="currentColor" stroke-width="1.8"/>
             <path d="M18 22h8M18 27h5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
           </svg>
+          </span>
+          <span class="hiw2-num">03</span>
         </div>
-        <div class="hiw-text">
-          <span class="hiw-num">03</span>
-          <h3>We Frame &amp; Deliver</h3>
-          <p>Your print is produced, carefully framed, and delivered to your door within 2–5 business days.</p>
-        </div>
+        <h3 class="hiw2-title"><span class="visually-hidden">Step 3: </span>We Frame &amp; Deliver</h3>
+        <p class="hiw2-text">Your print is produced, carefully framed, and delivered to your door within 2–5 business days.</p>
       </div>
-    </div>
-
-  </div>
+    </li>
+  </ol>
 </section>
 
 <!-- ─── Gallery ─────────────────────────────────────────────── -->
@@ -586,6 +570,20 @@
 </footer>
 
 <script src="js/site.js"></script>
+<script>
+// How It Works: reveal steps as they scroll into view (skipped for reduced motion)
+(function () {
+  var list = document.querySelector('.hiw2-steps');
+  if (!list) return;
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduce || !('IntersectionObserver' in window)) { list.classList.add('is-visible'); return; }
+  list.classList.add('hiw2-animate');
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) { if (e.isIntersecting) { list.classList.add('is-visible'); io.disconnect(); } });
+  }, { threshold: 0.2 });
+  io.observe(list);
+})();
+</script>
 <script>
 function filterGallery(category, btn) {
   const root = btn.closest('.gallery-section') || document;
