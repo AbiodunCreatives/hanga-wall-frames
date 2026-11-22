@@ -41,6 +41,7 @@
   <h1 id="confirmTitle">Order Placed!</h1>
   <p id="confirmMsg">Thank you for your order. We've received your request and will begin crafting your frame right away.</p>
   <div class="confirm-ref" id="confirmRef">—</div>
+  <div class="confirm-items" id="confirmItems" hidden></div>
 
   <!-- The site has no server, so the order details only reach Hanga when the customer sends them. -->
   <div class="confirm-send" id="sendBox">
@@ -127,18 +128,25 @@ if (method === 'transfer') {
 
 if (orderData.isUpload) document.getElementById('uploadMsg').classList.remove('hidden');
 
+const itemLines = orderData.price ? HANGA.orderLines(orderData) : ['• Order details not found on this device'];
 const summary = [
   'Order reference: ' + ref,
-  'Image: ' + (orderData.imageName || '—') + (orderData.isUpload ? ' (my own photo — attached)' : ''),
-  'Size: ' + (orderData.size ? orderData.size + '"' : '—'),
-  'Style: ' + (orderData.style === 'Borderless' ? 'Borderless (no frame)' : (orderData.style ? orderData.style + ' frame' : '—')),
-  'Frame price: ' + (orderData.price ? HANGA.formatNaira(orderData.price) : '—') + ' + delivery',
+  ...itemLines,
   'Payment: ' + (method === 'paystack' ? 'Paid online (Paystack)' : method === 'transfer' ? 'Bank transfer' : 'To be confirmed'),
   '',
   'Name: ' + (orderData.name || ''),
   'Phone: ' + (orderData.phone || ''),
   'Delivery address: ' + (orderData.address || '')
-].filter((l, i, a) => l !== '' || i === 6).join('\n');
+].join('\n');
+
+// On-page recap of what was ordered (every piece of a set is listed)
+if (orderData.price) {
+  const box = document.getElementById('confirmItems');
+  const h = document.createElement('strong'); h.textContent = 'Your order';
+  const ul = document.createElement('ul');
+  itemLines.forEach(l => { const li = document.createElement('li'); li.textContent = l.replace(/^\s*•\s*/, ''); ul.appendChild(li); });
+  box.append(h, ul); box.hidden = false;
+}
 
 document.getElementById('sendEmail').href = HANGA.mailtoLink('New Hanga order ' + ref, 'Hi Hanga,\n\nHere is my order:\n\n' + summary + '\n');
 if (HANGA.whatsappNumber) {

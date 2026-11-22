@@ -20,6 +20,11 @@ window.HANGA = {
   // payment stays off until an email approach is decided (see checkout.html).
   paystackPublicKey: '',
 
+  // Multi-frame sets: naira taken off the WHOLE set (per-frame price × pieces).
+  // Single frames get no discount. Change the numbers here to change every
+  // price on the site (builder, checkout, confirmation, order messages).
+  setDiscounts: { 2: 200, 3: 500 },
+
   // TODO(owner): the bank account customers should pay into.
   // The details below were already on the site but look like a placeholder
   // (account 2234567890). They stay hidden until you set confirmed: true.
@@ -35,6 +40,40 @@ window.HANGA = {
   var H = window.HANGA;
 
   H.formatNaira = function (n) { return '₦' + Number(n || 0).toLocaleString('en-NG'); };
+
+  // ── Sets: Single (1) / Pair (2) / Trio (3) ───────────────────
+  H.setLabel = function (n) { return ({ 1: 'Single', 2: 'Pair', 3: 'Trio' })[n] || 'Single'; };
+  H.setDiscount = function (n) { return n > 1 ? Number((H.setDiscounts || {})[n] || 0) : 0; };
+  H.setTotal = function (perFrame, n) { n = n || 1; return Math.max(0, Number(perFrame || 0) * n - H.setDiscount(n)); };
+
+  // Normalise a saved order (old single-frame orders had no `items`).
+  H.orderPieces = function (o) {
+    o = o || {};
+    if (o.items && o.items.length) return o.items;
+    return o.imageName ? [{ imageId: o.imageId, imageName: o.imageName, isUpload: !!o.isUpload }] : [];
+  };
+  H.styleText = function (style) { return style === 'Borderless' ? 'Borderless (no frame)' : (style || 'Black') + ' frame'; };
+
+  // Plain-text lines describing an order, used in WhatsApp / email messages.
+  H.orderLines = function (o) {
+    var pieces = H.orderPieces(o), n = o.pieces || pieces.length || 1, lines = [];
+    var unit = o.unitPrice || (n === 1 ? o.price : 0);
+    if (n > 1) {
+      lines.push('• ' + (o.setName ? o.setName + ' — ' : '') + H.setLabel(n) + ' (' + n + ' frames, sent together)');
+      pieces.forEach(function (p, i) { lines.push('   Frame ' + (i + 1) + ': ' + p.imageName + (p.isUpload ? ' (my own photo)' : '')); });
+    } else if (pieces[0]) {
+      lines.push('• Image: ' + pieces[0].imageName + (pieces[0].isUpload ? ' (my own photo)' : ''));
+    }
+    lines.push('• Size: ' + (o.size ? o.size + '"' + (n > 1 ? ' each' : '') : '—'));
+    lines.push('• Style: ' + H.styleText(o.style));
+    if (n > 1 && unit) {
+      lines.push('• Frames: ' + n + ' × ' + H.formatNaira(unit) + ' = ' + H.formatNaira(unit * n));
+      var d = o.discount != null ? o.discount : H.setDiscount(n);
+      if (d) lines.push('• ' + H.setLabel(n) + ' saving: −' + H.formatNaira(d));
+    }
+    lines.push('• Total: ' + H.formatNaira(o.price) + ' + delivery');
+    return lines;
+  };
 
   H.whatsappLink = function (text) {
     if (!H.whatsappNumber) return '';

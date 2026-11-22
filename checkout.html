@@ -50,8 +50,10 @@
             <p id="sidebarDetails">—</p>
           </div>
         </div>
+        <ol class="order-pieces" id="sidebarPieces" hidden></ol>
         <div class="sidebar-totals">
-          <div class="row"><span>Frame</span><span id="sidebarFramePrice">₦0</span></div>
+          <div class="row"><span id="sidebarFrameLabel">Frame</span><span id="sidebarFramePrice">₦0</span></div>
+          <div class="row saving" id="sidebarSaveRow" hidden><span id="sidebarSaveLabel">Set saving</span><span id="sidebarSave">—</span></div>
           <div class="row"><span>Delivery</span><span id="sidebarDelivery">TBC</span></div>
           <div class="row grand"><span>Total</span><span id="sidebarTotal">₦0</span></div>
         </div>
@@ -179,20 +181,44 @@ if (!order.imageName || !order.size) {
   window.location.replace('customize.html');
 }
 
-document.getElementById('sidebarName').textContent    = order.imageName || 'Custom Frame';
-const styleText = order.style === 'Borderless' ? 'Borderless (no frame)' : (order.style || '—') + ' Frame';
-document.getElementById('sidebarDetails').textContent = `${order.size || '—'} · ${styleText}`;
-document.getElementById('sidebarFramePrice').textContent = HANGA.formatNaira(order.price);
-document.getElementById('sidebarTotal').textContent       = HANGA.formatNaira(order.price) + ' + delivery';
+const pieces = HANGA.orderPieces(order);
+const nPieces = order.pieces || pieces.length || 1;
+const unitPrice = order.unitPrice || (nPieces === 1 ? order.price : 0);
+document.getElementById('sidebarName').textContent = order.imageName || 'Custom Frame';
+document.getElementById('sidebarDetails').textContent =
+  (nPieces > 1 ? `${HANGA.setLabel(nPieces)} of ${nPieces} · ` : '') + `${order.size || '—'}"${nPieces > 1 ? ' each' : ''} · ${HANGA.styleText(order.style)}`;
+if (nPieces > 1) {
+  const list = document.getElementById('sidebarPieces');
+  pieces.forEach((p, i) => {
+    const li = document.createElement('li');
+    li.textContent = `Frame ${i + 1}: ${p.imageName}${p.isUpload ? ' (your photo)' : ''}`;
+    list.appendChild(li);
+  });
+  list.hidden = false;
+  document.getElementById('sidebarFrameLabel').textContent = `Frames (${nPieces} × ${HANGA.formatNaira(unitPrice)})`;
+  document.getElementById('sidebarFramePrice').textContent = HANGA.formatNaira(unitPrice * nPieces);
+  const disc = order.discount != null ? order.discount : HANGA.setDiscount(nPieces);
+  if (disc) {
+    document.getElementById('sidebarSaveLabel').textContent = `${HANGA.setLabel(nPieces)} saving`;
+    document.getElementById('sidebarSave').textContent = '−' + HANGA.formatNaira(disc);
+    document.getElementById('sidebarSaveRow').hidden = false;
+  }
+} else {
+  document.getElementById('sidebarFramePrice').textContent = HANGA.formatNaira(order.price);
+}
+document.getElementById('sidebarTotal').textContent = HANGA.formatNaira(order.price) + ' + delivery';
 
 const sidebarImg = document.getElementById('sidebarImg');
-if (order.imageData) {
+const pics = pieces.map(p => p.imageData).filter(Boolean);
+if (!pics.length && order.imageData) pics.push(order.imageData);
+if (pics.length) {
   sidebarImg.textContent = '';
-  const im = document.createElement('img');
-  im.src = order.imageData; im.alt = 'Your chosen image';
-  sidebarImg.appendChild(im);
-} else if (order.imageEmoji) {
-  sidebarImg.textContent = order.imageEmoji;
+  sidebarImg.classList.toggle('is-set', nPieces > 1);
+  pics.slice(0, 3).forEach((src, i) => {
+    const im = document.createElement('img');
+    im.src = src; im.alt = nPieces > 1 ? `Frame ${i + 1}` : 'Your chosen image';
+    sidebarImg.appendChild(im);
+  });
 }
 
 // ── Payment toggle ─────────────────────────────────────────────
@@ -254,7 +280,8 @@ function customerDetails() {
 
 function saveAndConfirm(ref, method) {
   const data = Object.assign({ ref, method }, customerDetails(), order);
-  delete data.imageData; // keep storage small; the confirmation page doesn't need the picture
+  delete data.imageData; // keep storage small; the confirmation page doesn't need the pictures
+  if (data.items) data.items = data.items.map(i => ({ imageId: i.imageId, imageName: i.imageName, isUpload: i.isUpload }));
   sessionStorage.setItem('hangaOrderRef', ref);
   sessionStorage.setItem('hangaOrderData', JSON.stringify(data));
   window.location.href = `confirmation.html?ref=${encodeURIComponent(ref)}&method=${method}`;

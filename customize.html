@@ -69,24 +69,63 @@
   <!-- ── Config Panel ───────────────────────────────────────── -->
   <div class="config-panel">
     <h1>Build Your Frame</h1>
-    <p class="tagline text-muted">Pick an image, choose your size and style, then order.</p>
+    <p class="tagline text-muted">Choose one frame or a set, pick your images, size and style, then order.</p>
 
-    <ol class="bld-progress" aria-label="Your progress">
-      <li class="bld-progress-step" data-step="image"><span class="bld-progress-dot" aria-hidden="true">1</span><span class="bld-progress-label">Image</span></li>
-      <li class="bld-progress-step" data-step="size"><span class="bld-progress-dot" aria-hidden="true">2</span><span class="bld-progress-label">Size</span></li>
-      <li class="bld-progress-step" data-step="style"><span class="bld-progress-dot" aria-hidden="true">3</span><span class="bld-progress-label">Style</span></li>
-      <li class="bld-progress-step" data-step="order"><span class="bld-progress-dot" aria-hidden="true">4</span><span class="bld-progress-label">Order</span></li>
+    <ol class="bld-progress">
+      <li class="bld-progress-step" data-step="pieces"><span class="bld-progress-dot" aria-hidden="true">1</span><span class="bld-progress-label">Frames</span></li>
+      <li class="bld-progress-step" data-step="image"><span class="bld-progress-dot" aria-hidden="true">2</span><span class="bld-progress-label">Image</span></li>
+      <li class="bld-progress-step" data-step="size"><span class="bld-progress-dot" aria-hidden="true">3</span><span class="bld-progress-label">Size</span></li>
+      <li class="bld-progress-step" data-step="style"><span class="bld-progress-dot" aria-hidden="true">4</span><span class="bld-progress-label">Style</span></li>
+      <li class="bld-progress-step" data-step="order"><span class="bld-progress-dot" aria-hidden="true">5</span><span class="bld-progress-label">Order</span></li>
     </ol>
 
-    <!-- Step 1 -->
+    <!-- Step 1: how many frames -->
+    <div class="config-section bld-step is-done" data-step="pieces" role="group" aria-labelledby="piecesHeading">
+      <div class="bld-step-head">
+        <span class="bld-step-icon" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none" focusable="false"><rect x="4" y="14" width="11" height="15" rx="1" stroke="currentColor" stroke-width="2.2"/><rect x="18.5" y="10" width="11" height="15" rx="1" stroke="currentColor" stroke-width="2.2"/><rect x="33" y="14" width="11" height="15" rx="1" stroke="currentColor" stroke-width="2.2"/><path d="M8 38h32" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg><span class="bld-step-num">01</span></span>
+        <div class="bld-step-titles">
+          <h3 id="piecesHeading"><span class="visually-hidden">Step 1: </span>How Many Frames?</h3>
+          <p class="bld-step-status" id="statusPieces" aria-live="polite">Single frame</p>
+        </div>
+        <svg class="bld-step-check" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="bld-qty" id="qtyOptions" role="group" aria-labelledby="piecesHeading">
+        <button type="button" class="bld-qty-opt selected" aria-pressed="true" data-pieces="1" onclick="selectPieces(1)">
+          <span class="bld-qty-art" aria-hidden="true"><i></i></span>
+          <span class="bld-qty-name">Single</span>
+          <span class="bld-qty-sub">1 frame</span>
+        </button>
+        <button type="button" class="bld-qty-opt" aria-pressed="false" data-pieces="2" onclick="selectPieces(2)">
+          <span class="bld-qty-art" aria-hidden="true"><i></i><i></i></span>
+          <span class="bld-qty-name">Pair</span>
+          <span class="bld-qty-sub">2 frames</span>
+          <span class="bld-qty-save" data-save="2"></span>
+        </button>
+        <button type="button" class="bld-qty-opt" aria-pressed="false" data-pieces="3" onclick="selectPieces(3)">
+          <span class="bld-qty-art" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span class="bld-qty-name">Trio</span>
+          <span class="bld-qty-sub">3 frames</span>
+          <span class="bld-qty-save" data-save="3"></span>
+        </button>
+      </div>
+      <p class="bld-qty-note">Sets hang together as one piece. Size and frame style apply to every frame in the set.</p>
+    </div>
+
+    <!-- Step 2 -->
     <div class="config-section bld-step" data-step="image" aria-labelledby="imageHeading" role="group">
       <div class="bld-step-head">
-        <span class="bld-step-icon" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none" focusable="false"><rect x="6" y="10" width="36" height="28" rx="2" stroke="currentColor" stroke-width="2.4"/><circle cx="17" cy="20" r="3.5" stroke="currentColor" stroke-width="2.4"/><path d="M6 32l9-8 7 7 5-5 9 9" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="bld-step-num">01</span></span>
+        <span class="bld-step-icon" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none" focusable="false"><rect x="6" y="10" width="36" height="28" rx="2" stroke="currentColor" stroke-width="2.4"/><circle cx="17" cy="20" r="3.5" stroke="currentColor" stroke-width="2.4"/><path d="M6 32l9-8 7 7 5-5 9 9" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="bld-step-num">02</span></span>
         <div class="bld-step-titles">
-          <h3 id="imageHeading"><span class="visually-hidden">Step 1: </span>Choose Your Image</h3>
+          <h3 id="imageHeading"><span class="visually-hidden">Step 2: </span><span id="imageHeadingText">Choose Your Image</span></h3>
           <p class="bld-step-status" id="statusImage" aria-live="polite">Pick a print from our gallery or upload your own photo</p>
         </div>
         <svg class="bld-step-check" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="bld-setpanel" id="setPanel" hidden>
+        <p class="bld-setpanel-label">Curated sets</p>
+        <div class="bld-sets" id="curatedSets" role="group" aria-label="Curated sets"></div>
+        <p class="bld-setpanel-label">Your frames <span class="bld-setpanel-hint" id="slotHint"></span></p>
+        <div class="bld-slots" id="setSlots" role="group" aria-label="Frames in your set"></div>
       </div>
       <div class="source-tabs">
         <button type="button" class="source-tab active" aria-pressed="true" onclick="switchTab('gallery', this)">Our Gallery</button>
@@ -169,12 +208,12 @@
       </div>
     </div>
 
-    <!-- Step 2 -->
+    <!-- Step 3 -->
     <div class="config-section bld-step" data-step="size">
       <div class="bld-step-head">
-        <span class="bld-step-icon" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none" focusable="false"><rect x="8" y="8" width="32" height="32" rx="1.5" stroke="currentColor" stroke-width="2.4"/><rect x="14" y="14" width="20" height="20" rx="1" stroke="currentColor" stroke-width="2" stroke-dasharray="3 2"/><path d="M8 16h4M8 24h4M8 32h4M16 8v4M24 8v4M32 8v4" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg><span class="bld-step-num">02</span></span>
+        <span class="bld-step-icon" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none" focusable="false"><rect x="8" y="8" width="32" height="32" rx="1.5" stroke="currentColor" stroke-width="2.4"/><rect x="14" y="14" width="20" height="20" rx="1" stroke="currentColor" stroke-width="2" stroke-dasharray="3 2"/><path d="M8 16h4M8 24h4M8 32h4M16 8v4M24 8v4M32 8v4" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg><span class="bld-step-num">03</span></span>
         <div class="bld-step-titles">
-          <h3 id="sizeHeading"><span class="visually-hidden">Step 2: </span>Frame Size</h3>
+          <h3 id="sizeHeading"><span class="visually-hidden">Step 3: </span>Frame Size</h3>
           <p class="bld-step-status" id="statusSize" aria-live="polite">Six sizes — the preview shows each one to scale</p>
         </div>
         <svg class="bld-step-check" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -189,12 +228,12 @@
       </div>
     </div>
 
-    <!-- Step 3 -->
+    <!-- Step 4 -->
     <div class="config-section bld-step" data-step="style">
       <div class="bld-step-head">
-        <span class="bld-step-icon" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none" focusable="false"><rect x="7" y="7" width="34" height="34" rx="2" stroke="currentColor" stroke-width="2.4"/><rect x="14" y="14" width="20" height="20" rx="1" fill="currentColor" opacity="0.25"/><path d="M7 7l7 7M41 7l-7 7M7 41l7-7M41 41l-7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span class="bld-step-num">03</span></span>
+        <span class="bld-step-icon" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none" focusable="false"><rect x="7" y="7" width="34" height="34" rx="2" stroke="currentColor" stroke-width="2.4"/><rect x="14" y="14" width="20" height="20" rx="1" fill="currentColor" opacity="0.25"/><path d="M7 7l7 7M41 7l-7 7M7 41l7-7M41 41l-7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span class="bld-step-num">04</span></span>
         <div class="bld-step-titles">
-          <h3 id="styleHeading"><span class="visually-hidden">Step 3: </span>Frame Style</h3>
+          <h3 id="styleHeading"><span class="visually-hidden">Step 4: </span>Frame Style</h3>
           <p class="bld-step-status" id="statusStyle" aria-live="polite">Black · Same price for every style</p>
         </div>
         <svg class="bld-step-check" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -223,18 +262,21 @@
       <div class="bld-summary-head">
         <div class="bld-summary-thumb" id="summaryThumb" aria-hidden="true"></div>
         <div>
-          <h3>Your Frame</h3>
+          <h3 id="summaryTitle">Your Frame</h3>
           <p class="bld-summary-sub" id="summaryLine">Choose an image to get started</p>
         </div>
       </div>
-      <div class="summary-row"><span>Image</span><span id="summaryImage">—</span></div>
+      <div class="summary-row"><span id="summaryImageLabel">Image</span><span id="summaryImage">—</span></div>
+      <ol class="bld-summary-pieces" id="summaryPieces" hidden></ol>
       <div class="summary-row"><span>Size</span><span id="summarySize">—</span></div>
       <div class="summary-row"><span>Frame Style</span><span id="summaryStyle">Black</span></div>
+      <div class="summary-row" id="summarySubRow" hidden><span id="summarySubLabel">Frames</span><span id="summarySub">—</span></div>
+      <div class="summary-row bld-saving" id="summarySaveRow" hidden><span id="summarySaveLabel">Set saving</span><span id="summarySave">—</span></div>
       <div class="summary-row"><span>Delivery</span><span>Confirmed after you order</span></div>
       <div class="summary-row total"><span>Total</span><span id="summaryTotal">₦0</span></div>
       <button type="button" class="btn btn-gold proceed-btn" onclick="proceedToCheckout()">Proceed to Checkout →</button>
       <a href="#" class="btn btn-outline-dark whatsapp-order-btn" id="whatsappOrderBtn" hidden onclick="return orderOnWhatsApp()">Or order on WhatsApp</a>
-      <p class="summary-note">Same price for every frame style. Lagos delivery in 2–3 business days, other states 3–5.</p>
+      <p class="summary-note">Same price for every frame style. Pairs and trios get a set discount. Lagos delivery in 2–3 business days, other states 3–5.</p>
     </div>
   </div>
 
@@ -242,7 +284,7 @@
 
 <!-- Mobile: sticky total + checkout -->
 <div class="bld-mobilebar" id="mobileBar">
-  <div class="bld-mobilebar-total"><span>Total</span><strong id="mobileTotal">₦0</strong></div>
+  <div class="bld-mobilebar-total"><span>Total</span><strong id="mobileTotal">₦0</strong><em id="mobileSave"></em></div>
   <button type="button" class="btn btn-gold" onclick="proceedToCheckout()">Checkout →</button>
 </div>
 
@@ -283,9 +325,15 @@
 <script src="js/site.js"></script>
 <script>
 // ── State ──────────────────────────────────────────────────────
+// A order is 1, 2 or 3 frames ("Single", "Pair", "Trio"). Each slot holds one
+// image; size and frame style apply to the whole set.
 const state = {
-  imageId: null, imageName: null, imageEmoji: null,
-  imageData: null, isUpload: false, size: null, price: 0, style: 'Black'
+  pieces: 1,
+  slots: [null],          // { id, name, src, isUpload }
+  activeSlot: 0,
+  setKey: null,           // key of a curated set, if one is applied unchanged
+  size: null, price: 0,   // price = per-frame price for the chosen size
+  style: 'Black'
 };
 
 const FRAME_STYLES  = ['Black', 'White', 'Borderless'];
@@ -293,26 +341,65 @@ const FRAME_COLOURS = { Black: '#1a1a1a', White: '#f3f3f3' };
 // 'Borderless' = the print alone, no moulding. Shared label helper:
 function styleLabel(style) { return style === 'Borderless' ? 'Borderless (no frame)' : (style || 'Black') + ' Frame'; }
 
-// Room mockup: Unsplash living-room photo, wall extended for large frames.
+// Curated sets: complementary prints from the catalogue. `ids` refer to
+// gallery thumbnails below; `items` are set-only prints (not in the gallery).
+const CURATED_SETS = {
+  2: [
+    { key: 'mountain-air', name: 'Mountain Air', ids: ['alpine-meadow', 'alpine-bloom'] },
+    { key: 'fuji-pair',    name: 'Wave & Fuji',  ids: ['hokusai-great-wave', 'hokusai-red-fuji'] },
+    { key: 'garden-pair',  name: 'Garden Pair',  ids: ['van-gogh-irises', 'van-gogh-roses'] }
+  ],
+  3: [
+    { key: 'dont-give-up', name: "Don't Give Up", items: [
+        { id: 'dont-give-up-1', name: "Don't Give Up — DON'T", src: 'images/sets/dont-give-up-1.jpg', thumb: 'images/thumbs/dont-give-up-1.jpg' },
+        { id: 'dont-give-up-2', name: "Don't Give Up — GIVE",  src: 'images/sets/dont-give-up-2.jpg', thumb: 'images/thumbs/dont-give-up-2.jpg' },
+        { id: 'dont-give-up-3', name: "Don't Give Up — UP.",   src: 'images/sets/dont-give-up-3.jpg', thumb: 'images/thumbs/dont-give-up-3.jpg' } ] },
+    { key: 'abstract-trio',  name: 'Abstract Trio',  ids: ['kandinsky-improvisation-30', 'zen-balance', 'mondrian-lozenge'] },
+    { key: 'botanical-trio', name: 'Botanical Trio', ids: ['redoute-empress-rose', 'redoute-crown-imperial', 'redoute-gloriosa'] },
+    { key: 'hustle-trio',    name: 'Hustle Trio',    ids: ['build-in-silence', 'one-percent', 'dont-overthink'] }
+  ]
+};
+
+function thumbItem(id) {
+  const t = document.querySelector(`.mini-thumb[data-id="${CSS.escape(id)}"]`);
+  if (!t) return null;
+  return { id, name: t.dataset.name || id, src: t.dataset.src, thumb: t.querySelector('img').getAttribute('src'), isUpload: false };
+}
+function setItems(set) { return set.items ? set.items.map(i => Object.assign({ isUpload: false }, i)) : set.ids.map(thumbItem).filter(Boolean); }
+function findSet(key) { return [].concat(CURATED_SETS[2], CURATED_SETS[3]).find(s => s.key === key) || null; }
+
+// Room mockup: Pexels photo (RDNE Stock project), cropped and warmed slightly.
 // Coordinates are in the prepared image's pixels (images/room/living-room.jpg).
 const ROOM = {
   src: 'images/room/living-room.jpg',
-  width: 1600,
-  height: 1517,
-  sofaLeft: 218,
-  sofaRight: 1428,
-  sofaTop: 868,
+  width: 1920,
+  height: 1896,
+  sofaLeft: 252,
+  sofaRight: 1734,
+  sofaTop: 1060,
   sofaWidthCm: 200,
-  hangGapCm: 18,
+  hangGapCm: 20,
+  setGapCm: 7,
   mouldingCm: 2.4
 };
 const roomBg = new Image();
 roomBg.src = ROOM.src;
-roomBg.onload = () => { if (state.imageName) renderPreview(); };
+roomBg.onload = () => { if (filledSlots().length) renderPreview(); };
 
 function parseFrameSize(size) {
   const m = String(size || '').match(/(\d+)\s*[×x]\s*(\d+)/);
   return m ? { wIn: Number(m[1]), hIn: Number(m[2]) } : { wIn: 16, hIn: 20 };
+}
+
+// ── Derived values ─────────────────────────────────────────────
+function filledSlots() { return state.slots.filter(Boolean); }
+function imagesDone()  { return state.slots.length === state.pieces && state.slots.every(Boolean); }
+function setLabel()    { return HANGA.setLabel(state.pieces); }
+function orderTotal()  { return HANGA.setTotal(state.price, state.pieces); }
+function orderTitle() {
+  if (state.pieces === 1) return state.slots[0] ? state.slots[0].name : null;
+  const set = state.setKey && findSet(state.setKey);
+  return (set ? set.name : 'Custom') + ' ' + setLabel();
 }
 
 // ── Keyboard access for thumbnails, swatches and the upload box ─
@@ -323,17 +410,122 @@ document.querySelectorAll('.swatch').forEach(sw => {
 });
 HANGA.makePressable(document.getElementById('uploadZone'), 'Upload your image');
 
+// Savings badges on the Pair / Trio options
+document.querySelectorAll('.bld-qty-save').forEach(el => {
+  const d = HANGA.setDiscount(Number(el.dataset.save));
+  el.textContent = d ? 'Save ' + HANGA.formatNaira(d) : '';
+  el.hidden = !d;
+});
+
 // WhatsApp order button only appears when a number is set in js/site.js
 document.getElementById('whatsappOrderBtn').hidden = !HANGA.whatsappNumber;
 
-// ── Load from query params (?image=, ?size=, ?tab=upload) ───────
-(function() {
+// ── Frames: Single / Pair / Trio ───────────────────────────────
+function selectPieces(n, opts) {
+  n = [1, 2, 3].indexOf(Number(n)) === -1 ? 1 : Number(n);
+  state.pieces = n;
+  const old = state.slots;
+  state.slots = Array.from({ length: n }, (_, i) => old[i] || null);
+  state.setKey = null;
+  const firstEmpty = state.slots.findIndex(s => !s);
+  state.activeSlot = firstEmpty === -1 ? 0 : firstEmpty;
+  document.querySelectorAll('.bld-qty-opt').forEach(b => {
+    const on = Number(b.dataset.pieces) === n;
+    b.classList.toggle('selected', on); b.setAttribute('aria-pressed', String(on));
+  });
+  document.getElementById('setPanel').hidden = n === 1;
+  document.getElementById('imageHeadingText').textContent = n === 1 ? 'Choose Your Image' : 'Choose Your ' + setLabel();
+  renderCuratedSets();
+  refreshAll();
+  if (!(opts && opts.silent) && n > 1) showToast(setLabel() + ' selected — pick a curated set or choose an image for each frame.');
+}
+
+function renderCuratedSets() {
+  const wrap = document.getElementById('curatedSets');
+  wrap.textContent = '';
+  (CURATED_SETS[state.pieces] || []).forEach(set => {
+    const items = setItems(set);
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'bld-set' + (state.setKey === set.key ? ' selected' : '');
+    b.setAttribute('aria-pressed', String(state.setKey === set.key));
+    b.dataset.set = set.key;
+    const art = document.createElement('span'); art.className = 'bld-set-art'; art.setAttribute('aria-hidden', 'true');
+    items.forEach(it => { const im = document.createElement('img'); im.src = it.thumb || it.src; im.alt = ''; im.loading = 'lazy'; art.appendChild(im); });
+    const nm = document.createElement('span'); nm.className = 'bld-set-name'; nm.textContent = set.name;
+    const sub = document.createElement('span'); sub.className = 'bld-set-sub'; sub.textContent = items.map(i => i.name.replace(/^Don't Give Up — /, '')).join(' · ');
+    b.append(art, nm, sub);
+    b.addEventListener('click', () => applyCuratedSet(set.key));
+    wrap.appendChild(b);
+  });
+}
+
+function applyCuratedSet(key) {
+  const set = findSet(key);
+  if (!set) return;
+  const items = setItems(set);
+  if (items.length !== state.pieces) selectPieces(items.length, { silent: true });
+  state.slots = items;
+  state.setKey = key;
+  state.activeSlot = 0;
+  renderCuratedSets();
+  refreshAll();
+  showToast(set.name + ' set selected');
+}
+
+function renderSlots() {
+  const wrap = document.getElementById('setSlots');
+  wrap.textContent = '';
+  if (state.pieces === 1) return;
+  state.slots.forEach((slot, i) => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'bld-slot' + (i === state.activeSlot ? ' active' : '') + (slot ? ' filled' : '');
+    b.setAttribute('aria-pressed', String(i === state.activeSlot));
+    b.setAttribute('aria-label', 'Frame ' + (i + 1) + ': ' + (slot ? slot.name : 'empty') + '. Select to change it.');
+    const art = document.createElement('span'); art.className = 'bld-slot-art'; art.setAttribute('aria-hidden', 'true');
+    if (slot) art.style.backgroundImage = `url("${slot.thumb || slot.src}")`;
+    else art.textContent = '+';
+    const lab = document.createElement('span'); lab.className = 'bld-slot-label'; lab.textContent = 'Frame ' + (i + 1);
+    const nm = document.createElement('span'); nm.className = 'bld-slot-name'; nm.textContent = slot ? slot.name.replace(/^Don't Give Up — /, '') : 'Empty';
+    b.append(art, lab, nm);
+    b.addEventListener('click', () => { state.activeSlot = i; renderSlots(); });
+    wrap.appendChild(b);
+  });
+  document.getElementById('slotHint').textContent = '· now choosing Frame ' + (state.activeSlot + 1);
+}
+
+// Put an image in the active slot, then move to the next empty one.
+function fillActiveSlot(item) {
+  const i = Math.min(state.activeSlot, state.pieces - 1);
+  state.slots[i] = item;
+  state.setKey = null;
+  const next = state.slots.findIndex(s => !s);
+  state.activeSlot = next === -1 ? i : next;
+  renderCuratedSets();
+  refreshAll();
+}
+
+function refreshAll() { syncThumbs(); renderSlots(); updateSummary(); renderPreview(); }
+
+function syncThumbs() {
+  const ids = state.slots.filter(Boolean).map(s => s.id);
+  document.querySelectorAll('.mini-thumb').forEach(t => {
+    const on = ids.indexOf(t.dataset.id) !== -1;
+    t.classList.toggle('selected', on); t.setAttribute('aria-pressed', String(on));
+  });
+}
+
+// ── Load from query params (?frames=2, ?set=, ?image=, ?size=, ?tab=upload)
+function initFromParams() {
   const params = new URLSearchParams(window.location.search);
+  selectPieces(params.get('frames') || 1, { silent: true });
   const size = (params.get('size') || '').replace(/x/i, '×');
   if (size) {
     const chip = document.querySelector(`#sizeChips .chip[data-size="${CSS.escape(size)}"]`);
     if (chip) selectSize(chip);
   }
+  if (params.get('set')) applyCuratedSet(params.get('set'));
   if (params.get('tab') === 'upload') {
     switchTab('upload', document.querySelectorAll('.source-tab')[1]);
   }
@@ -341,12 +533,12 @@ document.getElementById('whatsappOrderBtn').hidden = !HANGA.whatsappNumber;
   if (img) {
     const thumb = document.querySelector(`.mini-thumb[data-id="${CSS.escape(img)}"]`);
     if (thumb) {
-      const name = thumb.dataset.name || thumb.dataset.id.replace(/-/g,' ').replace(/\b\w/g, c => c.toUpperCase());
-      selectGalleryImage(thumb, name);
+      selectGalleryImage(thumb, thumb.dataset.name, { silent: true });
       thumb.scrollIntoView({ block: 'nearest' });
     }
   }
-})();
+  updateSummary();
+}
 
 // ── Tabs ───────────────────────────────────────────────────────
 function switchTab(tab, btn) {
@@ -355,25 +547,16 @@ function switchTab(tab, btn) {
   btn.setAttribute('aria-pressed', 'true');
   document.getElementById('tab-gallery').classList.toggle('hidden', tab !== 'gallery');
   document.getElementById('tab-upload').classList.toggle('hidden', tab !== 'upload');
-  if (tab !== 'gallery') {
-    document.querySelectorAll('.mini-thumb').forEach(t => t.classList.remove('selected'));
-    Object.assign(state, { imageId: null, imageName: null, imageEmoji: null, imageData: null, isUpload: true });
-    updateSummary(); renderPreview();
-  } else {
-    state.isUpload = false;
-  }
 }
 
 // ── Gallery select ─────────────────────────────────────────────
-function selectGalleryImage(el, name) {
-  document.querySelectorAll('.mini-thumb').forEach(t => { t.classList.remove('selected'); t.setAttribute('aria-pressed', 'false'); });
-  el.classList.add('selected');
-  el.setAttribute('aria-pressed', 'true');
-  const src = el.dataset.src || '';
-  name = name || el.dataset.name || el.dataset.id;
-  Object.assign(state, { isUpload: false, imageId: el.dataset.id, imageName: name, imageEmoji: null, imageData: src });
-  updateSummary(); renderPreview();
-  showToast('Image selected: ' + name);
+function selectGalleryImage(el, name, opts) {
+  const item = thumbItem(el.dataset.id);
+  if (!item) return;
+  if (name) item.name = name;
+  const slotNo = state.activeSlot + 1;
+  fillActiveSlot(item);
+  if (!(opts && opts.silent)) showToast(state.pieces > 1 ? `Frame ${slotNo}: ${item.name}` : 'Image selected: ' + item.name);
 }
 
 // ── Mini-gallery filter ────────────────────────────────────────
@@ -383,8 +566,7 @@ function filterMiniGallery(category, btn) {
   btn.classList.add('active');
   wrap.querySelectorAll('.mini-thumb').forEach(thumb => {
     const cats = (thumb.dataset.category || '').split(/\s+/);
-    const show = category === 'all' || cats.includes(category);
-    thumb.hidden = !show;
+    thumb.hidden = !(category === 'all' || cats.includes(category));
   });
 }
 
@@ -415,12 +597,13 @@ function handleFileUpload(event) {
   if (file.size > 10 * 1024 * 1024) { showToast('File too large (max 10 MB)'); return; }
   const reader = new FileReader();
   reader.onload = e => {
-    downscaleImage(e.target.result, 1600, (small, w, h) => {
+    // Sets keep smaller copies so all pieces fit in browser storage.
+    downscaleImage(e.target.result, state.pieces > 1 ? 1000 : 1600, (small, w, h) => {
       if (!small) { showToast('Sorry, we could not read that image. Try another file.'); return; }
       const name = file.name.replace(/\.[^.]+$/, '');
-      Object.assign(state, { imageData: small, imageName: name, imageEmoji: null, isUpload: true, uploadWidth: w, uploadHeight: h });
-      updateSummary(); renderPreview();
-      showToast('Image uploaded: ' + name);
+      const slotNo = state.activeSlot + 1;
+      fillActiveSlot({ id: null, name, src: small, isUpload: true, uploadWidth: w, uploadHeight: h });
+      showToast(state.pieces > 1 ? `Frame ${slotNo}: uploaded ${name}` : 'Image uploaded: ' + name);
       const zone = document.getElementById('uploadZone');
       zone.textContent = '';
       const thumb = document.createElement('img');
@@ -430,8 +613,9 @@ function handleFileUpload(event) {
       const strong = document.createElement('strong'); strong.textContent = name; title.appendChild(strong);
       const hint = document.createElement('p');
       hint.style.cssText = 'font-size:12px;margin-top:4px;color:var(--gold-dk)';
-      hint.textContent = '✓ Uploaded · click to change';
+      hint.textContent = state.pieces > 1 ? '✓ Uploaded · click to upload for the next frame' : '✓ Uploaded · click to change';
       zone.append(thumb, title, hint);
+      document.getElementById('fileInput').value = '';
     });
   };
   reader.readAsDataURL(file);
@@ -460,34 +644,85 @@ function selectSize(el) {
   updateSummary(); renderPreview();
 }
 
+// Size chips show the set price (and saving) for Pairs and Trios.
+function updateSizeChips() {
+  document.querySelectorAll('#sizeChips .chip').forEach(c => {
+    const per = parseInt(c.dataset.price, 10);
+    const price = c.querySelector('.chip-price');
+    let save = c.querySelector('.chip-save');
+    if (!save) { save = document.createElement('span'); save.className = 'chip-save'; c.appendChild(save); }
+    if (state.pieces === 1) {
+      price.textContent = HANGA.formatNaira(per);
+      save.textContent = ''; save.hidden = true;
+    } else {
+      price.textContent = HANGA.formatNaira(HANGA.setTotal(per, state.pieces));
+      const d = HANGA.setDiscount(state.pieces);
+      save.textContent = `${setLabel()} · save ${HANGA.formatNaira(d)}`;
+      save.hidden = !d;
+    }
+    c.setAttribute('aria-label', `${c.dataset.size} inches, ${price.textContent}${state.pieces > 1 ? ' for a ' + setLabel().toLowerCase() : ''}`);
+  });
+}
+
 // ── Style ──────────────────────────────────────────────────────
 function selectStyle(el, style) {
   document.querySelectorAll('.swatch').forEach(s => { s.classList.remove('selected'); s.setAttribute('aria-pressed', 'false'); });
   el.classList.add('selected');
   el.setAttribute('aria-pressed', 'true');
   state.style = style;
-  document.getElementById('summaryStyle').textContent = style;
-  updateProgress();
+  updateSummary();
   renderPreview();
 }
 
 // ── Summary ────────────────────────────────────────────────────
 function updateSummary() {
-  document.getElementById('summaryImage').textContent = state.imageName || '—';
-  document.getElementById('summarySize').textContent  = state.size ? state.size + ' inches' : '—';
-  document.getElementById('summaryTotal').textContent = HANGA.formatNaira(state.price);
-  document.getElementById('mobileTotal').textContent  = HANGA.formatNaira(state.price);
+  const multi = state.pieces > 1;
+  const filled = filledSlots();
+  const total = orderTotal();
+  const disc = multi ? HANGA.setDiscount(state.pieces) : 0;
+
+  document.getElementById('summaryTitle').textContent = multi ? 'Your ' + setLabel() : 'Your Frame';
+  document.getElementById('summaryImageLabel').textContent = multi ? 'Set' : 'Image';
+  document.getElementById('summaryImage').textContent = multi ? (orderTitle() + ` (${filled.length}/${state.pieces} chosen)`) : (filled[0] ? filled[0].name : '—');
+  const list = document.getElementById('summaryPieces');
+  list.textContent = '';
+  list.hidden = !multi;
+  if (multi) state.slots.forEach((s, i) => {
+    const li = document.createElement('li');
+    li.textContent = `Frame ${i + 1}: ` + (s ? s.name + (s.isUpload ? ' (your photo)' : '') : '—');
+    list.appendChild(li);
+  });
+  document.getElementById('summarySize').textContent  = state.size ? state.size + ' inches' + (multi ? ' (each)' : '') : '—';
+  document.getElementById('summaryStyle').textContent = state.style;
+
+  const subRow = document.getElementById('summarySubRow');
+  const saveRow = document.getElementById('summarySaveRow');
+  subRow.hidden = !(multi && state.size);
+  saveRow.hidden = !(multi && state.size && disc);
+  if (multi && state.size) {
+    document.getElementById('summarySubLabel').textContent = `${state.pieces} × ${HANGA.formatNaira(state.price)}`;
+    document.getElementById('summarySub').textContent = HANGA.formatNaira(state.price * state.pieces);
+    document.getElementById('summarySaveLabel').textContent = `${setLabel()} saving`;
+    document.getElementById('summarySave').textContent = '−' + HANGA.formatNaira(disc);
+  }
+  document.getElementById('summaryTotal').textContent = HANGA.formatNaira(total);
+  document.getElementById('mobileTotal').textContent  = HANGA.formatNaira(total);
+  document.getElementById('mobileSave').textContent   = multi && disc ? `${setLabel()}: save ${HANGA.formatNaira(disc)}` : '';
+
   const thumb = document.getElementById('summaryThumb');
-  thumb.style.backgroundImage = state.imageData ? `url("${state.imageData}")` : '';
-  thumb.classList.toggle('has-img', !!state.imageData);
+  const first = filled[0];
+  thumb.style.backgroundImage = first ? `url("${first.thumb || first.src}")` : '';
+  thumb.classList.toggle('has-img', !!first);
+  updateSizeChips();
   updateProgress();
 }
 
 // ── Step progress + status lines ───────────────────────────────
 function updateProgress() {
-  const done = { image: !!state.imageName, size: !!state.size, style: !!state.style };
+  const multi = state.pieces > 1;
+  const done = { pieces: true, image: imagesDone(), size: !!state.size, style: !!state.style };
   done.order = done.image && done.size && done.style;
-  const firstOpen = ['image', 'size', 'style', 'order'].find(k => !done[k]) || 'order';
+  const firstOpen = ['pieces', 'image', 'size', 'style', 'order'].find(k => !done[k]) || 'order';
   document.querySelectorAll('.bld-progress-step').forEach(li => {
     const k = li.dataset.step;
     li.classList.toggle('is-done', !!done[k] && k !== 'order');
@@ -495,11 +730,17 @@ function updateProgress() {
     if (k === firstOpen) li.setAttribute('aria-current', 'step'); else li.removeAttribute('aria-current');
   });
   document.querySelectorAll('.bld-step').forEach(sec => sec.classList.toggle('is-done', !!done[sec.dataset.step]));
-  document.getElementById('statusImage').textContent = state.imageName ? 'Selected: ' + state.imageName : 'Pick a print from our gallery or upload your own photo';
-  document.getElementById('statusSize').textContent  = state.size ? `Selected: ${state.size}" · ${HANGA.formatNaira(state.price)}` : 'Six sizes — the preview shows each one to scale';
+  const disc = HANGA.setDiscount(state.pieces);
+  document.getElementById('statusPieces').textContent = multi ? `${setLabel()} · ${state.pieces} frames${disc ? ' · save ' + HANGA.formatNaira(disc) : ''}` : 'Single frame';
+  const filled = filledSlots().length;
+  document.getElementById('statusImage').textContent = multi
+    ? (done.image ? 'Selected: ' + orderTitle() : `${filled} of ${state.pieces} frames chosen — pick a curated set or fill each frame`)
+    : (state.slots[0] ? 'Selected: ' + state.slots[0].name : 'Pick a print from our gallery or upload your own photo');
+  const priceTxt = state.size ? (multi ? `${HANGA.formatNaira(orderTotal())} for the ${setLabel().toLowerCase()}` : HANGA.formatNaira(state.price)) : '';
+  document.getElementById('statusSize').textContent  = state.size ? `Selected: ${state.size}" · ${priceTxt}` : (multi ? 'One size for every frame in the set' : 'Six sizes — the preview shows each one to scale');
   document.getElementById('statusStyle').textContent = (state.style || 'Black') + ' · Same price for every style';
-  const parts = [state.size ? state.size + '"' : null, styleLabel(state.style)].filter(Boolean);
-  document.getElementById('summaryLine').textContent = state.imageName ? parts.join(' · ') : 'Choose an image to get started';
+  const parts = [multi ? setLabel() : null, state.size ? state.size + '"' : null, styleLabel(state.style)].filter(Boolean);
+  document.getElementById('summaryLine').textContent = filled ? parts.join(' · ') : (multi ? 'Choose the images for your set' : 'Choose an image to get started');
   document.getElementById('orderSummary').classList.toggle('is-ready', done.order);
   document.getElementById('mobileBar').classList.toggle('is-ready', done.order);
 }
@@ -551,13 +792,23 @@ function shadeMoulding(ctx, fx, fy, fw, fh, m, style) {
   ctx.restore();
 }
 
+
+const _imgCache = {};
+function loadImg(src) {
+  if (!src) return Promise.resolve(null);
+  if (_imgCache[src]) return _imgCache[src];
+  _imgCache[src] = new Promise(res => { const im = new Image(); im.onload = () => res(im); im.onerror = () => res(null); im.src = src; });
+  return _imgCache[src];
+}
+
+let _renderToken = 0;
 function renderPreview() {
   const canvas      = document.getElementById('frameCanvas');
   const placeholder = document.getElementById('canvasPlaceholder');
   const label       = document.getElementById('previewLabel');
   const scaleNote   = document.getElementById('previewScaleNote');
 
-  if (!state.imageName) {
+  if (!filledSlots().length) {
     canvas.style.display = 'none';
     placeholder.style.display = '';
     label.textContent = '';
@@ -568,32 +819,32 @@ function renderPreview() {
   placeholder.style.display = 'none';
   canvas.style.display = 'block';
 
-  const W = 800;
+  const W = 900;
   const H = Math.round(W * (ROOM.height / ROOM.width));
-  const dpr = window.devicePixelRatio || 1;
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
   canvas.width  = W * dpr;
   canvas.height = H * dpr;
   canvas.style.width  = '100%';
   canvas.style.height = 'auto';
   const ctx = canvas.getContext('2d');
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.imageSmoothingQuality = 'high';
 
   const sizeChosen = !!state.size;
   const { wIn, hIn } = parseFrameSize(state.size || '16×20');
   const style = FRAME_STYLES.indexOf(state.style) === -1 ? 'Black' : state.style;
   const borderless = style === 'Borderless';
   const frameCol = FRAME_COLOURS[style] || '#1a1a1a';
+  const n = state.pieces;
+  const token = ++_renderToken;
 
-  const drawScene = imgEl => {
+  Promise.all(state.slots.map(s => loadImg(s && s.src))).then(imgs => {
+    if (token !== _renderToken) return; // a newer render started
     ctx.clearRect(0, 0, W, H);
 
     // ── Room ──
-    if (roomBg.complete && roomBg.naturalWidth) {
-      ctx.drawImage(roomBg, 0, 0, W, H);
-    } else {
-      ctx.fillStyle = '#efece6';
-      ctx.fillRect(0, 0, W, H);
-    }
+    if (roomBg.complete && roomBg.naturalWidth) ctx.drawImage(roomBg, 0, 0, W, H);
+    else { ctx.fillStyle = '#efece6'; ctx.fillRect(0, 0, W, H); }
 
     const scale = W / ROOM.width;
     const pxPerCm = ((ROOM.sofaRight - ROOM.sofaLeft) * scale) / ROOM.sofaWidthCm;
@@ -601,97 +852,126 @@ function renderPreview() {
     const sofaTop  = ROOM.sofaTop * scale;
     const fw = wIn * 2.54 * pxPerCm;
     const fh = hIn * 2.54 * pxPerCm;
+    const gap = ROOM.setGapCm * pxPerCm;
     const m  = borderless ? 0 : ROOM.mouldingCm * pxPerCm;
-    const fx = sofaMidX - fw / 2;
+    const rowW = n * fw + (n - 1) * gap;     // 1 centred, 2 side by side, 3 in a row
     const fy = sofaTop - ROOM.hangGapCm * pxPerCm - fh;
-    const ix = fx + m, iy = fy + m, iw = fw - m * 2, ih = fh - m * 2;
 
-    // ── Soft drop shadow on the wall (not an outline) ──
-    ctx.save();
-    ctx.shadowColor = 'rgba(0,0,0,0.32)';
-    ctx.shadowBlur = 18 * scale * 2.2;
-    ctx.shadowOffsetX = 2 * scale;
-    ctx.shadowOffsetY = 8 * scale;
-    ctx.fillStyle = borderless ? '#e8e3dc' : frameCol;
-    ctx.fillRect(fx, fy, fw, fh);
-    ctx.restore();
+    for (let i = 0; i < n; i++) {
+      const fx = sofaMidX - rowW / 2 + i * (fw + gap);
+      const ix = fx + m, iy = fy + m, iw = fw - m * 2, ih = fh - m * 2;
+      const imgEl = imgs[i];
 
-    // ── Artwork, cover-fit, no mat ──
-    if (imgEl) {
-      const s = coverFitSource(imgEl, iw, ih);
-      ctx.drawImage(imgEl, s.sx, s.sy, s.sw, s.sh, ix, iy, iw, ih);
-    } else {
-      ctx.fillStyle = '#e8e3dc';
-      ctx.fillRect(ix, iy, iw, ih);
-    }
-
-    // ── Moulding only (even-odd ring), then subtle shading ──
-    if (!borderless) {
+      // Soft drop shadow on the wall
       ctx.save();
-      mouldingPath(ctx, fx, fy, fw, fh, m);
-      ctx.fillStyle = frameCol;
-      ctx.fill('evenodd');
+      ctx.shadowColor = 'rgba(40,30,20,0.30)';
+      ctx.shadowBlur = 16 * scale * 2.4;
+      ctx.shadowOffsetX = 2 * scale;
+      ctx.shadowOffsetY = 9 * scale;
+      ctx.fillStyle = borderless ? '#e8e3dc' : frameCol;
+      ctx.fillRect(fx, fy, fw, fh);
       ctx.restore();
-      shadeMoulding(ctx, fx, fy, fw, fh, m, style);
-    } else {
-      // Borderless: a hair-thin edge so the print reads as a mounted panel
-      ctx.save();
-      ctx.strokeStyle = 'rgba(0,0,0,0.12)';
-      ctx.lineWidth = 1;
-      ctx.strokeRect(fx + 0.5, fy + 0.5, fw - 1, fh - 1);
-      ctx.restore();
+
+      // Artwork, cover-fit, no mat (empty slot = dashed placeholder)
+      if (imgEl) {
+        const s = coverFitSource(imgEl, iw, ih);
+        ctx.drawImage(imgEl, s.sx, s.sy, s.sw, s.sh, ix, iy, iw, ih);
+      } else {
+        ctx.fillStyle = '#ece6dc';
+        ctx.fillRect(ix, iy, iw, ih);
+        ctx.save();
+        ctx.strokeStyle = 'rgba(168,137,62,0.8)'; ctx.setLineDash([5, 4]); ctx.lineWidth = 1.5;
+        ctx.strokeRect(ix + 4, iy + 4, iw - 8, ih - 8);
+        ctx.fillStyle = '#a8893e'; ctx.font = `600 ${Math.max(11, Math.min(18, iw / 6))}px Lato, sans-serif`;
+        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillText('Frame ' + (i + 1), ix + iw / 2, iy + ih / 2);
+        ctx.restore();
+      }
+
+      if (!borderless) {
+        ctx.save();
+        mouldingPath(ctx, fx, fy, fw, fh, m);
+        ctx.fillStyle = frameCol;
+        ctx.fill('evenodd');
+        ctx.restore();
+        shadeMoulding(ctx, fx, fy, fw, fh, m, style);
+      } else {
+        ctx.save();
+        ctx.strokeStyle = 'rgba(0,0,0,0.12)';
+        ctx.lineWidth = 1;
+        ctx.strokeRect(fx + 0.5, fy + 0.5, fw - 1, fh - 1);
+        ctx.restore();
+      }
     }
 
-    if (sizeChosen) {
-      label.textContent = `Preview: ${state.size}" · ${styleLabel(style)}`;
-    } else {
-      label.textContent = `Preview: ${styleLabel(style)} · 16×20" shown for scale`;
-    }
+    const what = n > 1 ? setLabel() + ' · ' : '';
+    label.textContent = sizeChosen
+      ? `Preview: ${what}${state.size}" · ${styleLabel(style)}`
+      : `Preview: ${what}${styleLabel(style)} · 16×20" shown for scale`;
     if (scaleNote) scaleNote.textContent = 'Shown at real scale on a 200 cm sofa.';
-  };
-
-  if (state.imageData) {
-    const img = new Image();
-    img.onload = () => drawScene(img);
-    img.src = state.imageData;
-  } else {
-    drawScene(null);
-  }
+    canvas.setAttribute('aria-label', `Preview of ${n > 1 ? 'your ' + setLabel().toLowerCase() + ' of ' + n + ' frames' : 'your framed image'} on a living-room wall`);
+  });
 }
 
 // ── Checkout ───────────────────────────────────────────────────
-function proceedToCheckout() {
-  if (!state.imageName) { showToast('Please select or upload an image first.'); return; }
-  if (!state.size)      { showToast('Please select a frame size.'); return; }
-  const order = {
-    imageId: state.isUpload ? null : state.imageId,
-    imageName: state.imageName,
-    imageEmoji: null,
-    imageData: state.imageData || null,
-    isUpload: !!state.isUpload,
-    size: state.size, price: state.price, style: state.style
+function checkReady() {
+  if (!imagesDone()) {
+    if (state.pieces > 1) {
+      const i = state.slots.findIndex(s => !s);
+      state.activeSlot = i; renderSlots();
+      showToast(`Please choose an image for Frame ${i + 1} of your ${setLabel().toLowerCase()}.`);
+    } else showToast('Please select or upload an image first.');
+    return false;
+  }
+  if (!state.size) { showToast('Please select a frame size.'); return false; }
+  return true;
+}
+
+function buildOrder() {
+  const items = state.slots.map(s => ({
+    imageId: s.isUpload ? null : s.id,
+    imageName: s.name,
+    isUpload: !!s.isUpload,
+    imageData: s.src || null
+  }));
+  const set = state.setKey && findSet(state.setKey);
+  return {
+    pieces: state.pieces,
+    setLabel: setLabel(),
+    setName: state.pieces > 1 ? (set ? set.name : 'Custom set') : null,
+    items,
+    // Kept for older pages / single-frame orders:
+    imageId: items[0].imageId,
+    imageName: orderTitle(),
+    imageData: items[0].imageData,
+    isUpload: items.some(i => i.isUpload),
+    size: state.size, style: state.style,
+    unitPrice: state.price,
+    discount: HANGA.setDiscount(state.pieces),
+    price: orderTotal()
   };
+}
+
+function proceedToCheckout() {
+  if (!checkReady()) return;
+  const order = buildOrder();
   try {
     sessionStorage.setItem('hangaOrder', JSON.stringify(order));
   } catch (err) {
-    // Very large images can exceed browser storage; continue without the preview image.
+    // Very large images can exceed browser storage; continue without the preview images.
     order.imageData = null;
-    sessionStorage.setItem('hangaOrder', JSON.stringify(order));
+    order.items.forEach(i => { if (i.isUpload) i.imageData = null; });
+    try { sessionStorage.setItem('hangaOrder', JSON.stringify(order)); }
+    catch (e2) { order.items.forEach(i => { i.imageData = null; }); sessionStorage.setItem('hangaOrder', JSON.stringify(order)); }
   }
   window.location.href = 'checkout.html';
 }
 
 // ── Order on WhatsApp (only shown when a WhatsApp number is set) ─
 function orderOnWhatsApp() {
-  if (!state.imageName) { showToast('Please select or upload an image first.'); return false; }
-  if (!state.size)      { showToast('Please select a frame size.'); return false; }
-  const lines = [
-    'Hi Hanga! I\'d like to order a frame:',
-    '• Image: ' + state.imageName + (state.isUpload ? ' (my own photo — I\'ll send it here)' : ''),
-    '• Size: ' + state.size + '"',
-    '• Style: ' + styleLabel(state.style),
-    '• Price: ' + HANGA.formatNaira(state.price) + ' + delivery'
-  ];
+  if (!checkReady()) return false;
+  const lines = ['Hi Hanga! I\'d like to order:'].concat(HANGA.orderLines(buildOrder()));
+  if (state.slots.some(s => s.isUpload)) lines.push('(I\'ll send my own photo(s) here.)');
   window.open(HANGA.whatsappLink(lines.join('\n')), '_blank', 'noopener');
   return false;
 }
@@ -701,8 +981,11 @@ function showToast(msg) {
   const t = document.getElementById('toast');
   t.textContent = msg;
   t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2800);
+  clearTimeout(showToast._t);
+  showToast._t = setTimeout(() => t.classList.remove('show'), 2800);
 }
+
+initFromParams();
 </script>
 
 </body>
