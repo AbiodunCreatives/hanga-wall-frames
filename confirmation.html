@@ -46,8 +46,8 @@
   <!-- The site has no server, so the order details only reach Hanga when the customer sends them. -->
   <div class="confirm-send" id="sendBox">
     <strong>One last step: send us your order</strong>
-    <p id="sendMsg">Tap below to send your order details to Hanga so we can confirm your delivery fee and get started.</p>
-    <p id="uploadMsg" class="hidden"><strong>Framing your own photo?</strong> Please attach the original image file (not a screenshot) so it prints sharply.</p>
+    <p id="sendMsg">Tap below to send your order details to Hanga and get started. We will confirm your delivery fee after your order.</p>
+    <p id="uploadMsg" class="hidden"><strong>Framing your own photo or artwork?</strong> Please attach the original file (PDF or full-size image, not a screenshot) so it prints sharply.</p>
     <div class="confirm-send-actions">
       <a href="#" class="btn btn-gold" id="sendWhatsApp" hidden target="_blank" rel="noopener">Send on WhatsApp</a>
       <a href="#" class="btn btn-primary" id="sendEmail">Send by Email</a>
@@ -128,6 +128,7 @@ if (method === 'transfer') {
 
 if (orderData.isUpload) document.getElementById('uploadMsg').classList.remove('hidden');
 
+if (orderData.style) orderData.style = HANGA.normStyle(orderData.style);
 const itemLines = orderData.price ? HANGA.orderLines(orderData) : ['• Order details not found on this device'];
 const summary = [
   'Order reference: ' + ref,

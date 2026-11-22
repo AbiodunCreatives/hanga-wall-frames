@@ -61,9 +61,10 @@
     </div>
     <div style="margin-top:16px; padding:16px; background:var(--cream); border-radius:var(--radius); font-size:13px; color:var(--muted); line-height:1.75">
       <strong style="color:var(--black)">📦 Delivery Info</strong><br>
-      Lagos: 2–3 business days<br>
-      Other states: 3–5 business days<br>
-      We'll confirm your delivery fee after you order.
+      Hanga is based in Ado Ekiti, Ekiti State.<br>
+      Within Ekiti and Ondo State: 1 to 2 business days<br>
+      Other states: 2 to 3 business days<br>
+      We will confirm your delivery fee after your order.
     </div>
   </div>
 
@@ -181,6 +182,7 @@ if (!order.imageName || !order.size) {
   window.location.replace('customize.html');
 }
 
+order.style = HANGA.normStyle(order.style); // also fixes older saved orders
 const pieces = HANGA.orderPieces(order);
 const nPieces = order.pieces || pieces.length || 1;
 const unitPrice = order.unitPrice || (nPieces === 1 ? order.price : 0);
@@ -191,7 +193,7 @@ if (nPieces > 1) {
   const list = document.getElementById('sidebarPieces');
   pieces.forEach((p, i) => {
     const li = document.createElement('li');
-    li.textContent = `Frame ${i + 1}: ${p.imageName}${p.isUpload ? ' (your photo)' : ''}`;
+    li.textContent = `Frame ${i + 1}: ${p.imageName}${p.isUpload ? (p.fileKind === 'pdf' ? ' (your PDF)' : ' (your photo)') : ''}`;
     list.appendChild(li);
   });
   list.hidden = false;
@@ -214,6 +216,7 @@ if (!pics.length && order.imageData) pics.push(order.imageData);
 if (pics.length) {
   sidebarImg.textContent = '';
   sidebarImg.classList.toggle('is-set', nPieces > 1);
+  sidebarImg.classList.add('is-framed', HANGA.styleClass(order.style));
   pics.slice(0, 3).forEach((src, i) => {
     const im = document.createElement('img');
     im.src = src; im.alt = nPieces > 1 ? `Frame ${i + 1}` : 'Your chosen image';
@@ -281,7 +284,7 @@ function customerDetails() {
 function saveAndConfirm(ref, method) {
   const data = Object.assign({ ref, method }, customerDetails(), order);
   delete data.imageData; // keep storage small; the confirmation page doesn't need the pictures
-  if (data.items) data.items = data.items.map(i => ({ imageId: i.imageId, imageName: i.imageName, isUpload: i.isUpload }));
+  if (data.items) data.items = data.items.map(i => ({ imageId: i.imageId, imageName: i.imageName, isUpload: i.isUpload, fileKind: i.fileKind, fileName: i.fileName }));
   sessionStorage.setItem('hangaOrderRef', ref);
   sessionStorage.setItem('hangaOrderData', JSON.stringify(data));
   window.location.href = `confirmation.html?ref=${encodeURIComponent(ref)}&method=${method}`;

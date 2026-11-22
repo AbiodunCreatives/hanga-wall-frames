@@ -134,77 +134,66 @@
 
       <div id="tab-gallery">
         <div class="gallery-filters mini-filters" role="group" aria-label="Filter gallery by category">
-          <button type="button" class="filter-chip active" data-filter="all" onclick="filterMiniGallery('all', this)">All</button>
+          <button type="button" class="filter-chip active" data-filter="featured" onclick="filterMiniGallery('featured', this)">Featured</button>
+          <button type="button" class="filter-chip" data-filter="all" onclick="filterMiniGallery('all', this)">All</button>
           <button type="button" class="filter-chip" data-filter="motivational" onclick="filterMiniGallery('motivational', this)">Motivational</button>
           <button type="button" class="filter-chip" data-filter="classic-art" onclick="filterMiniGallery('classic-art', this)">Classic Art</button>
-          <button type="button" class="filter-chip" data-filter="nature" onclick="filterMiniGallery('nature', this)">Nature &amp; Botanical</button>
-          <button type="button" class="filter-chip" data-filter="landscapes" onclick="filterMiniGallery('landscapes', this)">Landscapes</button>
-          <button type="button" class="filter-chip" data-filter="japanese" onclick="filterMiniGallery('japanese', this)">Japanese</button>
+          <button type="button" class="filter-chip" data-filter="nature" onclick="filterMiniGallery('nature', this)">Nature &amp; Botanicals</button>
+          <button type="button" class="filter-chip" data-filter="landscapes" onclick="filterMiniGallery('landscapes', this)">Landscape</button>
           <button type="button" class="filter-chip" data-filter="abstract" onclick="filterMiniGallery('abstract', this)">Abstract</button>
-          <button type="button" class="filter-chip" data-filter="portraits" onclick="filterMiniGallery('portraits', this)">Portraits</button>
+          <button type="button" class="filter-chip" data-filter="portraits" onclick="filterMiniGallery('portraits', this)">Portrait</button>
           <button type="button" class="filter-chip" data-filter="urban" onclick="filterMiniGallery('urban', this)">Urban</button>
         </div>
         <div class="mini-gallery" id="miniGallery">
-          <div class="mini-thumb" data-id="build-in-silence" data-name="Build in Silence" data-category="motivational" data-src="images/build-in-silence.jpg" onclick="selectGalleryImage(this,'Build in Silence')"><img src="images/thumbs/build-in-silence.jpg"   alt="Build in Silence" loading="lazy" decoding="async"></div>
-          <div class="mini-thumb" data-id="iron-mike" data-name="Iron Mike" data-category="portraits" data-src="images/iron-mike.jpg" onclick="selectGalleryImage(this,'Iron Mike')"><img src="images/thumbs/iron-mike.jpg"           alt="Iron Mike" loading="lazy" decoding="async"></div>
-          <div class="mini-thumb" data-id="alpine-bloom" data-name="Alpine Bloom" data-category="nature" data-src="images/alpine-bloom.jpg" onclick="selectGalleryImage(this,'Alpine Bloom')"><img src="images/thumbs/alpine-bloom.jpg"        alt="Alpine Bloom" loading="lazy" decoding="async"></div>
+          <div class="mini-thumb" data-id="build-in-silence" data-name="Build in Silence" data-category="featured motivational" data-src="images/build-in-silence.jpg" onclick="selectGalleryImage(this,'Build in Silence')"><img src="images/thumbs/build-in-silence.jpg"   alt="Build in Silence" loading="lazy" decoding="async"></div>
           <div class="mini-thumb" data-id="one-percent" data-name="1% Better Every Day" data-category="motivational" data-src="images/one-percent.jpg" onclick="selectGalleryImage(this,'1% Better Every Day')"><img src="images/thumbs/one-percent.jpg"         alt="1% Better Every Day" loading="lazy" decoding="async"></div>
-          <div class="mini-thumb" data-id="city-architecture" data-name="City Architecture" data-category="urban" data-src="images/city-architecture.jpg" onclick="selectGalleryImage(this,'City Architecture')"><img src="images/thumbs/city-architecture.jpg"   alt="City Architecture" loading="lazy" decoding="async"></div>
-          <div class="mini-thumb" data-id="joyful-soul" data-name="Joyful Soul" data-category="portraits" data-src="images/joyful-soul.jpg" onclick="selectGalleryImage(this,'Joyful Soul')"><img src="images/thumbs/joyful-soul.jpg"         alt="Joyful Soul" loading="lazy" decoding="async"></div>
-          <div class="mini-thumb" data-id="burna-boy" data-name="Burna Boy" data-category="portraits" data-src="images/burna-boy.jpg" onclick="selectGalleryImage(this,'Burna Boy')"><img src="images/thumbs/burna-boy.jpg"           alt="Burna Boy" loading="lazy" decoding="async"></div>
+          <div class="mini-thumb" data-id="burna-boy" data-name="Burna Boy" data-category="featured portraits" data-src="images/burna-boy.jpg" onclick="selectGalleryImage(this,'Burna Boy')"><img src="images/thumbs/burna-boy.jpg"           alt="Burna Boy" loading="lazy" decoding="async"></div>
           <div class="mini-thumb" data-id="classic-roadster" data-name="Classic Roadster" data-category="urban" data-src="images/classic-roadster.jpg" onclick="selectGalleryImage(this,'Classic Roadster')"><img src="images/thumbs/classic-roadster.jpg"    alt="Classic Roadster" loading="lazy" decoding="async"></div>
-          <div class="mini-thumb" data-id="he-left-99" data-name="He Left the 99" data-category="motivational" data-src="images/he-left-99.jpg" onclick="selectGalleryImage(this,'He Left the 99')"><img src="images/thumbs/he-left-99.jpg"          alt="He Left the 99" loading="lazy" decoding="async"></div>
-          <div class="mini-thumb" data-id="alpine-meadow" data-name="Alpine Meadow" data-category="landscapes nature" data-src="images/alpine-meadow.jpg" onclick="selectGalleryImage(this,'Alpine Meadow')"><img src="images/thumbs/alpine-meadow.jpg"       alt="Alpine Meadow" loading="lazy" decoding="async"></div>
-          <div class="mini-thumb" data-id="dont-overthink" data-name="Don't Overthink It" data-category="motivational" data-src="images/dont-overthink.jpg" onclick="selectGalleryImage(this,'Don\'t Overthink It')"><img src="images/thumbs/dont-overthink.jpg"      alt="Don't Overthink It" loading="lazy" decoding="async"></div>
+          <div class="mini-thumb" data-id="dont-overthink" data-name="Don't Overthink It" data-category="featured motivational" data-src="images/dont-overthink.jpg" onclick="selectGalleryImage(this,'Don\'t Overthink It')"><img src="images/thumbs/dont-overthink.jpg"      alt="Don't Overthink It" loading="lazy" decoding="async"></div>
           <div class="mini-thumb" data-id="if-you-want" data-name="If You Want, You Can" data-category="motivational" data-src="images/if-you-want.jpg" onclick="selectGalleryImage(this,'If You Want, You Can')"><img src="images/thumbs/if-you-want.jpg"         alt="If You Want You Can" loading="lazy" decoding="async"></div>
-          <div class="mini-thumb" data-id="zen-balance" data-name="Zen Balance" data-category="abstract" data-src="images/zen-balance.jpg" onclick="selectGalleryImage(this,'Zen Balance')"><img src="images/thumbs/zen-balance.jpg"         alt="Zen Balance" loading="lazy" decoding="async"></div>
           <div class="mini-thumb" data-id="raleigh-bike" data-name="Raleigh Classic" data-category="urban" data-src="images/raleigh-bike.jpg" onclick="selectGalleryImage(this,'Raleigh Classic')"><img src="images/thumbs/raleigh-bike.jpg"        alt="Raleigh Classic" loading="lazy" decoding="async"></div>
-          <div class="mini-thumb" data-id="hokusai-great-wave" data-name="The Great Wave" data-category="japanese landscapes" data-src="images/collection/hokusai-great-wave.jpg" onclick="selectGalleryImage(this,'The Great Wave')"><img src="images/thumbs/hokusai-great-wave.jpg" alt="The Great Wave" loading="lazy" decoding="async"></div>
           <div class="mini-thumb" data-id="van-gogh-self-portrait" data-name="Self-Portrait" data-category="portraits classic-art" data-src="images/collection/van-gogh-self-portrait.jpg" onclick="selectGalleryImage(this,'Self-Portrait')"><img src="images/thumbs/van-gogh-self-portrait.jpg" alt="Self-Portrait" loading="lazy" decoding="async"></div>
-          <div class="mini-thumb" data-id="monet-water-lilies" data-name="Water Lilies" data-category="nature classic-art" data-src="images/collection/monet-water-lilies.jpg" onclick="selectGalleryImage(this,'Water Lilies')"><img src="images/thumbs/monet-water-lilies.jpg" alt="Water Lilies" loading="lazy" decoding="async"></div>
+          <div class="mini-thumb" data-id="monet-water-lilies" data-name="Water Lilies" data-category="featured nature classic-art" data-src="images/collection/monet-water-lilies.jpg" onclick="selectGalleryImage(this,'Water Lilies')"><img src="images/thumbs/monet-water-lilies.jpg" alt="Water Lilies" loading="lazy" decoding="async"></div>
           <div class="mini-thumb" data-id="van-gogh-straw-hat" data-name="Self-Portrait with a Straw Hat" data-category="portraits classic-art" data-src="images/collection/van-gogh-straw-hat.jpg" onclick="selectGalleryImage(this,'Self-Portrait with a Straw Hat')"><img src="images/thumbs/van-gogh-straw-hat.jpg" alt="Self-Portrait with a Straw Hat" loading="lazy" decoding="async"></div>
-          <div class="mini-thumb" data-id="hokusai-red-fuji" data-name="Red Fuji" data-category="japanese landscapes" data-src="images/collection/hokusai-red-fuji.jpg" onclick="selectGalleryImage(this,'Red Fuji')"><img src="images/thumbs/hokusai-red-fuji.jpg" alt="Red Fuji" loading="lazy" decoding="async"></div>
           <div class="mini-thumb" data-id="van-gogh-roses" data-name="Roses" data-category="nature classic-art" data-src="images/collection/van-gogh-roses.jpg" onclick="selectGalleryImage(this,'Roses')"><img src="images/thumbs/van-gogh-roses.jpg" alt="Roses" loading="lazy" decoding="async"></div>
           <div class="mini-thumb" data-id="renoir-two-sisters" data-name="Two Sisters" data-category="portraits classic-art" data-src="images/collection/renoir-two-sisters.jpg" onclick="selectGalleryImage(this,'Two Sisters')"><img src="images/thumbs/renoir-two-sisters.jpg" alt="Two Sisters" loading="lazy" decoding="async"></div>
           <div class="mini-thumb" data-id="vermeer-water-pitcher" data-name="Woman with a Water Pitcher" data-category="portraits classic-art" data-src="images/collection/vermeer-water-pitcher.jpg" onclick="selectGalleryImage(this,'Woman with a Water Pitcher')"><img src="images/thumbs/vermeer-water-pitcher.jpg" alt="Woman with a Water Pitcher" loading="lazy" decoding="async"></div>
           <div class="mini-thumb" data-id="van-gogh-bedroom" data-name="The Bedroom" data-category="classic-art" data-src="images/collection/van-gogh-bedroom.jpg" onclick="selectGalleryImage(this,'The Bedroom')"><img src="images/thumbs/van-gogh-bedroom.jpg" alt="The Bedroom" loading="lazy" decoding="async"></div>
-          <div class="mini-thumb" data-id="van-gogh-irises" data-name="Irises" data-category="nature classic-art" data-src="images/collection/van-gogh-irises.jpg" onclick="selectGalleryImage(this,'Irises')"><img src="images/thumbs/van-gogh-irises.jpg" alt="Irises" loading="lazy" decoding="async"></div>
-          <div class="mini-thumb" data-id="hiroshige-sudden-shower" data-name="Sudden Shower over Shin-Ōhashi" data-category="japanese urban landscapes" data-src="images/collection/hiroshige-sudden-shower.jpg" onclick="selectGalleryImage(this,'Sudden Shower over Shin-Ōhashi')"><img src="images/thumbs/hiroshige-sudden-shower.jpg" alt="Sudden Shower over Shin-Ōhashi" loading="lazy" decoding="async"></div>
+          <div class="mini-thumb" data-id="van-gogh-irises" data-name="Irises" data-category="featured nature classic-art" data-src="images/collection/van-gogh-irises.jpg" onclick="selectGalleryImage(this,'Irises')"><img src="images/thumbs/van-gogh-irises.jpg" alt="Irises" loading="lazy" decoding="async"></div>
           <div class="mini-thumb" data-id="van-gogh-cypresses" data-name="Cypresses" data-category="landscapes nature classic-art" data-src="images/collection/van-gogh-cypresses.jpg" onclick="selectGalleryImage(this,'Cypresses')"><img src="images/thumbs/van-gogh-cypresses.jpg" alt="Cypresses" loading="lazy" decoding="async"></div>
           <div class="mini-thumb" data-id="redoute-empress-rose" data-name="Empress Josephine Rose" data-category="nature" data-src="images/collection/redoute-empress-rose.jpg" onclick="selectGalleryImage(this,'Empress Josephine Rose')"><img src="images/thumbs/redoute-empress-rose.jpg" alt="Empress Josephine Rose" loading="lazy" decoding="async"></div>
-          <div class="mini-thumb" data-id="van-gogh-sunflowers" data-name="Sunflowers" data-category="nature classic-art" data-src="images/collection/van-gogh-sunflowers.jpg" onclick="selectGalleryImage(this,'Sunflowers')"><img src="images/thumbs/van-gogh-sunflowers.jpg" alt="Sunflowers" loading="lazy" decoding="async"></div>
-          <div class="mini-thumb" data-id="van-gogh-wheat-field" data-name="Wheat Field with Cypresses" data-category="landscapes classic-art" data-src="images/collection/van-gogh-wheat-field.jpg" onclick="selectGalleryImage(this,'Wheat Field with Cypresses')"><img src="images/thumbs/van-gogh-wheat-field.jpg" alt="Wheat Field with Cypresses" loading="lazy" decoding="async"></div>
+          <div class="mini-thumb" data-id="van-gogh-sunflowers" data-name="Sunflowers" data-category="featured nature classic-art" data-src="images/collection/van-gogh-sunflowers.jpg" onclick="selectGalleryImage(this,'Sunflowers')"><img src="images/thumbs/van-gogh-sunflowers.jpg" alt="Sunflowers" loading="lazy" decoding="async"></div>
+          <div class="mini-thumb" data-id="van-gogh-wheat-field" data-name="Wheat Field with Cypresses" data-category="featured landscapes classic-art" data-src="images/collection/van-gogh-wheat-field.jpg" onclick="selectGalleryImage(this,'Wheat Field with Cypresses')"><img src="images/thumbs/van-gogh-wheat-field.jpg" alt="Wheat Field with Cypresses" loading="lazy" decoding="async"></div>
           <div class="mini-thumb" data-id="mucha-zodiac" data-name="The Zodiac" data-category="classic-art portraits" data-src="images/collection/mucha-zodiac.jpg" onclick="selectGalleryImage(this,'The Zodiac')"><img src="images/thumbs/mucha-zodiac.jpg" alt="The Zodiac" loading="lazy" decoding="async"></div>
           <div class="mini-thumb" data-id="gauguin-tehamana" data-name="Tehamana" data-category="portraits classic-art" data-src="images/collection/gauguin-tehamana.jpg" onclick="selectGalleryImage(this,'Tehamana')"><img src="images/thumbs/gauguin-tehamana.jpg" alt="Tehamana" loading="lazy" decoding="async"></div>
           <div class="mini-thumb" data-id="caillebotte-paris-street" data-name="Paris Street, Rainy Day" data-category="urban classic-art landscapes" data-src="images/collection/caillebotte-paris-street.jpg" onclick="selectGalleryImage(this,'Paris Street, Rainy Day')"><img src="images/thumbs/caillebotte-paris-street.jpg" alt="Paris Street, Rainy Day" loading="lazy" decoding="async"></div>
           <div class="mini-thumb" data-id="van-gogh-orchard" data-name="The Flowering Orchard" data-category="nature landscapes classic-art" data-src="images/collection/van-gogh-orchard.jpg" onclick="selectGalleryImage(this,'The Flowering Orchard')"><img src="images/thumbs/van-gogh-orchard.jpg" alt="The Flowering Orchard" loading="lazy" decoding="async"></div>
           <div class="mini-thumb" data-id="monet-lily-pond" data-name="Water Lily Pond" data-category="nature landscapes classic-art" data-src="images/collection/monet-lily-pond.jpg" onclick="selectGalleryImage(this,'Water Lily Pond')"><img src="images/thumbs/monet-lily-pond.jpg" alt="Water Lily Pond" loading="lazy" decoding="async"></div>
-          <div class="mini-thumb" data-id="hokusai-cranes" data-name="Cranes on a Pine" data-category="japanese nature" data-src="images/collection/hokusai-cranes.jpg" onclick="selectGalleryImage(this,'Cranes on a Pine')"><img src="images/thumbs/hokusai-cranes.jpg" alt="Cranes on a Pine" loading="lazy" decoding="async"></div>
           <div class="mini-thumb" data-id="rembrandt-gold-chain" data-name="Old Man with a Gold Chain" data-category="portraits classic-art" data-src="images/collection/rembrandt-gold-chain.jpg" onclick="selectGalleryImage(this,'Old Man with a Gold Chain')"><img src="images/thumbs/rembrandt-gold-chain.jpg" alt="Old Man with a Gold Chain" loading="lazy" decoding="async"></div>
           <div class="mini-thumb" data-id="monet-stacks-of-wheat" data-name="Stacks of Wheat" data-category="landscapes classic-art" data-src="images/collection/monet-stacks-of-wheat.jpg" onclick="selectGalleryImage(this,'Stacks of Wheat')"><img src="images/thumbs/monet-stacks-of-wheat.jpg" alt="Stacks of Wheat" loading="lazy" decoding="async"></div>
           <div class="mini-thumb" data-id="vermeer-young-woman" data-name="Study of a Young Woman" data-category="portraits classic-art" data-src="images/collection/vermeer-young-woman.jpg" onclick="selectGalleryImage(this,'Study of a Young Woman')"><img src="images/thumbs/vermeer-young-woman.jpg" alt="Study of a Young Woman" loading="lazy" decoding="async"></div>
           <div class="mini-thumb" data-id="monet-cliff-walk" data-name="Cliff Walk at Pourville" data-category="landscapes classic-art" data-src="images/collection/monet-cliff-walk.jpg" onclick="selectGalleryImage(this,'Cliff Walk at Pourville')"><img src="images/thumbs/monet-cliff-walk.jpg" alt="Cliff Walk at Pourville" loading="lazy" decoding="async"></div>
           <div class="mini-thumb" data-id="cezanne-tulips" data-name="The Vase of Tulips" data-category="nature classic-art" data-src="images/collection/cezanne-tulips.jpg" onclick="selectGalleryImage(this,'The Vase of Tulips')"><img src="images/thumbs/cezanne-tulips.jpg" alt="The Vase of Tulips" loading="lazy" decoding="async"></div>
-          <div class="mini-thumb" data-id="hiroshige-fireworks" data-name="Fireworks at Ryōgoku" data-category="japanese urban" data-src="images/collection/hiroshige-fireworks.jpg" onclick="selectGalleryImage(this,'Fireworks at Ryōgoku')"><img src="images/thumbs/hiroshige-fireworks.jpg" alt="Fireworks at Ryōgoku" loading="lazy" decoding="async"></div>
           <div class="mini-thumb" data-id="monet-saint-lazare" data-name="Gare Saint-Lazare" data-category="urban classic-art" data-src="images/collection/monet-saint-lazare.jpg" onclick="selectGalleryImage(this,'Gare Saint-Lazare')"><img src="images/thumbs/monet-saint-lazare.jpg" alt="Gare Saint-Lazare" loading="lazy" decoding="async"></div>
-          <div class="mini-thumb" data-id="hiroshige-jumantsubo" data-name="Eagle over the Jumantsubo Plain" data-category="japanese landscapes" data-src="images/collection/hiroshige-jumantsubo.jpg" onclick="selectGalleryImage(this,'Eagle over the Jumantsubo Plain')"><img src="images/thumbs/hiroshige-jumantsubo.jpg" alt="Eagle over the Jumantsubo Plain" loading="lazy" decoding="async"></div>
           <div class="mini-thumb" data-id="redoute-crown-imperial" data-name="Crown Imperial" data-category="nature" data-src="images/collection/redoute-crown-imperial.jpg" onclick="selectGalleryImage(this,'Crown Imperial')"><img src="images/thumbs/redoute-crown-imperial.jpg" alt="Crown Imperial" loading="lazy" decoding="async"></div>
-          <div class="mini-thumb" data-id="hokusai-storm-fuji" data-name="Storm below Mount Fuji" data-category="japanese landscapes" data-src="images/collection/hokusai-storm-fuji.jpg" onclick="selectGalleryImage(this,'Storm below Mount Fuji')"><img src="images/thumbs/hokusai-storm-fuji.jpg" alt="Storm below Mount Fuji" loading="lazy" decoding="async"></div>
           <div class="mini-thumb" data-id="seurat-grande-jatte" data-name="A Sunday on La Grande Jatte" data-category="classic-art landscapes" data-src="images/collection/seurat-grande-jatte.jpg" onclick="selectGalleryImage(this,'A Sunday on La Grande Jatte')"><img src="images/thumbs/seurat-grande-jatte.jpg" alt="A Sunday on La Grande Jatte" loading="lazy" decoding="async"></div>
-          <div class="mini-thumb" data-id="kandinsky-improvisation-30" data-name="Improvisation No. 30" data-category="abstract" data-src="images/collection/kandinsky-improvisation-30.jpg" onclick="selectGalleryImage(this,'Improvisation No. 30')"><img src="images/thumbs/kandinsky-improvisation-30.jpg" alt="Improvisation No. 30" loading="lazy" decoding="async"></div>
+          <div class="mini-thumb" data-id="kandinsky-improvisation-30" data-name="Improvisation No. 30" data-category="featured abstract" data-src="images/collection/kandinsky-improvisation-30.jpg" onclick="selectGalleryImage(this,'Improvisation No. 30')"><img src="images/thumbs/kandinsky-improvisation-30.jpg" alt="Improvisation No. 30" loading="lazy" decoding="async"></div>
           <div class="mini-thumb" data-id="redoute-gloriosa" data-name="Gloriosa Superba" data-category="nature" data-src="images/collection/redoute-gloriosa.jpg" onclick="selectGalleryImage(this,'Gloriosa Superba')"><img src="images/thumbs/redoute-gloriosa.jpg" alt="Gloriosa Superba" loading="lazy" decoding="async"></div>
           <div class="mini-thumb" data-id="fayum-woman-in-red" data-name="Woman in Red" data-category="portraits" data-src="images/collection/fayum-woman-in-red.jpg" onclick="selectGalleryImage(this,'Woman in Red')"><img src="images/thumbs/fayum-woman-in-red.jpg" alt="Woman in Red" loading="lazy" decoding="async"></div>
           <div class="mini-thumb" data-id="mondrian-lozenge" data-name="Lozenge Composition" data-category="abstract" data-src="images/collection/mondrian-lozenge.jpg" onclick="selectGalleryImage(this,'Lozenge Composition')"><img src="images/thumbs/mondrian-lozenge.jpg" alt="Lozenge Composition" loading="lazy" decoding="async"></div>
         </div>
+        <button type="button" class="btn btn-outline-dark gallery-more mini-more" id="miniMore" hidden>Show all</button>
       </div>
 
       <div id="tab-upload" class="hidden">
         <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
           <div class="upload-icon">📁</div>
           <p><strong>Click to upload</strong> or drag &amp; drop your image here</p>
-          <p style="font-size:12px; margin-top:4px">JPG, PNG, WEBP — max 10 MB</p>
+          <p style="font-size:12px; margin-top:4px">PDF, JPG, PNG or WEBP — images up to 10 MB, PDFs up to 20 MB</p>
         </div>
-        <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp" aria-label="Upload your image" style="display:none" onchange="handleFileUpload(event)">
+        <input type="file" id="fileInput" accept="application/pdf,image/jpeg,image/png,image/webp" aria-label="Upload your image or PDF" aria-describedby="uploadHint" style="display:none" onchange="handleFileUpload(event)">
+        <p class="upload-hint" id="uploadHint">💡 For the sharpest print, upload a PDF or a high-resolution image (JPG/PNG, ideally 3000px+ on the long side).</p>
+        <p class="upload-warn" id="uploadWarn" hidden></p>
       </div>
     </div>
 
@@ -276,7 +265,7 @@
       <div class="summary-row total"><span>Total</span><span id="summaryTotal">₦0</span></div>
       <button type="button" class="btn btn-gold proceed-btn" onclick="proceedToCheckout()">Proceed to Checkout →</button>
       <a href="#" class="btn btn-outline-dark whatsapp-order-btn" id="whatsappOrderBtn" hidden onclick="return orderOnWhatsApp()">Or order on WhatsApp</a>
-      <p class="summary-note">Same price for every frame style. Pairs and trios get a set discount. Lagos delivery in 2–3 business days, other states 3–5.</p>
+      <p class="summary-note">Same price for every frame style. Pairs and trios get a set discount. Hanga is based in Ado Ekiti, Ekiti State. Delivery within Ekiti and Ondo State takes 1 to 2 business days. Delivery to other states takes 2 to 3 business days. We will confirm your delivery fee after your order.</p>
     </div>
   </div>
 
@@ -339,14 +328,14 @@ const state = {
 const FRAME_STYLES  = ['Black', 'White', 'Borderless'];
 const FRAME_COLOURS = { Black: '#1a1a1a', White: '#f3f3f3' };
 // 'Borderless' = the print alone, no moulding. Shared label helper:
-function styleLabel(style) { return style === 'Borderless' ? 'Borderless (no frame)' : (style || 'Black') + ' Frame'; }
+function styleLabel(style) { style = HANGA.normStyle(style); return style === 'Borderless' ? 'Borderless (no frame)' : style + ' Frame'; }
 
 // Curated sets: complementary prints from the catalogue. `ids` refer to
 // gallery thumbnails below; `items` are set-only prints (not in the gallery).
 const CURATED_SETS = {
   2: [
-    { key: 'mountain-air', name: 'Mountain Air', ids: ['alpine-meadow', 'alpine-bloom'] },
-    { key: 'fuji-pair',    name: 'Wave & Fuji',  ids: ['hokusai-great-wave', 'hokusai-red-fuji'] },
+    { key: 'coast-sunset', name: 'Coast & Sunset', ids: ['monet-cliff-walk', 'monet-stacks-of-wheat'] },
+    { key: 'van-gogh-fields', name: 'Van Gogh Fields', ids: ['van-gogh-wheat-field', 'van-gogh-cypresses'] },
     { key: 'garden-pair',  name: 'Garden Pair',  ids: ['van-gogh-irises', 'van-gogh-roses'] }
   ],
   3: [
@@ -354,7 +343,7 @@ const CURATED_SETS = {
         { id: 'dont-give-up-1', name: "Don't Give Up — DON'T", src: 'images/sets/dont-give-up-1.jpg', thumb: 'images/thumbs/dont-give-up-1.jpg' },
         { id: 'dont-give-up-2', name: "Don't Give Up — GIVE",  src: 'images/sets/dont-give-up-2.jpg', thumb: 'images/thumbs/dont-give-up-2.jpg' },
         { id: 'dont-give-up-3', name: "Don't Give Up — UP.",   src: 'images/sets/dont-give-up-3.jpg', thumb: 'images/thumbs/dont-give-up-3.jpg' } ] },
-    { key: 'abstract-trio',  name: 'Abstract Trio',  ids: ['kandinsky-improvisation-30', 'zen-balance', 'mondrian-lozenge'] },
+    { key: 'abstract-trio',  name: 'Colour Trio',    ids: ['kandinsky-improvisation-30', 'mondrian-lozenge', 'seurat-grande-jatte'] },
     { key: 'botanical-trio', name: 'Botanical Trio', ids: ['redoute-empress-rose', 'redoute-crown-imperial', 'redoute-gloriosa'] },
     { key: 'hustle-trio',    name: 'Hustle Trio',    ids: ['build-in-silence', 'one-percent', 'dont-overthink'] }
   ]
@@ -533,6 +522,7 @@ function initFromParams() {
   if (img) {
     const thumb = document.querySelector(`.mini-thumb[data-id="${CSS.escape(img)}"]`);
     if (thumb) {
+      if (thumb.hidden) filterMiniGallery('all', null, true);
       selectGalleryImage(thumb, thumb.dataset.name, { silent: true });
       thumb.scrollIntoView({ block: 'nearest' });
     }
@@ -560,15 +550,25 @@ function selectGalleryImage(el, name, opts) {
 }
 
 // ── Mini-gallery filter ────────────────────────────────────────
-function filterMiniGallery(category, btn) {
+// Opens on Featured. On phones long categories show 8 at a time with "Show all".
+let miniCategory = 'featured';
+function filterMiniGallery(category, btn, expand) {
   const wrap = document.getElementById('tab-gallery');
-  wrap.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
-  btn.classList.add('active');
+  wrap.querySelectorAll('.filter-chip').forEach(c => c.classList.toggle('active', c.dataset.filter === category));
+  miniCategory = category;
+  const matches = [];
   wrap.querySelectorAll('.mini-thumb').forEach(thumb => {
     const cats = (thumb.dataset.category || '').split(/\s+/);
-    thumb.hidden = !(category === 'all' || cats.includes(category));
+    if (category === 'all' || cats.includes(category)) matches.push(thumb); else thumb.hidden = true;
   });
+  const lim = expand || !window.matchMedia('(max-width: 768px)').matches ? Infinity : 8;
+  matches.forEach((t, i) => { t.hidden = i >= lim; });
+  const more = document.getElementById('miniMore');
+  more.hidden = matches.length <= lim;
+  more.textContent = 'Show all ' + matches.length;
 }
+document.getElementById('miniMore').addEventListener('click', () => filterMiniGallery(miniCategory, null, true));
+filterMiniGallery('featured');
 
 // ── File upload ────────────────────────────────────────────────
 // The photo stays in the browser (nothing is uploaded to a server). We keep a
@@ -590,32 +590,99 @@ function downscaleImage(dataUrl, maxSide, cb) {
   img.src = dataUrl;
 }
 
+// PDFs: page 1 is rendered with pdf.js (loaded only when needed) for the
+// preview; if that fails we show a clean "PDF attached" card instead.
+const PDFJS = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/';
+let _pdfjs = null;
+function loadPdfJs() {
+  if (_pdfjs) return _pdfjs;
+  _pdfjs = new Promise((res, rej) => {
+    const sc = document.createElement('script');
+    sc.src = PDFJS + 'pdf.min.js';
+    sc.onload = () => { window.pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJS + 'pdf.worker.min.js'; res(window.pdfjsLib); };
+    sc.onerror = () => { _pdfjs = null; rej(new Error('pdf.js failed to load')); };
+    document.head.appendChild(sc);
+  });
+  return _pdfjs;
+}
+function pdfFirstPage(arrayBuffer, maxSide) {
+  return loadPdfJs().then(lib => lib.getDocument({ data: arrayBuffer }).promise).then(doc => doc.getPage(1)).then(page => {
+    const v1 = page.getViewport({ scale: 1 });
+    const scale = Math.min(3, maxSide / Math.max(v1.width, v1.height));
+    const vp = page.getViewport({ scale });
+    const c = document.createElement('canvas');
+    c.width = Math.round(vp.width); c.height = Math.round(vp.height);
+    const ctx = c.getContext('2d');
+    ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, c.width, c.height);
+    return page.render({ canvasContext: ctx, viewport: vp }).promise.then(() => c.toDataURL('image/jpeg', 0.85));
+  });
+}
+function pdfPlaceholder(name) {
+  const c = document.createElement('canvas'); c.width = 600; c.height = 800;
+  const ctx = c.getContext('2d');
+  ctx.fillStyle = '#f3ece0'; ctx.fillRect(0, 0, 600, 800);
+  ctx.fillStyle = '#a8893e'; ctx.font = '700 64px Lato, sans-serif'; ctx.textAlign = 'center';
+  ctx.fillText('PDF', 300, 360);
+  ctx.fillStyle = '#1a1a1a'; ctx.font = '600 26px Lato, sans-serif';
+  ctx.fillText('PDF attached:', 300, 430);
+  ctx.font = '22px Lato, sans-serif';
+  ctx.fillText(name.length > 34 ? name.slice(0, 31) + '…' : name, 300, 470);
+  return c.toDataURL('image/jpeg', 0.85);
+}
+
+function showUploaded(name, src, hintText) {
+  const zone = document.getElementById('uploadZone');
+  zone.textContent = '';
+  const thumb = document.createElement('img');
+  thumb.src = src; thumb.alt = '';
+  thumb.style.cssText = 'max-height:90px;border-radius:4px;display:block;margin:0 auto 8px';
+  const title = document.createElement('p');
+  const strong = document.createElement('strong'); strong.textContent = name; title.appendChild(strong);
+  const hint = document.createElement('p');
+  hint.style.cssText = 'font-size:12px;margin-top:4px;color:var(--gold-dk)';
+  hint.textContent = hintText || (state.pieces > 1 ? '✓ Uploaded · click to upload for the next frame' : '✓ Uploaded · click to change');
+  zone.append(thumb, title, hint);
+  document.getElementById('fileInput').value = '';
+}
+
 function handleFileUpload(event) {
   const file = event.target.files[0];
   if (!file) return;
-  if (ACCEPTED_TYPES.indexOf(file.type) === -1) { showToast('Please upload a JPG, PNG or WEBP image.'); return; }
-  if (file.size > 10 * 1024 * 1024) { showToast('File too large (max 10 MB)'); return; }
+  const warn = document.getElementById('uploadWarn');
+  warn.hidden = true;
+  const isPdf = file.type === 'application/pdf' || /\.pdf$/i.test(file.name);
+  if (!isPdf && ACCEPTED_TYPES.indexOf(file.type) === -1) { showToast('Please upload a PDF, JPG, PNG or WEBP file.'); return; }
+  if (file.size > (isPdf ? 20 : 10) * 1024 * 1024) { showToast(isPdf ? 'PDF too large (max 20 MB)' : 'File too large (max 10 MB)'); return; }
+  const slotNo = state.activeSlot + 1;
+  const done = (item, label) => {
+    fillActiveSlot(item);
+    showToast(state.pieces > 1 ? `Frame ${slotNo}: uploaded ${label}` : 'Uploaded: ' + label);
+    showUploaded(label, item.src);
+  };
+
+  if (isPdf) {
+    const reader = new FileReader();
+    reader.onload = e => {
+      const base = { id: null, name: file.name, isUpload: true, fileKind: 'pdf', fileName: file.name };
+      pdfFirstPage(e.target.result, state.pieces > 1 ? 1000 : 1600)
+        .then(src => done(Object.assign(base, { src }), file.name))
+        .catch(() => done(Object.assign(base, { src: pdfPlaceholder(file.name) }), file.name));
+    };
+    reader.readAsArrayBuffer(file);
+    return;
+  }
+
   const reader = new FileReader();
   reader.onload = e => {
     // Sets keep smaller copies so all pieces fit in browser storage.
     downscaleImage(e.target.result, state.pieces > 1 ? 1000 : 1600, (small, w, h) => {
       if (!small) { showToast('Sorry, we could not read that image. Try another file.'); return; }
       const name = file.name.replace(/\.[^.]+$/, '');
-      const slotNo = state.activeSlot + 1;
-      fillActiveSlot({ id: null, name, src: small, isUpload: true, uploadWidth: w, uploadHeight: h });
-      showToast(state.pieces > 1 ? `Frame ${slotNo}: uploaded ${name}` : 'Image uploaded: ' + name);
-      const zone = document.getElementById('uploadZone');
-      zone.textContent = '';
-      const thumb = document.createElement('img');
-      thumb.src = small; thumb.alt = '';
-      thumb.style.cssText = 'max-height:90px;border-radius:4px;display:block;margin:0 auto 8px';
-      const title = document.createElement('p');
-      const strong = document.createElement('strong'); strong.textContent = name; title.appendChild(strong);
-      const hint = document.createElement('p');
-      hint.style.cssText = 'font-size:12px;margin-top:4px;color:var(--gold-dk)';
-      hint.textContent = state.pieces > 1 ? '✓ Uploaded · click to upload for the next frame' : '✓ Uploaded · click to change';
-      zone.append(thumb, title, hint);
-      document.getElementById('fileInput').value = '';
+      done({ id: null, name, src: small, isUpload: true, fileKind: 'image', fileName: file.name, uploadWidth: w, uploadHeight: h }, name);
+      if (Math.max(w, h) < 1500) {
+        warn.textContent = `Heads up: this image is ${w}×${h}px, so it may print a little soft at larger sizes. A bigger original or a PDF will look sharper.`;
+        warn.hidden = false;
+      }
     });
   };
   reader.readAsDataURL(file);
@@ -669,7 +736,7 @@ function selectStyle(el, style) {
   document.querySelectorAll('.swatch').forEach(s => { s.classList.remove('selected'); s.setAttribute('aria-pressed', 'false'); });
   el.classList.add('selected');
   el.setAttribute('aria-pressed', 'true');
-  state.style = style;
+  state.style = HANGA.normStyle(style);
   updateSummary();
   renderPreview();
 }
@@ -689,7 +756,7 @@ function updateSummary() {
   list.hidden = !multi;
   if (multi) state.slots.forEach((s, i) => {
     const li = document.createElement('li');
-    li.textContent = `Frame ${i + 1}: ` + (s ? s.name + (s.isUpload ? ' (your photo)' : '') : '—');
+    li.textContent = `Frame ${i + 1}: ` + (s ? s.name + (s.isUpload ? (s.fileKind === 'pdf' ? ' (your PDF)' : ' (your photo)') : '') : '—');
     list.appendChild(li);
   });
   document.getElementById('summarySize').textContent  = state.size ? state.size + ' inches' + (multi ? ' (each)' : '') : '—';
@@ -713,6 +780,12 @@ function updateSummary() {
   const first = filled[0];
   thumb.style.backgroundImage = first ? `url("${first.thumb || first.src}")` : '';
   thumb.classList.toggle('has-img', !!first);
+  // Thumbnails follow the chosen frame style (Borderless = no border at all)
+  ['summaryThumb', 'setSlots', 'curatedSets'].forEach(id => {
+    const el = document.getElementById(id);
+    el.classList.remove('fstyle-black', 'fstyle-white', 'fstyle-borderless');
+    el.classList.add(HANGA.styleClass(state.style));
+  });
   updateSizeChips();
   updateProgress();
 }
@@ -832,7 +905,7 @@ function renderPreview() {
 
   const sizeChosen = !!state.size;
   const { wIn, hIn } = parseFrameSize(state.size || '16×20');
-  const style = FRAME_STYLES.indexOf(state.style) === -1 ? 'Black' : state.style;
+  const style = HANGA.normStyle(state.style);
   const borderless = style === 'Borderless';
   const frameCol = FRAME_COLOURS[style] || '#1a1a1a';
   const n = state.pieces;
@@ -895,13 +968,8 @@ function renderPreview() {
         ctx.fill('evenodd');
         ctx.restore();
         shadeMoulding(ctx, fx, fy, fw, fh, m, style);
-      } else {
-        ctx.save();
-        ctx.strokeStyle = 'rgba(0,0,0,0.12)';
-        ctx.lineWidth = 1;
-        ctx.strokeRect(fx + 0.5, fy + 0.5, fw - 1, fh - 1);
-        ctx.restore();
       }
+      // Borderless: no frame or outline at all, just the print and its wall shadow
     }
 
     const what = n > 1 ? setLabel() + ' · ' : '';
@@ -932,6 +1000,8 @@ function buildOrder() {
     imageId: s.isUpload ? null : s.id,
     imageName: s.name,
     isUpload: !!s.isUpload,
+    fileKind: s.fileKind || null,
+    fileName: s.fileName || null,
     imageData: s.src || null
   }));
   const set = state.setKey && findSet(state.setKey);
@@ -945,7 +1015,7 @@ function buildOrder() {
     imageName: orderTitle(),
     imageData: items[0].imageData,
     isUpload: items.some(i => i.isUpload),
-    size: state.size, style: state.style,
+    size: state.size, style: HANGA.normStyle(state.style),
     unitPrice: state.price,
     discount: HANGA.setDiscount(state.pieces),
     price: orderTotal()
@@ -971,7 +1041,7 @@ function proceedToCheckout() {
 function orderOnWhatsApp() {
   if (!checkReady()) return false;
   const lines = ['Hi Hanga! I\'d like to order:'].concat(HANGA.orderLines(buildOrder()));
-  if (state.slots.some(s => s.isUpload)) lines.push('(I\'ll send my own photo(s) here.)');
+  if (state.slots.some(s => s.isUpload)) lines.push('(I\'ll send my own file(s) — PDF or full-size image — here.)');
   window.open(HANGA.whatsappLink(lines.join('\n')), '_blank', 'noopener');
   return false;
 }

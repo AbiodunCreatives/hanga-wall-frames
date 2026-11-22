@@ -52,17 +52,31 @@ window.HANGA = {
     if (o.items && o.items.length) return o.items;
     return o.imageName ? [{ imageId: o.imageId, imageName: o.imageName, isUpload: !!o.isUpload }] : [];
   };
-  H.styleText = function (style) { return style === 'Borderless' ? 'Borderless (no frame)' : (style || 'Black') + ' frame'; };
+  // One source of truth for frame styles: 'Black' | 'White' | 'Borderless'.
+  // Accepts any casing / older values ('borderless', 'none', 'No frame').
+  H.normStyle = function (style) {
+    var s = String(style || '').trim().toLowerCase();
+    if (/borderless|no ?frame|none|frameless/.test(s)) return 'Borderless';
+    if (s.indexOf('white') === 0) return 'White';
+    return 'Black';
+  };
+  H.styleText = function (style) { style = H.normStyle(style); return style === 'Borderless' ? 'Borderless (no frame)' : style + ' frame'; };
+  // CSS class that draws thumbnails with the right frame (or none)
+  H.styleClass = function (style) { return 'fstyle-' + H.normStyle(style).toLowerCase(); };
 
   // Plain-text lines describing an order, used in WhatsApp / email messages.
+  H.uploadNote = function (p) {
+    if (!p || !p.isUpload) return '';
+    return p.fileKind === 'pdf' ? ' (my own PDF: ' + (p.fileName || p.imageName) + ')' : ' (my own photo' + (p.fileName ? ': ' + p.fileName : '') + ')';
+  };
   H.orderLines = function (o) {
     var pieces = H.orderPieces(o), n = o.pieces || pieces.length || 1, lines = [];
     var unit = o.unitPrice || (n === 1 ? o.price : 0);
     if (n > 1) {
       lines.push('• ' + (o.setName ? o.setName + ' — ' : '') + H.setLabel(n) + ' (' + n + ' frames, sent together)');
-      pieces.forEach(function (p, i) { lines.push('   Frame ' + (i + 1) + ': ' + p.imageName + (p.isUpload ? ' (my own photo)' : '')); });
+      pieces.forEach(function (p, i) { lines.push('   Frame ' + (i + 1) + ': ' + p.imageName + H.uploadNote(p)); });
     } else if (pieces[0]) {
-      lines.push('• Image: ' + pieces[0].imageName + (pieces[0].isUpload ? ' (my own photo)' : ''));
+      lines.push('• Image: ' + pieces[0].imageName + H.uploadNote(pieces[0]));
     }
     lines.push('• Size: ' + (o.size ? o.size + '"' + (n > 1 ? ' each' : '') : '—'));
     lines.push('• Style: ' + H.styleText(o.style));

@@ -29,6 +29,10 @@ Anything left empty is hidden, so the site never shows a dead link or fake payme
 
 > The site has no backend. Orders reach Hanga when the customer taps **Send on WhatsApp** or **Send by Email** on the confirmation page .
 
+## Delivery
+
+Hanga is based in Ado Ekiti, Ekiti State. Delivery within Ekiti and Ondo State takes 1 to 2 business days. Delivery to other states takes 2 to 3 business days. We will confirm your delivery fee after your order.
+
 ## Images
 
 - `images/` – original prints; `images/collection/` – public-domain museum works (see `CREDITS.md`).
