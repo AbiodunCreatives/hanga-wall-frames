@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Order Confirmed – Hanga</title>
+  <title>Your Receipt – Hanga</title>
   <meta name="description" content="Your Hanga order.">
   <meta name="theme-color" content="#1a1a1a">
   <meta name="robots" content="noindex">
@@ -20,7 +20,7 @@
 <a class="skip-link" href="#main">Skip to content</a>
 
 <!-- ─── Header ─────────────────────────────────────────────── -->
-<header>
+<header class="no-print">
   <a href="index.html" class="logo">HANGA<span>.</span></a>
   <nav class="nav-links">
     <a href="index.html">Home</a>
@@ -30,47 +30,50 @@
     <span></span><span></span><span></span>
   </button>
 </header>
-<nav class="nav-drawer" id="navDrawer">
+<nav class="nav-drawer no-print" id="navDrawer">
   <a href="index.html">Home</a>
   <a href="customize.html" class="btn-nav-mobile">Create Another Frame</a>
 </nav>
 
-<!-- ─── Confirmation ────────────────────────────────────────── -->
-<div class="confirm-wrap" id="main" tabindex="-1">
-  <div class="confirm-icon" aria-hidden="true">🎉</div>
-  <h1 id="confirmTitle">Order Placed!</h1>
-  <p id="confirmMsg">Thank you for your order. We've received your request and will begin crafting your frame right away.</p>
-  <div class="confirm-ref" id="confirmRef">—</div>
-  <div class="confirm-items" id="confirmItems" hidden></div>
-
-  <!-- The site has no server, so the order details only reach Hanga when the customer sends them. -->
-  <div class="confirm-send" id="sendBox">
-    <strong>One last step: send us your order</strong>
-    <p id="sendMsg">Tap below to send your order details to Hanga and get started. We will confirm your delivery fee after your order.</p>
-    <p id="uploadMsg" class="hidden"><strong>Framing your own photo or artwork?</strong> Please attach the original file (PDF or full-size image, not a screenshot) so it prints sharply.</p>
-    <div class="confirm-send-actions">
-      <a href="#" class="btn btn-gold" id="sendWhatsApp" hidden target="_blank" rel="noopener">Send on WhatsApp</a>
-      <a href="#" class="btn btn-primary" id="sendEmail">Send by Email</a>
-    </div>
+<!-- ─── Receipt (rendered by js/receipt.js) ─────────────────── -->
+<main class="rc-page" id="main" tabindex="-1">
+  <div class="rc-intro no-print">
+    <h1 id="confirmTitle">Your receipt</h1>
+    <p id="confirmMsg">Thank you for ordering with Hanga.</p>
   </div>
 
-  <div id="transferNote" class="hidden confirm-transfer">
-    <strong>📋 Next Steps for Bank Transfer</strong><br>
+  <article class="receipt" id="receipt" aria-label="Order receipt"></article>
+
+  <div class="rc-alert no-print" id="payAlert" role="status" hidden></div>
+
+  <!-- Actions sit below the receipt -->
+  <section class="rc-actions no-print" aria-label="Next steps">
+    <button type="button" class="btn rc-btn rc-btn-pay" id="payBtn" hidden>Pay <span id="payAmt"></span> with Paystack</button>
+    <p class="rc-pay-note" id="payNote" hidden>Card, bank transfer or USSD · secured by Paystack</p>
+    <p class="rc-or" id="sendLead">Send your order to Hanga:</p>
+    <div class="rc-send">
+      <a href="#" class="btn rc-btn rc-btn-wa" id="sendWhatsApp" hidden target="_blank" rel="noopener">Send on WhatsApp</a>
+      <a href="#" class="btn rc-btn rc-btn-mail" id="sendEmail">Send by Email</a>
+    </div>
+    <p id="uploadMsg" class="rc-upload" hidden><strong>Framing your own photo or artwork?</strong> Please send us the original file (PDF or full-size image, not a screenshot) so it prints sharply.</p>
+    <div class="rc-secondary">
+      <button type="button" class="btn rc-btn rc-btn-ghost" id="printBtn">Print / Save PDF</button>
+      <a href="customize.html" class="btn rc-btn rc-btn-ghost">Continue shopping</a>
+    </div>
+  </section>
+
+  <div id="transferNote" class="hidden confirm-transfer no-print">
+    <strong>📋 Bank transfer</strong><br>
     Please transfer <strong id="transferAmount">—</strong> to:<br><br>
     Bank: <strong data-bank="bankName"></strong><br>
     Account: <strong data-bank="accountNumber"></strong><br>
     Name: <strong data-bank="accountName"></strong><br><br>
-    Use your order reference as the payment description, then send your receipt to <strong>hello@hanga.ng</strong>. We'll confirm and begin production within 2 hours.
+    Use your order reference as the payment description, then send your receipt to <strong>hello@hanga.ng</strong>.
   </div>
-
-  <div class="confirm-actions">
-    <a href="customize.html" class="btn btn-primary">Create Another Frame</a>
-    <a href="index.html" class="btn btn-outline-dark">Back to Home</a>
-  </div>
-</div>
+</main>
 
 <!-- ─── Footer ──────────────────────────────────────────────── -->
-<footer>
+<footer class="no-print">
   <div class="footer-grid">
     <div class="footer-brand">
       <a href="index.html" class="logo">HANGA<span>.</span></a>
@@ -101,61 +104,8 @@
 </footer>
 
 <script src="js/site.js"></script>
-<script>
-
-const params    = new URLSearchParams(window.location.search);
-const ref       = params.get('ref')    || '—';
-const method    = params.get('method') || 'request';
-let orderData = {};
-try { orderData = JSON.parse(sessionStorage.getItem('hangaOrderData') || '{}'); } catch (e) { orderData = {}; }
-
-document.getElementById('confirmRef').textContent = 'Order Reference: ' + ref;
-document.querySelectorAll('[data-bank]').forEach(el => { el.textContent = (HANGA.bank || {})[el.dataset.bank] || ''; });
-
-if (method === 'transfer') {
-  document.getElementById('confirmTitle').textContent = 'Order Received!';
-  document.getElementById('confirmMsg').textContent   = "We've received your order details. Please complete your bank transfer to confirm production.";
-  if (HANGA.bank && HANGA.bank.confirmed) document.getElementById('transferNote').classList.remove('hidden');
-  if (orderData.price) document.getElementById('transferAmount').textContent = HANGA.formatNaira(orderData.price);
-} else if (method === 'request') {
-  document.getElementById('confirmTitle').textContent = 'Almost done!';
-  document.getElementById('confirmMsg').textContent   = "Your order reference is below. Send us your order and we'll confirm your total (frame + delivery) and how to pay before we start framing.";
-} else {
-  document.getElementById('confirmTitle').textContent = 'Payment received — thank you!';
-  document.getElementById('confirmMsg').textContent   = "We've received your order and will start crafting your frame.";
-  document.getElementById('sendMsg').textContent      = 'Send us your order details so we can confirm delivery to your address.';
-}
-
-if (orderData.isUpload) document.getElementById('uploadMsg').classList.remove('hidden');
-
-if (orderData.style) orderData.style = HANGA.normStyle(orderData.style);
-const itemLines = orderData.price ? HANGA.orderLines(orderData) : ['• Order details not found on this device'];
-const summary = [
-  'Order reference: ' + ref,
-  ...itemLines,
-  'Payment: ' + (method === 'paystack' ? 'Paid online (Paystack)' : method === 'transfer' ? 'Bank transfer' : 'To be confirmed'),
-  '',
-  'Name: ' + (orderData.name || ''),
-  'Phone: ' + (orderData.phone || ''),
-  'Delivery address: ' + (orderData.address || '')
-].join('\n');
-
-// On-page recap of what was ordered (every piece of a set is listed)
-if (orderData.price) {
-  const box = document.getElementById('confirmItems');
-  const h = document.createElement('strong'); h.textContent = 'Your order';
-  const ul = document.createElement('ul');
-  itemLines.forEach(l => { const li = document.createElement('li'); li.textContent = l.replace(/^\s*•\s*/, ''); ul.appendChild(li); });
-  box.append(h, ul); box.hidden = false;
-}
-
-document.getElementById('sendEmail').href = HANGA.mailtoLink('New Hanga order ' + ref, 'Hi Hanga,\n\nHere is my order:\n\n' + summary + '\n');
-if (HANGA.whatsappNumber) {
-  const wa = document.getElementById('sendWhatsApp');
-  wa.href = HANGA.whatsappLink('Hi Hanga! Here is my order:\n\n' + summary);
-  wa.hidden = false;
-}
-</script>
+<script src="js/receipt.js"></script>
+<script src="js/receipt-page.js"></script>
 
 </body>
 </html>

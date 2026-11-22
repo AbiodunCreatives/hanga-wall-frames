@@ -10,7 +10,9 @@ Live: https://hanga-frames.vercel.app
 | --- | --- |
 | `index.html` | Home: hero, how it works, gallery, sizes & prices, reviews, delivery & FAQs |
 | `customize.html` | Frame builder with live room preview (`?image=<id>`, `?size=16x20`, `?tab=upload`) |
-| `checkout.html` | Name, phone and delivery address, then place order |
+| `checkout.html` | Name, phone, email and delivery address, then place order |
+| `confirmation.html` | Printable receipt, Pay with Paystack, WhatsApp/email send (`js/receipt.js`, `js/receipt-page.js`) |
+| `api/` | Vercel functions: `config` (public key), `verify` (payment check), `paystack-webhook` (owner email) |
 | `confirmation.html` | Order reference + "send us your order" (WhatsApp / email) |
 | `about.html` | Brand story and values |
 | `404.html` | Not-found page (served automatically by Vercel) |
@@ -21,7 +23,7 @@ All contact and payment details live in one place, `window.HANGA` at the top of 
 
 - `whatsappNumber` – international format, digits only (e.g. `2348012345678`). Turns on the WhatsApp footer link, "Order on WhatsApp" in the builder and "Send on WhatsApp" on the confirmation page.
 - `instagramHandle` – turns on the Instagram footer link.
-- `paystackPublicKey` – your Paystack **public** key (`pk_live_…`). Not used yet: the order form only asks for name, phone and delivery address, and Paystack needs a customer email, so card payment is off until that's decided. Never put the secret key in this repo.
+- `paystackPublicKey` – optional Paystack **public** key (`pk_live_…`). Better: set `PAYSTACK_PUBLIC_KEY` in Vercel. See **SETUP-PAYSTACK.md** for payments and the automatic owner email. Never put the secret key in this repo.
 - `setDiscounts` – naira off a whole multi-frame set: `{ 2: 200, 3: 500 }` means a Pair is 2 × the per-frame price − ₦200 and a Trio is 3 × − ₦500. Single frames have no discount. Every price on the site is calculated from this.
 - `bank` – account details for manual transfer; shown only when `confirmed: true`.
 

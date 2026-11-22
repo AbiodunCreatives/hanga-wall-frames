@@ -89,6 +89,12 @@
       </div>
       <div class="form-row full">
         <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" autocomplete="email" inputmode="email" placeholder="you@example.com" required>
+        </div>
+      </div>
+      <div class="form-row full">
+        <div class="form-group">
           <label for="address">Delivery Address</label>
           <textarea id="address" autocomplete="street-address" rows="3" placeholder="House number, street, area, city and state" required></textarea>
         </div>
@@ -124,14 +130,14 @@
 
       <!-- Shown while neither Paystack nor bank details are switched on in js/site.js -->
       <div id="requestPanel" class="pay-panel hidden">
-        <strong>No payment needed right now</strong><br>
-        Place your order to get an order reference. We'll then confirm your total (frame + delivery) and how to pay, before we start framing.
+        <strong>Next: your receipt</strong><br>
+        Place your order to get your receipt and order reference. From there you can pay securely with Paystack (when available) or send your order to us on WhatsApp or email. We will confirm your delivery fee after your order.
       </div>
     </div>
 
     <button type="button" class="btn btn-gold place-order-btn" id="placeOrderBtn" onclick="placeOrder()">Place Order &amp; Pay →</button>
     <p style="font-size:12px;color:var(--muted);margin-top:12px;text-align:center">
-      🔒 All payments are processed securely. Your data is never stored on our servers.
+      🔒 Card payments are handled securely by Paystack. We only use your details to deliver your order.
     </p>
   </div>
 
@@ -226,9 +232,8 @@ if (pics.length) {
 
 // ── Payment toggle ─────────────────────────────────────────────
 // Which payment options are switched on is set in js/site.js.
-// Card payment (Paystack) is OFF at checkout for now: Paystack needs a customer
-// email and the form only asks for name, phone and address. Even if a Paystack
-// key is set in js/site.js it is ignored here until an email approach is chosen.
+// Card payment (Paystack) happens on the receipt page (confirmation.html), so
+// checkout just collects details and creates the order reference.
 const PAYSTACK_ON = false;
 const BANK_ON     = !!(HANGA.bank && HANGA.bank.confirmed);
 document.querySelectorAll('[data-bank]').forEach(el => { el.textContent = (HANGA.bank || {})[el.dataset.bank] || ''; });
@@ -244,7 +249,7 @@ function selectPayMethod(m) {
   document.getElementById('paystackPanel').classList.toggle('hidden', m !== 'paystack');
   document.getElementById('transferPanel').classList.toggle('hidden', m !== 'transfer');
   document.getElementById('requestPanel').classList.toggle('hidden', m !== 'request');
-  document.getElementById('placeOrderBtn').textContent = m === 'paystack' ? 'Place Order & Pay →' : 'Place Order →';
+  document.getElementById('placeOrderBtn').textContent = m === 'paystack' ? 'Place Order & Pay →' : 'Place Order & Get Receipt →';
 }
 document.getElementById('paystackMethod').hidden = !PAYSTACK_ON;
 document.getElementById('transferMethod').hidden = !BANK_ON;
@@ -253,7 +258,7 @@ selectPayMethod(activePayMethod);
 
 // ── Validation ─────────────────────────────────────────────────
 function validate() {
-  for (const id of ['name','phone','address']) {
+  for (const id of ['name','phone','email','address']) {
     const el = document.getElementById(id);
     if (!el.value.trim()) {
       el.style.borderColor = '#e55';
@@ -263,6 +268,11 @@ function validate() {
       return false;
     }
   }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(document.getElementById('email').value.trim())) {
+    showToast('Please enter a valid email address.');
+    document.getElementById('email').focus();
+    return false;
+  }
   if (document.getElementById('phone').value.replace(/\D/g, '').length < 10) {
     showToast('Please enter a valid phone number.');
     document.getElementById('phone').focus();
@@ -271,22 +281,24 @@ function validate() {
   return true;
 }
 
-function genRef() { return 'HNG-' + Date.now().toString(36).toUpperCase(); }
+function genRef() { return 'HNG-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).slice(2, 5).toUpperCase(); }
 
 // ── Place Order ────────────────────────────────────────────────
 function customerDetails() {
   const v = id => document.getElementById(id).value.trim();
   return {
-    name: v('name'), phone: v('phone'), address: v('address')
+    name: v('name'), phone: v('phone'), email: v('email'), address: v('address')
   };
 }
 
 function saveAndConfirm(ref, method) {
-  const data = Object.assign({ ref, method }, customerDetails(), order);
+  const data = Object.assign({ ref, method, placedAt: new Date().toISOString() }, customerDetails(), order);
   delete data.imageData; // keep storage small; the confirmation page doesn't need the pictures
   if (data.items) data.items = data.items.map(i => ({ imageId: i.imageId, imageName: i.imageName, isUpload: i.isUpload, fileKind: i.fileKind, fileName: i.fileName }));
   sessionStorage.setItem('hangaOrderRef', ref);
   sessionStorage.setItem('hangaOrderData', JSON.stringify(data));
+  // Also kept on the device so the receipt survives a Paystack redirect / new tab.
+  try { localStorage.setItem('hangaLastOrder', JSON.stringify(data)); } catch (e) {}
   window.location.href = `confirmation.html?ref=${encodeURIComponent(ref)}&method=${method}`;
 }
 

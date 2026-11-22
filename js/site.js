@@ -15,9 +15,10 @@ window.HANGA = {
 
   // TODO(owner): Paystack PUBLIC key (starts with pk_live_ or pk_test_).
   // Public keys are safe to put here; never put the secret key (sk_...) in this file.
-  // NOTE: checkout currently ignores this key. Paystack needs a customer email
-  // and the order form only asks for name, phone and delivery address, so card
-  // payment stays off until an email approach is decided (see checkout.html).
+  // You can ALSO (preferably) set it in Vercel as the env var PAYSTACK_PUBLIC_KEY;
+  // the receipt page reads it from /api/config. While neither is set, the
+  // "Pay with Paystack" button stays hidden and customers order on WhatsApp/email.
+  // See SETUP-PAYSTACK.md.
   paystackPublicKey: '',
 
   // Multi-frame sets: naira taken off the WHOLE set (per-frame price × pieces).

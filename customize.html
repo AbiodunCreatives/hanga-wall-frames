@@ -208,12 +208,12 @@
         <svg class="bld-step-check" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </div>
       <div class="option-chips size-grid" id="sizeChips" role="group" aria-labelledby="sizeHeading">
-        <button type="button" class="chip" aria-pressed="false" data-size="12×16"  data-price="8000"  onclick="selectSize(this)"><span class="chip-shape" aria-hidden="true" style="--w:12;--h:16"></span><span class="chip-size">12×16"</span><span class="chip-price">₦8,000</span></button>
-        <button type="button" class="chip" aria-pressed="false" data-size="16×20"  data-price="9500"  onclick="selectSize(this)"><span class="chip-shape" aria-hidden="true" style="--w:16;--h:20"></span><span class="chip-size">16×20"</span><span class="chip-price">₦9,500</span></button>
-        <button type="button" class="chip" aria-pressed="false" data-size="16×24"  data-price="11000" onclick="selectSize(this)"><span class="chip-shape" aria-hidden="true" style="--w:16;--h:24"></span><span class="chip-size">16×24"</span><span class="chip-price">₦11,000</span></button>
-        <button type="button" class="chip" aria-pressed="false" data-size="20×24"  data-price="14000" onclick="selectSize(this)"><span class="chip-shape" aria-hidden="true" style="--w:20;--h:24"></span><span class="chip-size">20×24"</span><span class="chip-price">₦14,000</span></button>
-        <button type="button" class="chip" aria-pressed="false" data-size="20×30"  data-price="17500" onclick="selectSize(this)"><span class="chip-shape" aria-hidden="true" style="--w:20;--h:30"></span><span class="chip-size">20×30"</span><span class="chip-price">₦17,500</span></button>
-        <button type="button" class="chip" aria-pressed="false" data-size="24×36"  data-price="20000" onclick="selectSize(this)"><span class="chip-shape" aria-hidden="true" style="--w:24;--h:36"></span><span class="chip-size">24×36"</span><span class="chip-price">₦20,000</span></button>
+        <button type="button" class="chip" aria-pressed="false" data-size="12×16"  data-price="8000"  onclick="selectSize(this)"><span class="chip-size">12×16"</span><span class="chip-price">₦8,000</span></button>
+        <button type="button" class="chip" aria-pressed="false" data-size="16×20"  data-price="9500"  onclick="selectSize(this)"><span class="chip-size">16×20"</span><span class="chip-price">₦9,500</span></button>
+        <button type="button" class="chip" aria-pressed="false" data-size="16×24"  data-price="11000" onclick="selectSize(this)"><span class="chip-size">16×24"</span><span class="chip-price">₦11,000</span></button>
+        <button type="button" class="chip" aria-pressed="false" data-size="20×24"  data-price="14000" onclick="selectSize(this)"><span class="chip-size">20×24"</span><span class="chip-price">₦14,000</span></button>
+        <button type="button" class="chip" aria-pressed="false" data-size="20×30"  data-price="17500" onclick="selectSize(this)"><span class="chip-size">20×30"</span><span class="chip-price">₦17,500</span></button>
+        <button type="button" class="chip" aria-pressed="false" data-size="24×36"  data-price="20000" onclick="selectSize(this)"><span class="chip-size">24×36"</span><span class="chip-price">₦20,000</span></button>
       </div>
     </div>
 
@@ -368,8 +368,12 @@ const ROOM = {
   sofaTop: 1060,
   sofaWidthCm: 200,
   hangGapCm: 20,
-  setGapCm: 7,
-  mouldingCm: 2.4
+  // Set spacing: ~6% of one frame's width (min 2.5 cm) so pieces read as one set.
+  setGapRatio: 0.06,
+  setGapMinCm: 2.5,
+  // Slim moulding: ~2.5% of the frame width (min 0.9 cm), square corners.
+  mouldingRatio: 0.025,
+  mouldingMinCm: 0.9
 };
 const roomBg = new Image();
 roomBg.src = ROOM.src;
@@ -925,8 +929,8 @@ function renderPreview() {
     const sofaTop  = ROOM.sofaTop * scale;
     const fw = wIn * 2.54 * pxPerCm;
     const fh = hIn * 2.54 * pxPerCm;
-    const gap = ROOM.setGapCm * pxPerCm;
-    const m  = borderless ? 0 : ROOM.mouldingCm * pxPerCm;
+    const gap = Math.max(ROOM.setGapMinCm, wIn * 2.54 * ROOM.setGapRatio) * pxPerCm;
+    const m  = borderless ? 0 : Math.max(3, Math.max(ROOM.mouldingMinCm, wIn * 2.54 * ROOM.mouldingRatio) * pxPerCm);
     const rowW = n * fw + (n - 1) * gap;     // 1 centred, 2 side by side, 3 in a row
     const fy = sofaTop - ROOM.hangGapCm * pxPerCm - fh;
 
