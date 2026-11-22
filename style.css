@@ -1567,13 +1567,6 @@ button.pay-method { font: inherit; color: inherit; background: var(--white); }
   box-shadow: 0 10px 30px rgba(0,0,0,0.07);
   font-variant-numeric: tabular-nums;
 }
-/* perforated top & bottom edges */
-.receipt::before, .receipt::after {
-  content: ""; position: absolute; left: 0; right: 0; height: 10px;
-  background: radial-gradient(circle at 6px 5px, var(--cream, #f6f1ea) 4px, transparent 4.5px) 0 0 / 12px 10px repeat-x;
-}
-.receipt::before { top: -5px; }
-.receipt::after { bottom: -5px; }
 .rc-head { text-align: center; padding-bottom: 14px; border-bottom: 1px dashed #c9c1b2; }
 .rc-brand { font-family: "Playfair Display", serif; font-weight: 700; font-size: 28px; letter-spacing: 3px; }
 .rc-brand span { color: var(--gold, #c9a96e); }
@@ -1698,3 +1691,71 @@ button.pay-method { font: inherit; color: inherit; background: var(--white); }
 .rc-btn-sec:hover { background: #f0faf4; }
 .rc-continue { display: block; text-align: center; font-size: 13.5px; color: var(--black); text-decoration: underline; margin-top: 6px; padding: 10px; }
 .rc-actions .rc-alert { margin: 0; }
+
+/* ═══ Receipt: fancy paper look ═══════════════════════════════════ */
+.rc-body {
+  background-color: #f6f1e8;
+  background-image:
+    radial-gradient(rgba(168,137,62,0.10) 1px, transparent 1.2px),
+    radial-gradient(ellipse at top, rgba(255,255,255,0.9), rgba(255,255,255,0) 60%);
+  background-size: 18px 18px, 100% 100%;
+}
+.rc-body footer { background-image: none; }
+/* drop shadow lives on the wrapper so the scalloped mask keeps it */
+.rc-sheet { filter: drop-shadow(0 14px 22px rgba(60,45,20,0.12)) drop-shadow(0 2px 3px rgba(60,45,20,0.10)); }
+.receipt {
+  --scallop: 7px;
+  border: 0; border-radius: 0; box-shadow: none;
+  padding: calc(30px + var(--scallop)) clamp(18px, 4.5vw, 40px) calc(26px + var(--scallop));
+  background-color: #fffdf8;
+  /* fine paper grain + barely-there linen lines */
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .45 0 0 0 0 .38 0 0 0 0 .25 0 0 0 .05 0'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E"),
+    repeating-linear-gradient(0deg, rgba(168,137,62,0.025) 0 1px, transparent 1px 4px);
+  /* scalloped top and bottom edges */
+  -webkit-mask:
+    radial-gradient(circle at 50% 0, #0000 var(--scallop), #000 calc(var(--scallop) + 0.5px)) top / calc(var(--scallop) * 2.6) 51% repeat-x,
+    radial-gradient(circle at 50% 100%, #0000 var(--scallop), #000 calc(var(--scallop) + 0.5px)) bottom / calc(var(--scallop) * 2.6) 51% repeat-x;
+          mask:
+    radial-gradient(circle at 50% 0, #0000 var(--scallop), #000 calc(var(--scallop) + 0.5px)) top / calc(var(--scallop) * 2.6) 51% repeat-x,
+    radial-gradient(circle at 50% 100%, #0000 var(--scallop), #000 calc(var(--scallop) + 0.5px)) bottom / calc(var(--scallop) * 2.6) 51% repeat-x;
+}
+/* retire the old perforation; ::before = inset double rule, ::after = watermark */
+.receipt::before {
+  content: ""; position: absolute; top: calc(var(--scallop) + 10px); bottom: calc(var(--scallop) + 10px); left: 10px; right: 10px; height: auto;
+  background: none; border: 1px solid rgba(168,137,62,0.55); outline: 1px solid rgba(168,137,62,0.25); outline-offset: 3px;
+  pointer-events: none; z-index: 0;
+}
+.receipt::after {
+  content: "HANGA" / ""; position: absolute; inset: 0; bottom: auto; top: 50%; height: auto; left: 50%; right: auto;
+  transform: translate(-50%, -50%) rotate(-24deg);
+  font-family: "Playfair Display", serif; font-weight: 700; letter-spacing: 0.18em;
+  font-size: clamp(64px, 18vw, 150px); line-height: 1; color: #1a1a1a; opacity: 0.045;
+  background: none; white-space: nowrap; pointer-events: none; user-select: none; z-index: 0;
+}
+.receipt > * { position: relative; z-index: 1; }
+.rc-head { border-bottom: 0; padding-bottom: 16px; }
+.rc-head::after {
+  content: ""; display: block; height: 7px; margin: 14px auto 0; max-width: 220px;
+  background:
+    linear-gradient(var(--gold, #c9a96e), var(--gold, #c9a96e)) center / 100% 1px no-repeat,
+    radial-gradient(circle, var(--gold, #c9a96e) 3px, transparent 3.5px) center / 7px 7px no-repeat;
+}
+.rc-head::after { background-size: 100% 1px, 7px 7px; }
+.rc-brand { font-size: 30px; letter-spacing: 5px; }
+.rc-addr { color: #5f5a50; }
+.rc-ref, .rc-cust, .rc-foot { border-color: rgba(168,137,62,0.45); }
+.rc-ref { border-top: 1px dashed rgba(168,137,62,0.45); }
+.rc-items th { border-bottom-color: #1a1a1a; color: #5f5a50; }
+.rc-items td { border-bottom-color: rgba(168,137,62,0.35); }
+.rc-label { color: #6b5a33; }
+.rc-meta dt, .rc-totals dt, .rc-status-note, .rc-delivery-note, .rc-item-sub { color: #55524b; }
+.rc-grand { border-top: 0; position: relative; padding-top: 10px; }
+.rc-grand::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 4px; border-top: 1.5px solid #1a1a1a; border-bottom: 1px solid #1a1a1a; }
+.rc-foot { color: #6b5a33; font-style: italic; }
+@media print {
+  .rc-body { background: #fff !important; }
+  .rc-sheet { filter: none; }
+  .receipt { -webkit-mask: none; mask: none; background: #fff; }
+  .receipt::after { display: none; }
+}

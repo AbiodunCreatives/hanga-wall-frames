@@ -16,7 +16,7 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Lato:wght@300;400;700&display=swap">
   <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="rc-body">
 <a class="skip-link" href="#main">Skip to content</a>
 
 <!-- ─── Header ─────────────────────────────────────────────── -->
@@ -42,7 +42,9 @@
     <p id="confirmMsg">Thank you for ordering with Hanga.</p>
   </div>
 
-  <article class="receipt" id="receipt" aria-label="Order receipt"></article>
+  <div class="rc-sheet">
+    <article class="receipt" id="receipt" aria-label="Order receipt"></article>
+  </div>
 
   <!-- Actions: receipt first, then ONE primary button, then secondary actions -->
   <section class="rc-actions no-print" aria-label="Next steps">
