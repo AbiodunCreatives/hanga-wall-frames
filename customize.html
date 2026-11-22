@@ -71,9 +71,23 @@
     <h1>Build Your Frame</h1>
     <p class="tagline text-muted">Pick an image, choose your size and style, then order.</p>
 
+    <ol class="bld-progress" aria-label="Your progress">
+      <li class="bld-progress-step" data-step="image"><span class="bld-progress-dot" aria-hidden="true">1</span><span class="bld-progress-label">Image</span></li>
+      <li class="bld-progress-step" data-step="size"><span class="bld-progress-dot" aria-hidden="true">2</span><span class="bld-progress-label">Size</span></li>
+      <li class="bld-progress-step" data-step="style"><span class="bld-progress-dot" aria-hidden="true">3</span><span class="bld-progress-label">Style</span></li>
+      <li class="bld-progress-step" data-step="order"><span class="bld-progress-dot" aria-hidden="true">4</span><span class="bld-progress-label">Order</span></li>
+    </ol>
+
     <!-- Step 1 -->
-    <div class="config-section">
-      <h3>Step 1 — Choose Your Image</h3>
+    <div class="config-section bld-step" data-step="image" aria-labelledby="imageHeading" role="group">
+      <div class="bld-step-head">
+        <span class="bld-step-icon" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none" focusable="false"><rect x="6" y="10" width="36" height="28" rx="2" stroke="currentColor" stroke-width="2.4"/><circle cx="17" cy="20" r="3.5" stroke="currentColor" stroke-width="2.4"/><path d="M6 32l9-8 7 7 5-5 9 9" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="bld-step-num">01</span></span>
+        <div class="bld-step-titles">
+          <h3 id="imageHeading"><span class="visually-hidden">Step 1: </span>Choose Your Image</h3>
+          <p class="bld-step-status" id="statusImage" aria-live="polite">Pick a print from our gallery or upload your own photo</p>
+        </div>
+        <svg class="bld-step-check" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
       <div class="source-tabs">
         <button type="button" class="source-tab active" aria-pressed="true" onclick="switchTab('gallery', this)">Our Gallery</button>
         <button type="button" class="source-tab" aria-pressed="false" onclick="switchTab('upload', this)">Upload Mine</button>
@@ -156,40 +170,63 @@
     </div>
 
     <!-- Step 2 -->
-    <div class="config-section">
-      <h3 id="sizeHeading">Step 2 — Frame Size</h3>
+    <div class="config-section bld-step" data-step="size">
+      <div class="bld-step-head">
+        <span class="bld-step-icon" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none" focusable="false"><rect x="8" y="8" width="32" height="32" rx="1.5" stroke="currentColor" stroke-width="2.4"/><rect x="14" y="14" width="20" height="20" rx="1" stroke="currentColor" stroke-width="2" stroke-dasharray="3 2"/><path d="M8 16h4M8 24h4M8 32h4M16 8v4M24 8v4M32 8v4" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg><span class="bld-step-num">02</span></span>
+        <div class="bld-step-titles">
+          <h3 id="sizeHeading"><span class="visually-hidden">Step 2: </span>Frame Size</h3>
+          <p class="bld-step-status" id="statusSize" aria-live="polite">Six sizes — the preview shows each one to scale</p>
+        </div>
+        <svg class="bld-step-check" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
       <div class="option-chips size-grid" id="sizeChips" role="group" aria-labelledby="sizeHeading">
-        <button type="button" class="chip" aria-pressed="false" data-size="12×16"  data-price="8000"  onclick="selectSize(this)"><span class="chip-size">12×16"</span><span class="chip-price">₦8,000</span></button>
-        <button type="button" class="chip" aria-pressed="false" data-size="16×20"  data-price="9500"  onclick="selectSize(this)"><span class="chip-size">16×20"</span><span class="chip-price">₦9,500</span></button>
-        <button type="button" class="chip" aria-pressed="false" data-size="16×24"  data-price="11000" onclick="selectSize(this)"><span class="chip-size">16×24"</span><span class="chip-price">₦11,000</span></button>
-        <button type="button" class="chip" aria-pressed="false" data-size="20×24"  data-price="14000" onclick="selectSize(this)"><span class="chip-size">20×24"</span><span class="chip-price">₦14,000</span></button>
-        <button type="button" class="chip" aria-pressed="false" data-size="20×30"  data-price="17500" onclick="selectSize(this)"><span class="chip-size">20×30"</span><span class="chip-price">₦17,500</span></button>
-        <button type="button" class="chip" aria-pressed="false" data-size="24×36"  data-price="20000" onclick="selectSize(this)"><span class="chip-size">24×36"</span><span class="chip-price">₦20,000</span></button>
+        <button type="button" class="chip" aria-pressed="false" data-size="12×16"  data-price="8000"  onclick="selectSize(this)"><span class="chip-shape" aria-hidden="true" style="--w:12;--h:16"></span><span class="chip-size">12×16"</span><span class="chip-price">₦8,000</span></button>
+        <button type="button" class="chip" aria-pressed="false" data-size="16×20"  data-price="9500"  onclick="selectSize(this)"><span class="chip-shape" aria-hidden="true" style="--w:16;--h:20"></span><span class="chip-size">16×20"</span><span class="chip-price">₦9,500</span></button>
+        <button type="button" class="chip" aria-pressed="false" data-size="16×24"  data-price="11000" onclick="selectSize(this)"><span class="chip-shape" aria-hidden="true" style="--w:16;--h:24"></span><span class="chip-size">16×24"</span><span class="chip-price">₦11,000</span></button>
+        <button type="button" class="chip" aria-pressed="false" data-size="20×24"  data-price="14000" onclick="selectSize(this)"><span class="chip-shape" aria-hidden="true" style="--w:20;--h:24"></span><span class="chip-size">20×24"</span><span class="chip-price">₦14,000</span></button>
+        <button type="button" class="chip" aria-pressed="false" data-size="20×30"  data-price="17500" onclick="selectSize(this)"><span class="chip-shape" aria-hidden="true" style="--w:20;--h:30"></span><span class="chip-size">20×30"</span><span class="chip-price">₦17,500</span></button>
+        <button type="button" class="chip" aria-pressed="false" data-size="24×36"  data-price="20000" onclick="selectSize(this)"><span class="chip-shape" aria-hidden="true" style="--w:24;--h:36"></span><span class="chip-size">24×36"</span><span class="chip-price">₦20,000</span></button>
       </div>
     </div>
 
     <!-- Step 3 -->
-    <div class="config-section">
-      <h3 id="styleHeading">Step 3 — Frame Style</h3>
+    <div class="config-section bld-step" data-step="style">
+      <div class="bld-step-head">
+        <span class="bld-step-icon" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none" focusable="false"><rect x="7" y="7" width="34" height="34" rx="2" stroke="currentColor" stroke-width="2.4"/><rect x="14" y="14" width="20" height="20" rx="1" fill="currentColor" opacity="0.25"/><path d="M7 7l7 7M41 7l-7 7M7 41l7-7M41 41l-7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span class="bld-step-num">03</span></span>
+        <div class="bld-step-titles">
+          <h3 id="styleHeading"><span class="visually-hidden">Step 3: </span>Frame Style</h3>
+          <p class="bld-step-status" id="statusStyle" aria-live="polite">Black · Same price for every style</p>
+        </div>
+        <svg class="bld-step-check" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
       <div class="style-swatches" id="styleSwatches" role="group" aria-labelledby="styleHeading">
-        <div>
-          <div class="swatch swatch-black selected" data-style="Black" onclick="selectStyle(this,'Black')"></div>
+        <div class="swatch selected" data-style="Black" onclick="selectStyle(this,'Black')">
+          <span class="swatch-art swatch-art--black" aria-hidden="true"><span></span></span>
           <span class="swatch-label">Black</span>
+          <span class="swatch-sub">Bold &amp; classic</span>
         </div>
-        <div>
-          <div class="swatch swatch-white" data-style="White" onclick="selectStyle(this,'White')"></div>
+        <div class="swatch" data-style="White" onclick="selectStyle(this,'White')">
+          <span class="swatch-art swatch-art--white" aria-hidden="true"><span></span></span>
           <span class="swatch-label">White</span>
+          <span class="swatch-sub">Clean &amp; bright</span>
         </div>
-        <div>
-          <div class="swatch swatch-borderless" data-style="Borderless" onclick="selectStyle(this,'Borderless')"></div>
+        <div class="swatch" data-style="Borderless" onclick="selectStyle(this,'Borderless')">
+          <span class="swatch-art swatch-art--borderless" aria-hidden="true"><span></span></span>
           <span class="swatch-label">Borderless</span>
+          <span class="swatch-sub">Just the print</span>
         </div>
       </div>
     </div>
 
     <!-- Order Summary -->
-    <div class="order-summary-box">
-      <h3>Order Summary</h3>
+    <div class="order-summary-box bld-summary" id="orderSummary">
+      <div class="bld-summary-head">
+        <div class="bld-summary-thumb" id="summaryThumb" aria-hidden="true"></div>
+        <div>
+          <h3>Your Frame</h3>
+          <p class="bld-summary-sub" id="summaryLine">Choose an image to get started</p>
+        </div>
+      </div>
       <div class="summary-row"><span>Image</span><span id="summaryImage">—</span></div>
       <div class="summary-row"><span>Size</span><span id="summarySize">—</span></div>
       <div class="summary-row"><span>Frame Style</span><span id="summaryStyle">Black</span></div>
@@ -201,6 +238,12 @@
     </div>
   </div>
 
+</div>
+
+<!-- Mobile: sticky total + checkout -->
+<div class="bld-mobilebar" id="mobileBar">
+  <div class="bld-mobilebar-total"><span>Total</span><strong id="mobileTotal">₦0</strong></div>
+  <button type="button" class="btn btn-gold" onclick="proceedToCheckout()">Checkout →</button>
 </div>
 
 <!-- ─── Toast ────────────────────────────────────────────────── -->
@@ -424,6 +467,7 @@ function selectStyle(el, style) {
   el.setAttribute('aria-pressed', 'true');
   state.style = style;
   document.getElementById('summaryStyle').textContent = style;
+  updateProgress();
   renderPreview();
 }
 
@@ -432,6 +476,32 @@ function updateSummary() {
   document.getElementById('summaryImage').textContent = state.imageName || '—';
   document.getElementById('summarySize').textContent  = state.size ? state.size + ' inches' : '—';
   document.getElementById('summaryTotal').textContent = HANGA.formatNaira(state.price);
+  document.getElementById('mobileTotal').textContent  = HANGA.formatNaira(state.price);
+  const thumb = document.getElementById('summaryThumb');
+  thumb.style.backgroundImage = state.imageData ? `url("${state.imageData}")` : '';
+  thumb.classList.toggle('has-img', !!state.imageData);
+  updateProgress();
+}
+
+// ── Step progress + status lines ───────────────────────────────
+function updateProgress() {
+  const done = { image: !!state.imageName, size: !!state.size, style: !!state.style };
+  done.order = done.image && done.size && done.style;
+  const firstOpen = ['image', 'size', 'style', 'order'].find(k => !done[k]) || 'order';
+  document.querySelectorAll('.bld-progress-step').forEach(li => {
+    const k = li.dataset.step;
+    li.classList.toggle('is-done', !!done[k] && k !== 'order');
+    li.classList.toggle('is-current', k === firstOpen || (k === 'order' && done.order));
+    if (k === firstOpen) li.setAttribute('aria-current', 'step'); else li.removeAttribute('aria-current');
+  });
+  document.querySelectorAll('.bld-step').forEach(sec => sec.classList.toggle('is-done', !!done[sec.dataset.step]));
+  document.getElementById('statusImage').textContent = state.imageName ? 'Selected: ' + state.imageName : 'Pick a print from our gallery or upload your own photo';
+  document.getElementById('statusSize').textContent  = state.size ? `Selected: ${state.size}" · ${HANGA.formatNaira(state.price)}` : 'Six sizes — the preview shows each one to scale';
+  document.getElementById('statusStyle').textContent = (state.style || 'Black') + ' · Same price for every style';
+  const parts = [state.size ? state.size + '"' : null, styleLabel(state.style)].filter(Boolean);
+  document.getElementById('summaryLine').textContent = state.imageName ? parts.join(' · ') : 'Choose an image to get started';
+  document.getElementById('orderSummary').classList.toggle('is-ready', done.order);
+  document.getElementById('mobileBar').classList.toggle('is-ready', done.order);
 }
 
 // ── Canvas preview (room-wall mockup) ──────────────────────────
