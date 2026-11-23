@@ -2193,3 +2193,7 @@ html.kb-open .bld-mobilebar, html.kb-open .co-pill, html.kb-open .toast {
   opacity: 0 !important; pointer-events: none !important; transform: translate(-50%, calc(100% + 40px)) !important;
 }
 html.kb-open .toast { transform: translateY(20px) !important; }
+
+/* <picture> wrappers (WebP + JPG fallback) behave like the plain <img> they wrap */
+.gallery-card picture, .mini-thumb picture { display: block; width: 100%; }
+.mini-thumb picture { height: 100%; }

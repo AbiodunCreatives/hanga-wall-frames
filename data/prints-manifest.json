@@ -1,0 +1,923 @@
+{
+  "note": "Owner-supplied photos and artworks. Originals (full resolution) are kept for print fulfilment; the site uses the web copies. dpi_by_size = effective pixels per inch when cropped to fill that frame size.",
+  "excluded": {
+    "19": "chick on painted Easter egg: oil-painting/AI look (as asked)",
+    "16": "rainbow mountains: only 400x640px and heavily over-saturated, too small to print",
+    "21": "fountain at sunset #1: near-duplicate of #29 at lower resolution (also M34 watermark)",
+    "27": "pink-sky wetlands, wide crop: same scene as #23; frames are portrait so the upright version is kept"
+  },
+  "prints": [
+    {
+      "id": "winter-road",
+      "title": "Winter Road",
+      "category": "landscapes",
+      "subtitle": "Landscape \u00b7 Snow",
+      "featured": false,
+      "watermark": null,
+      "original": "assets/prints/originals/winter-road.jpg",
+      "original_pixels": "1170x1570",
+      "web_image": "images/prints/winter-road.jpg",
+      "web_pixels": "1170x1570",
+      "dpi_by_size": {
+        "12x16": 97,
+        "16x20": 73,
+        "16x24": 65,
+        "20x24": 58,
+        "20x30": 52,
+        "24x36": 43
+      },
+      "print_safe_150dpi": [],
+      "print_ok_100_150dpi": []
+    },
+    {
+      "id": "autumn-canopy",
+      "title": "Autumn Canopy",
+      "category": "landscapes",
+      "subtitle": "Landscape \u00b7 Aerial",
+      "featured": false,
+      "watermark": null,
+      "original": "assets/prints/originals/autumn-canopy.jpg",
+      "original_pixels": "1638x2048",
+      "web_image": "images/prints/autumn-canopy.jpg",
+      "web_pixels": "1280x1600",
+      "dpi_by_size": {
+        "12x16": 128,
+        "16x20": 102,
+        "16x24": 85,
+        "20x24": 81,
+        "20x30": 68,
+        "24x36": 56
+      },
+      "print_safe_150dpi": [],
+      "print_ok_100_150dpi": [
+        "12x16",
+        "16x20"
+      ]
+    },
+    {
+      "id": "ridge-road",
+      "title": "Ridge Road",
+      "category": "landscapes",
+      "subtitle": "Landscape \u00b7 Mountains",
+      "featured": false,
+      "watermark": null,
+      "original": "assets/prints/originals/ridge-road.jpg",
+      "original_pixels": "1179x1522",
+      "web_image": "images/prints/ridge-road.jpg",
+      "web_pixels": "1179x1522",
+      "dpi_by_size": {
+        "12x16": 95,
+        "16x20": 73,
+        "16x24": 63,
+        "20x24": 58,
+        "20x30": 50,
+        "24x36": 42
+      },
+      "print_safe_150dpi": [],
+      "print_ok_100_150dpi": []
+    },
+    {
+      "id": "starlit-lake",
+      "title": "Starlit Lake",
+      "category": "landscapes",
+      "subtitle": "Landscape \u00b7 Night sky",
+      "featured": false,
+      "watermark": null,
+      "original": "assets/prints/originals/starlit-lake.jpg",
+      "original_pixels": "3276x4096",
+      "web_image": "images/prints/starlit-lake.jpg",
+      "web_pixels": "1280x1600",
+      "dpi_by_size": {
+        "12x16": 256,
+        "16x20": 204,
+        "16x24": 170,
+        "20x24": 163,
+        "20x30": 136,
+        "24x36": 113
+      },
+      "print_safe_150dpi": [
+        "12x16",
+        "16x20",
+        "16x24",
+        "20x24"
+      ],
+      "print_ok_100_150dpi": [
+        "20x30",
+        "24x36"
+      ]
+    },
+    {
+      "id": "canyon-falls",
+      "title": "Canyon Falls",
+      "category": "landscapes",
+      "subtitle": "Landscape \u00b7 Mountains",
+      "featured": true,
+      "watermark": null,
+      "original": "assets/prints/originals/canyon-falls.jpg",
+      "original_pixels": "1000x1500",
+      "web_image": "images/prints/canyon-falls.jpg",
+      "web_pixels": "1000x1500",
+      "dpi_by_size": {
+        "12x16": 83,
+        "16x20": 62,
+        "16x24": 62,
+        "20x24": 50,
+        "20x30": 50,
+        "24x36": 41
+      },
+      "print_safe_150dpi": [],
+      "print_ok_100_150dpi": []
+    },
+    {
+      "id": "yellow-wall",
+      "title": "Yellow Wall",
+      "category": "landscapes",
+      "subtitle": "Landscape \u00b7 Minimal city",
+      "featured": false,
+      "watermark": null,
+      "original": "assets/prints/originals/yellow-wall.jpg",
+      "original_pixels": "1170x1563",
+      "web_image": "images/prints/yellow-wall.jpg",
+      "web_pixels": "1170x1563",
+      "dpi_by_size": {
+        "12x16": 97,
+        "16x20": 73,
+        "16x24": 65,
+        "20x24": 58,
+        "20x30": 52,
+        "24x36": 43
+      },
+      "print_safe_150dpi": [],
+      "print_ok_100_150dpi": []
+    },
+    {
+      "id": "fisherman-in-the-light",
+      "title": "Fisherman in the Light",
+      "category": "landscapes",
+      "subtitle": "Landscape \u00b7 Lake",
+      "featured": false,
+      "watermark": null,
+      "original": "assets/prints/originals/fisherman-in-the-light.jpg",
+      "original_pixels": "1170x1575",
+      "web_image": "images/prints/fisherman-in-the-light.jpg",
+      "web_pixels": "1170x1575",
+      "dpi_by_size": {
+        "12x16": 97,
+        "16x20": 73,
+        "16x24": 65,
+        "20x24": 58,
+        "20x30": 52,
+        "24x36": 43
+      },
+      "print_safe_150dpi": [],
+      "print_ok_100_150dpi": []
+    },
+    {
+      "id": "lone-tree-snow-dune",
+      "title": "Lone Tree, Snow Dune",
+      "category": "landscapes",
+      "subtitle": "Landscape \u00b7 Black & white",
+      "featured": false,
+      "watermark": null,
+      "original": "assets/prints/originals/lone-tree-snow-dune.jpg",
+      "original_pixels": "1170x1582",
+      "web_image": "images/prints/lone-tree-snow-dune.jpg",
+      "web_pixels": "1170x1582",
+      "dpi_by_size": {
+        "12x16": 97,
+        "16x20": 73,
+        "16x24": 65,
+        "20x24": 58,
+        "20x30": 52,
+        "24x36": 43
+      },
+      "print_safe_150dpi": [],
+      "print_ok_100_150dpi": []
+    },
+    {
+      "id": "the-orange-door",
+      "title": "The Orange Door",
+      "category": "landscapes",
+      "subtitle": "Landscape \u00b7 Minimal city",
+      "featured": false,
+      "watermark": null,
+      "original": "assets/prints/originals/the-orange-door.jpg",
+      "original_pixels": "1170x1559",
+      "web_image": "images/prints/the-orange-door.jpg",
+      "web_pixels": "1170x1559",
+      "dpi_by_size": {
+        "12x16": 97,
+        "16x20": 73,
+        "16x24": 64,
+        "20x24": 58,
+        "20x30": 51,
+        "24x36": 43
+      },
+      "print_safe_150dpi": [],
+      "print_ok_100_150dpi": []
+    },
+    {
+      "id": "falling-leaves",
+      "title": "Falling Leaves",
+      "category": "landscapes",
+      "subtitle": "Landscape \u00b7 Autumn",
+      "featured": false,
+      "watermark": null,
+      "original": "assets/prints/originals/falling-leaves.jpg",
+      "original_pixels": "3278x4096",
+      "web_image": "images/prints/falling-leaves.jpg",
+      "web_pixels": "1280x1600",
+      "dpi_by_size": {
+        "12x16": 256,
+        "16x20": 204,
+        "16x24": 170,
+        "20x24": 163,
+        "20x30": 136,
+        "24x36": 113
+      },
+      "print_safe_150dpi": [
+        "12x16",
+        "16x20",
+        "16x24",
+        "20x24"
+      ],
+      "print_ok_100_150dpi": [
+        "20x30",
+        "24x36"
+      ]
+    },
+    {
+      "id": "colour-block-street",
+      "title": "Colour Block Street",
+      "category": "landscapes",
+      "subtitle": "Landscape \u00b7 Minimal city",
+      "featured": false,
+      "watermark": null,
+      "original": "assets/prints/originals/colour-block-street.jpg",
+      "original_pixels": "1170x1562",
+      "web_image": "images/prints/colour-block-street.jpg",
+      "web_pixels": "1170x1562",
+      "dpi_by_size": {
+        "12x16": 97,
+        "16x20": 73,
+        "16x24": 65,
+        "20x24": 58,
+        "20x30": 52,
+        "24x36": 43
+      },
+      "print_safe_150dpi": [],
+      "print_ok_100_150dpi": []
+    },
+    {
+      "id": "city-windows",
+      "title": "City Windows",
+      "category": "landscapes",
+      "subtitle": "Landscape \u00b7 City at night",
+      "featured": false,
+      "watermark": null,
+      "original": "assets/prints/originals/city-windows.jpg",
+      "original_pixels": "1170x1560",
+      "web_image": "images/prints/city-windows.jpg",
+      "web_pixels": "1170x1560",
+      "dpi_by_size": {
+        "12x16": 97,
+        "16x20": 73,
+        "16x24": 65,
+        "20x24": 58,
+        "20x30": 52,
+        "24x36": 43
+      },
+      "print_safe_150dpi": [],
+      "print_ok_100_150dpi": []
+    },
+    {
+      "id": "valley-hideaway",
+      "title": "Valley Hideaway",
+      "category": "landscapes",
+      "subtitle": "Landscape \u00b7 Highlands",
+      "featured": false,
+      "watermark": null,
+      "original": "assets/prints/originals/valley-hideaway.jpg",
+      "original_pixels": "1179x1491",
+      "web_image": "images/prints/valley-hideaway.jpg",
+      "web_pixels": "1179x1491",
+      "dpi_by_size": {
+        "12x16": 93,
+        "16x20": 73,
+        "16x24": 62,
+        "20x24": 58,
+        "20x30": 49,
+        "24x36": 41
+      },
+      "print_safe_150dpi": [],
+      "print_ok_100_150dpi": []
+    },
+    {
+      "id": "pink-sky-wetlands",
+      "title": "Pink Sky Wetlands",
+      "category": "landscapes",
+      "subtitle": "Landscape \u00b7 Sunset",
+      "featured": false,
+      "watermark": null,
+      "original": "assets/prints/originals/pink-sky-wetlands.jpg",
+      "original_pixels": "2382x2978",
+      "web_image": "images/prints/pink-sky-wetlands.jpg",
+      "web_pixels": "1280x1600",
+      "dpi_by_size": {
+        "12x16": 186,
+        "16x20": 148,
+        "16x24": 124,
+        "20x24": 119,
+        "20x30": 99,
+        "24x36": 82
+      },
+      "print_safe_150dpi": [
+        "12x16"
+      ],
+      "print_ok_100_150dpi": [
+        "16x20",
+        "16x24",
+        "20x24"
+      ]
+    },
+    {
+      "id": "golden-dust-bagan",
+      "title": "Golden Dust, Bagan",
+      "category": "landscapes",
+      "subtitle": "Landscape \u00b7 Golden hour",
+      "featured": true,
+      "watermark": null,
+      "original": "assets/prints/originals/golden-dust-bagan.jpg",
+      "original_pixels": "1170x1563",
+      "web_image": "images/prints/golden-dust-bagan.jpg",
+      "web_pixels": "1170x1563",
+      "dpi_by_size": {
+        "12x16": 97,
+        "16x20": 73,
+        "16x24": 65,
+        "20x24": 58,
+        "20x30": 52,
+        "24x36": 43
+      },
+      "print_safe_150dpi": [],
+      "print_ok_100_150dpi": []
+    },
+    {
+      "id": "palm-climbers-at-dawn",
+      "title": "Palm Climbers at Dawn",
+      "category": "landscapes",
+      "subtitle": "Landscape \u00b7 Golden hour",
+      "featured": false,
+      "watermark": null,
+      "original": "assets/prints/originals/palm-climbers-at-dawn.jpg",
+      "original_pixels": "1170x1567",
+      "web_image": "images/prints/palm-climbers-at-dawn.jpg",
+      "web_pixels": "1170x1567",
+      "dpi_by_size": {
+        "12x16": 97,
+        "16x20": 73,
+        "16x24": 65,
+        "20x24": 58,
+        "20x30": 52,
+        "24x36": 43
+      },
+      "print_safe_150dpi": [],
+      "print_ok_100_150dpi": []
+    },
+    {
+      "id": "fountain-at-sunset",
+      "title": "Fountain at Sunset",
+      "category": "landscapes",
+      "subtitle": "Landscape \u00b7 City",
+      "featured": false,
+      "watermark": "M34",
+      "original": "assets/prints/originals/fountain-at-sunset.jpg",
+      "original_pixels": "3069x4096",
+      "web_image": "images/prints/fountain-at-sunset.jpg",
+      "web_pixels": "1199x1600",
+      "dpi_by_size": {
+        "12x16": 255,
+        "16x20": 191,
+        "16x24": 170,
+        "20x24": 153,
+        "20x30": 136,
+        "24x36": 113
+      },
+      "print_safe_150dpi": [
+        "12x16",
+        "16x20",
+        "16x24",
+        "20x24"
+      ],
+      "print_ok_100_150dpi": [
+        "20x30",
+        "24x36"
+      ]
+    },
+    {
+      "id": "autumn-lake",
+      "title": "Autumn Lake",
+      "category": "landscapes",
+      "subtitle": "Landscape \u00b7 Lake",
+      "featured": false,
+      "watermark": null,
+      "original": "assets/prints/originals/autumn-lake.jpg",
+      "original_pixels": "3276x4096",
+      "web_image": "images/prints/autumn-lake.jpg",
+      "web_pixels": "1280x1600",
+      "dpi_by_size": {
+        "12x16": 256,
+        "16x20": 204,
+        "16x24": 170,
+        "20x24": 163,
+        "20x30": 136,
+        "24x36": 113
+      },
+      "print_safe_150dpi": [
+        "12x16",
+        "16x20",
+        "16x24",
+        "20x24"
+      ],
+      "print_ok_100_150dpi": [
+        "20x30",
+        "24x36"
+      ]
+    },
+    {
+      "id": "snow-road-lone-tree",
+      "title": "Snow Road, Lone Tree",
+      "category": "landscapes",
+      "subtitle": "Landscape \u00b7 Snow",
+      "featured": false,
+      "watermark": "Peyman Az",
+      "original": "assets/prints/originals/snow-road-lone-tree.jpg",
+      "original_pixels": "1170x1586",
+      "web_image": "images/prints/snow-road-lone-tree.jpg",
+      "web_pixels": "1170x1586",
+      "dpi_by_size": {
+        "12x16": 97,
+        "16x20": 73,
+        "16x24": 66,
+        "20x24": 58,
+        "20x30": 52,
+        "24x36": 44
+      },
+      "print_safe_150dpi": [],
+      "print_ok_100_150dpi": []
+    },
+    {
+      "id": "yellow-in-the-snow",
+      "title": "Yellow in the Snow",
+      "category": "landscapes",
+      "subtitle": "Landscape \u00b7 Winter",
+      "featured": false,
+      "watermark": null,
+      "original": "assets/prints/originals/yellow-in-the-snow.jpg",
+      "original_pixels": "1358x1698",
+      "web_image": "images/prints/yellow-in-the-snow.jpg",
+      "web_pixels": "1280x1600",
+      "dpi_by_size": {
+        "12x16": 106,
+        "16x20": 84,
+        "16x24": 70,
+        "20x24": 67,
+        "20x30": 56,
+        "24x36": 47
+      },
+      "print_safe_150dpi": [],
+      "print_ok_100_150dpi": [
+        "12x16"
+      ]
+    },
+    {
+      "id": "leaf-tunnel",
+      "title": "Leaf Tunnel",
+      "category": "landscapes",
+      "subtitle": "Landscape \u00b7 Autumn",
+      "featured": false,
+      "watermark": null,
+      "original": "assets/prints/originals/leaf-tunnel.jpg",
+      "original_pixels": "973x1217",
+      "web_image": "images/prints/leaf-tunnel.jpg",
+      "web_pixels": "973x1217",
+      "dpi_by_size": {
+        "12x16": 76,
+        "16x20": 60,
+        "16x24": 50,
+        "20x24": 48,
+        "20x30": 40,
+        "24x36": 33
+      },
+      "print_safe_150dpi": [],
+      "print_ok_100_150dpi": []
+    },
+    {
+      "id": "light-within",
+      "title": "Light Within",
+      "category": "portraits",
+      "subtitle": "Portrait \u00b7 Moody",
+      "featured": true,
+      "watermark": null,
+      "original": "assets/prints/originals/light-within.jpg",
+      "original_pixels": "3277x4096",
+      "web_image": "images/prints/light-within.jpg",
+      "web_pixels": "1280x1600",
+      "dpi_by_size": {
+        "12x16": 256,
+        "16x20": 204,
+        "16x24": 170,
+        "20x24": 163,
+        "20x30": 136,
+        "24x36": 113
+      },
+      "print_safe_150dpi": [
+        "12x16",
+        "16x20",
+        "16x24",
+        "20x24"
+      ],
+      "print_ok_100_150dpi": [
+        "20x30",
+        "24x36"
+      ]
+    },
+    {
+      "id": "forest-elk",
+      "title": "Forest Elk",
+      "category": "portraits",
+      "subtitle": "Portrait \u00b7 Wildlife",
+      "featured": false,
+      "watermark": null,
+      "original": "assets/prints/originals/forest-elk.jpg",
+      "original_pixels": "3276x4096",
+      "web_image": "images/prints/forest-elk.jpg",
+      "web_pixels": "1280x1600",
+      "dpi_by_size": {
+        "12x16": 256,
+        "16x20": 204,
+        "16x24": 170,
+        "20x24": 163,
+        "20x30": 136,
+        "24x36": 113
+      },
+      "print_safe_150dpi": [
+        "12x16",
+        "16x20",
+        "16x24",
+        "20x24"
+      ],
+      "print_ok_100_150dpi": [
+        "20x30",
+        "24x36"
+      ]
+    },
+    {
+      "id": "watchful-owl",
+      "title": "Watchful Owl",
+      "category": "portraits",
+      "subtitle": "Portrait \u00b7 Wildlife",
+      "featured": false,
+      "watermark": null,
+      "original": "assets/prints/originals/watchful-owl.jpg",
+      "original_pixels": "2567x3209",
+      "web_image": "images/prints/watchful-owl.jpg",
+      "web_pixels": "1280x1600",
+      "dpi_by_size": {
+        "12x16": 200,
+        "16x20": 160,
+        "16x24": 133,
+        "20x24": 128,
+        "20x30": 106,
+        "24x36": 89
+      },
+      "print_safe_150dpi": [
+        "12x16",
+        "16x20"
+      ],
+      "print_ok_100_150dpi": [
+        "16x24",
+        "20x24",
+        "20x30"
+      ]
+    },
+    {
+      "id": "snowy-owl",
+      "title": "Snowy Owl",
+      "category": "portraits",
+      "subtitle": "Portrait \u00b7 Wildlife",
+      "featured": true,
+      "watermark": null,
+      "original": "assets/prints/originals/snowy-owl.jpg",
+      "original_pixels": "1532x1915",
+      "web_image": "images/prints/snowy-owl.jpg",
+      "web_pixels": "1280x1600",
+      "dpi_by_size": {
+        "12x16": 119,
+        "16x20": 95,
+        "16x24": 79,
+        "20x24": 76,
+        "20x30": 63,
+        "24x36": 53
+      },
+      "print_safe_150dpi": [],
+      "print_ok_100_150dpi": [
+        "12x16"
+      ]
+    },
+    {
+      "id": "red-umbrella-crossing",
+      "title": "Red Umbrella Crossing",
+      "category": "portraits",
+      "subtitle": "Portrait \u00b7 Street",
+      "featured": false,
+      "watermark": null,
+      "original": "assets/prints/originals/red-umbrella-crossing.jpg",
+      "original_pixels": "1170x1549",
+      "web_image": "images/prints/red-umbrella-crossing.jpg",
+      "web_pixels": "1170x1549",
+      "dpi_by_size": {
+        "12x16": 96,
+        "16x20": 73,
+        "16x24": 64,
+        "20x24": 58,
+        "20x30": 51,
+        "24x36": 43
+      },
+      "print_safe_150dpi": [],
+      "print_ok_100_150dpi": []
+    },
+    {
+      "id": "red-parasol",
+      "title": "Red Parasol",
+      "category": "portraits",
+      "subtitle": "Portrait \u00b7 Street",
+      "featured": false,
+      "watermark": null,
+      "original": "assets/prints/originals/red-parasol.jpg",
+      "original_pixels": "1170x1563",
+      "web_image": "images/prints/red-parasol.jpg",
+      "web_pixels": "1170x1563",
+      "dpi_by_size": {
+        "12x16": 97,
+        "16x20": 73,
+        "16x24": 65,
+        "20x24": 58,
+        "20x30": 52,
+        "24x36": 43
+      },
+      "print_safe_150dpi": [],
+      "print_ok_100_150dpi": []
+    },
+    {
+      "id": "fisherman-through-the-net",
+      "title": "Fisherman Through the Net",
+      "category": "portraits",
+      "subtitle": "Portrait \u00b7 Lake life",
+      "featured": false,
+      "watermark": null,
+      "original": "assets/prints/originals/fisherman-through-the-net.jpg",
+      "original_pixels": "1170x1560",
+      "web_image": "images/prints/fisherman-through-the-net.jpg",
+      "web_pixels": "1170x1560",
+      "dpi_by_size": {
+        "12x16": 97,
+        "16x20": 73,
+        "16x24": 65,
+        "20x24": 58,
+        "20x30": 52,
+        "24x36": 43
+      },
+      "print_safe_150dpi": [],
+      "print_ok_100_150dpi": []
+    },
+    {
+      "id": "rainbow-fabrics",
+      "title": "Rainbow Fabrics",
+      "category": "portraits",
+      "subtitle": "Portrait \u00b7 Colour",
+      "featured": false,
+      "watermark": null,
+      "original": "assets/prints/originals/rainbow-fabrics.jpg",
+      "original_pixels": "1170x1555",
+      "web_image": "images/prints/rainbow-fabrics.jpg",
+      "web_pixels": "1170x1555",
+      "dpi_by_size": {
+        "12x16": 97,
+        "16x20": 73,
+        "16x24": 64,
+        "20x24": 58,
+        "20x30": 51,
+        "24x36": 43
+      },
+      "print_safe_150dpi": [],
+      "print_ok_100_150dpi": []
+    },
+    {
+      "id": "wild-horse",
+      "title": "Wild Horse",
+      "category": "classic-art",
+      "subtitle": "Classic Art \u00b7 Hand-painted",
+      "featured": true,
+      "watermark": null,
+      "original": "assets/prints/originals/wild-horse.jpg",
+      "original_pixels": "1226x1799",
+      "web_image": "images/prints/wild-horse.jpg",
+      "web_pixels": "1090x1600",
+      "dpi_by_size": {
+        "12x16": 102,
+        "16x20": 76,
+        "16x24": 74,
+        "20x24": 61,
+        "20x30": 59,
+        "24x36": 49
+      },
+      "print_safe_150dpi": [],
+      "print_ok_100_150dpi": [
+        "12x16"
+      ]
+    },
+    {
+      "id": "rainbow-cat",
+      "title": "Rainbow Cat",
+      "category": "classic-art",
+      "subtitle": "Classic Art \u00b7 Hand-painted",
+      "featured": true,
+      "watermark": null,
+      "original": "assets/prints/originals/rainbow-cat.jpg",
+      "original_pixels": "1449x2048",
+      "web_image": "images/prints/rainbow-cat.jpg",
+      "web_pixels": "1132x1600",
+      "dpi_by_size": {
+        "12x16": 120,
+        "16x20": 90,
+        "16x24": 85,
+        "20x24": 72,
+        "20x30": 68,
+        "24x36": 56
+      },
+      "print_safe_150dpi": [],
+      "print_ok_100_150dpi": [
+        "12x16"
+      ]
+    },
+    {
+      "id": "red-cat",
+      "title": "Red Cat",
+      "category": "classic-art",
+      "subtitle": "Classic Art \u00b7 Hand-painted",
+      "featured": false,
+      "watermark": null,
+      "original": "assets/prints/originals/red-cat.jpg",
+      "original_pixels": "1444x2048",
+      "web_image": "images/prints/red-cat.jpg",
+      "web_pixels": "1128x1600",
+      "dpi_by_size": {
+        "12x16": 120,
+        "16x20": 90,
+        "16x24": 85,
+        "20x24": 72,
+        "20x30": 68,
+        "24x36": 56
+      },
+      "print_safe_150dpi": [],
+      "print_ok_100_150dpi": [
+        "12x16"
+      ]
+    },
+    {
+      "id": "space-cat",
+      "title": "Space Cat",
+      "category": "classic-art",
+      "subtitle": "Classic Art \u00b7 Hand-painted",
+      "featured": false,
+      "watermark": null,
+      "original": "assets/prints/originals/space-cat.jpg",
+      "original_pixels": "1221x1814",
+      "web_image": "images/prints/space-cat.jpg",
+      "web_pixels": "1077x1600",
+      "dpi_by_size": {
+        "12x16": 101,
+        "16x20": 76,
+        "16x24": 75,
+        "20x24": 61,
+        "20x30": 60,
+        "24x36": 50
+      },
+      "print_safe_150dpi": [],
+      "print_ok_100_150dpi": [
+        "12x16"
+      ]
+    },
+    {
+      "id": "midnight-tram",
+      "title": "Midnight Tram",
+      "category": "cars",
+      "subtitle": "Cars \u00b7 Night street",
+      "featured": true,
+      "watermark": null,
+      "original": "assets/prints/originals/midnight-tram.jpg",
+      "original_pixels": "1170x1575",
+      "web_image": "images/prints/midnight-tram.jpg",
+      "web_pixels": "1170x1575",
+      "dpi_by_size": {
+        "12x16": 97,
+        "16x20": 73,
+        "16x24": 65,
+        "20x24": 58,
+        "20x30": 52,
+        "24x36": 43
+      },
+      "print_safe_150dpi": [],
+      "print_ok_100_150dpi": []
+    },
+    {
+      "id": "tram-reflection",
+      "title": "Tram Reflection",
+      "category": "cars",
+      "subtitle": "Cars \u00b7 Street",
+      "featured": true,
+      "watermark": null,
+      "original": "assets/prints/originals/tram-reflection.jpg",
+      "original_pixels": "1170x1491",
+      "web_image": "images/prints/tram-reflection.jpg",
+      "web_pixels": "1170x1491",
+      "dpi_by_size": {
+        "12x16": 93,
+        "16x20": 73,
+        "16x24": 62,
+        "20x24": 58,
+        "20x30": 49,
+        "24x36": 41
+      },
+      "print_safe_150dpi": [],
+      "print_ok_100_150dpi": []
+    },
+    {
+      "id": "tram-in-the-rain",
+      "title": "Tram in the Rain",
+      "category": "cars",
+      "subtitle": "Cars \u00b7 Rainy night",
+      "featured": false,
+      "watermark": null,
+      "original": "assets/prints/originals/tram-in-the-rain.jpg",
+      "original_pixels": "1170x1580",
+      "web_image": "images/prints/tram-in-the-rain.jpg",
+      "web_pixels": "1170x1580",
+      "dpi_by_size": {
+        "12x16": 97,
+        "16x20": 73,
+        "16x24": 65,
+        "20x24": 58,
+        "20x30": 52,
+        "24x36": 43
+      },
+      "print_safe_150dpi": [],
+      "print_ok_100_150dpi": []
+    },
+    {
+      "id": "night-tram",
+      "title": "Night Tram",
+      "category": "cars",
+      "subtitle": "Cars \u00b7 Night street",
+      "featured": false,
+      "watermark": null,
+      "original": "assets/prints/originals/night-tram.jpg",
+      "original_pixels": "1170x1609",
+      "web_image": "images/prints/night-tram.jpg",
+      "web_pixels": "1163x1600",
+      "dpi_by_size": {
+        "12x16": 97,
+        "16x20": 73,
+        "16x24": 67,
+        "20x24": 58,
+        "20x30": 53,
+        "24x36": 44
+      },
+      "print_safe_150dpi": [],
+      "print_ok_100_150dpi": []
+    },
+    {
+      "id": "yellow-tram-street",
+      "title": "Yellow Tram Street",
+      "category": "cars",
+      "subtitle": "Cars \u00b7 Street",
+      "featured": false,
+      "watermark": null,
+      "original": "assets/prints/originals/yellow-tram-street.jpg",
+      "original_pixels": "1170x1582",
+      "web_image": "images/prints/yellow-tram-street.jpg",
+      "web_pixels": "1170x1582",
+      "dpi_by_size": {
+        "12x16": 97,
+        "16x20": 73,
+        "16x24": 65,
+        "20x24": 58,
+        "20x30": 52,
+        "24x36": 43
+      },
+      "print_safe_150dpi": [],
+      "print_ok_100_150dpi": []
+    }
+  ]
+}

@@ -37,6 +37,7 @@ Hanga is based in Ado Ekiti, Ekiti State. Delivery within Ekiti and Ondo State t
 ## Images
 
 - `images/` – original prints; `images/collection/` – public-domain museum works (see `CREDITS.md`).
+- `assets/prints/originals/` – full-resolution owner photos for printing; `images/prints/` – their web copies (WebP + JPG, ≤1600px); `data/prints-manifest.json` – pixel sizes and print DPI per frame size.
 - `images/thumbs/` – small copies used for gallery thumbnails. Re-generate when you add a print, e.g. with ImageMagick:
   `magick images/collection/new-print.jpg -resize 400x560 -quality 76 images/thumbs/new-print.jpg`
 - `images/og-image.jpg` – the picture shown when the site is shared on WhatsApp, X, etc.

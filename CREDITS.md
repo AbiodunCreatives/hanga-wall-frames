@@ -41,3 +41,13 @@ The Customise page room mockup uses a living-room photograph from Unsplash, used
 - Image: [images.unsplash.com/photo-1555041469-a586c61ea9bc](https://images.unsplash.com/photo-1555041469-a586c61ea9bc)
 - Local file: `images/room/living-room.jpg` (wall extended slightly at the top so a 24×36" frame still fits at true scale above the sofa)
 - Scale reference: the sofa is treated as 200 cm wide
+
+## Owner-supplied photos and artworks (added Nov 2026)
+
+Full-resolution originals for print fulfilment are in `assets/prints/originals/`; the site shows
+web copies from `images/prints/` (≤1600px, WebP + JPG) and `images/thumbs/`. Pixel sizes and the
+effective print resolution for every frame size are in `data/prints-manifest.json`.
+
+Watermarked images (get the photographer's permission before selling prints):
+- `fountain-at-sunset` — watermark "M34"
+- `snow-road-lone-tree` — watermark "Peyman Az"
