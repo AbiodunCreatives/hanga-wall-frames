@@ -3,7 +3,7 @@
 /* ─── Reset & Base ─────────────────────────────────────────── */
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; scroll-padding-top: calc(var(--nav-space) + 16px); }
 
 body {
   font-family: "Lato", sans-serif;
@@ -24,42 +24,61 @@ img, canvas, video { max-width: 100%; display: block; }
   --muted:   #666;
   --border:  #e8e3dc;
   --radius:  6px;
-  --nav-h:   66px;         /* matches header min-height, used for sticky offset */
+  --nav-h:   60px;         /* height of the floating glass pill */
+  --nav-top: 12px;         /* gap between the pill and the viewport edge */
+  --nav-space: calc(var(--nav-h) + var(--nav-top)); /* total room the nav takes */
+  --glass-bg: rgba(248, 245, 240, 0.72);
+  --glass-bg-strong: rgba(248, 245, 240, 0.86);
+  --glass-border: rgba(255, 255, 255, 0.55);
   --px:      clamp(16px, 5vw, 48px);  /* responsive horizontal padding */
 }
 
 /* ─── Typography ───────────────────────────────────────────── */
 h1, h2, h3 { font-family: "Playfair Display", serif; letter-spacing: 0.01em; }
 
-/* ─── Header ───────────────────────────────────────────────── */
+/* ─── Header: floating glass pill ───────────────────────────── */
 header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 var(--px);
-  height: var(--nav-h);
-  border-bottom: 1px solid var(--border);
+  gap: 16px;
   position: sticky;
-  top: 0;
+  top: var(--nav-top);
   z-index: 1000;
-  background: var(--white);
+  width: min(1120px, calc(100% - 2 * var(--nav-top)));
+  height: var(--nav-h);
+  margin: var(--nav-top) auto 0;
+  padding: 0 8px 0 26px;
+  border-radius: 999px;
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: blur(18px) saturate(180%);
+  backdrop-filter: blur(18px) saturate(180%);
+  border: 1px solid var(--glass-border);
+  box-shadow:
+    0 10px 30px -10px rgba(26, 26, 26, 0.22),
+    0 2px 6px rgba(26, 26, 26, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+/* No backdrop-filter support: fall back to a near-opaque cream pill */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  header, .nav-drawer { background: rgba(248, 245, 240, 0.97); }
 }
 
 .logo {
   font-family: "Playfair Display", serif;
-  font-size: clamp(20px, 4vw, 26px);
+  font-size: clamp(20px, 4vw, 24px);
   font-weight: 700;
   letter-spacing: 0.08em;
   color: var(--black);
   text-decoration: none;
   flex-shrink: 0;
 }
-.logo span { color: var(--gold); }
+.logo span { color: var(--gold-dk); }
 
 /* Desktop nav */
 .nav-links {
   display: flex;
-  gap: 28px;
+  gap: 6px;
   align-items: center;
 }
 
@@ -67,21 +86,26 @@ header {
   text-decoration: none;
   color: var(--black);
   font-size: 13px;
+  font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  transition: color 0.25s;
+  padding: 10px 16px;
+  border-radius: 999px;
+  transition: color 0.25s, background 0.25s;
   white-space: nowrap;
 }
-.nav-links a:hover { color: var(--gold); }
+.nav-links a:hover { color: var(--gold-dk); background: rgba(255, 255, 255, 0.55); }
+.nav-links a[aria-current="page"]:not(.btn-nav) { background: rgba(255, 255, 255, 0.6); }
 
 .nav-links a.btn-nav {
   background: var(--black);
   color: var(--white);
-  padding: 9px 18px;
-  border-radius: var(--radius);
-  transition: background 0.25s;
+  padding: 11px 20px;
+  margin-left: 6px;
+  border-radius: 999px;
+  box-shadow: 0 4px 14px -4px rgba(26, 26, 26, 0.45);
 }
-.nav-links a.btn-nav:hover { background: var(--gold); }
+.nav-links a.btn-nav:hover { background: var(--gold-dk); color: var(--white); }
 
 /* Hamburger */
 .nav-toggle {
@@ -89,12 +113,13 @@ header {
   flex-direction: column;
   justify-content: center;
   gap: 5px;
-  width: 36px;
-  height: 36px;
-  background: none;
-  border: none;
+  width: 44px;
+  height: 44px;
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid var(--glass-border);
+  border-radius: 999px;
   cursor: pointer;
-  padding: 4px;
+  padding: 0 12px;
   flex-shrink: 0;
 }
 .nav-toggle span {
@@ -109,44 +134,50 @@ header {
 .nav-toggle.open span:nth-child(2) { opacity: 0; }
 .nav-toggle.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
-/* Mobile drawer */
+/* Mobile drawer: a glass card floating under the pill */
 .nav-drawer {
   display: none;
   position: fixed;
-  top: var(--nav-h);
-  left: 0;
-  right: 0;
-  background: var(--white);
-  border-bottom: 1px solid var(--border);
-  padding: 20px var(--px) 28px;
+  top: calc(var(--nav-top) + var(--nav-h) + 8px);
+  left: var(--nav-top);
+  right: var(--nav-top);
+  background: var(--glass-bg-strong);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid var(--glass-border);
+  border-radius: 24px;
+  padding: 10px 20px 20px;
   z-index: 999;
   flex-direction: column;
   gap: 0;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  box-shadow: 0 18px 40px -12px rgba(26, 26, 26, 0.3);
 }
-.nav-drawer.open { display: flex; }
+.nav-drawer.open { display: flex; animation: navDrop 0.22s ease-out; }
+@keyframes navDrop { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .nav-drawer.open { animation: none; } }
 .nav-drawer a {
   text-decoration: none;
   color: var(--black);
   font-size: 15px;
+  font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  padding: 14px 0;
-  border-bottom: 1px solid var(--border);
+  padding: 14px 4px;
+  border-bottom: 1px solid rgba(26, 26, 26, 0.08);
   transition: color 0.2s;
 }
 .nav-drawer a:last-child { border-bottom: none; }
-.nav-drawer a:hover { color: var(--gold); }
+.nav-drawer a:hover { color: var(--gold-dk); }
 .nav-drawer a.btn-nav-mobile {
-  margin-top: 16px;
+  margin-top: 12px;
   background: var(--black);
   color: var(--white);
   text-align: center;
   padding: 14px;
-  border-radius: var(--radius);
+  border-radius: 999px;
   border-bottom: none;
 }
-.nav-drawer a.btn-nav-mobile:hover { background: var(--gold); }
+.nav-drawer a.btn-nav-mobile:hover { background: var(--gold-dk); color: var(--white); }
 
 /* ─── Buttons ──────────────────────────────────────────────── */
 .btn {
@@ -173,7 +204,7 @@ header {
 /* ─── Hero ─────────────────────────────────────────────────── */
 .hero {
   position: relative;
-  min-height: calc(100svh - var(--nav-h));
+  min-height: calc(100svh - var(--nav-space));
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -498,7 +529,7 @@ section.section {
 .preview-panel {
   grid-area: preview;
   position: sticky;
-  top: calc(var(--nav-h) + 16px);
+  top: calc(var(--nav-space) + 16px);
 }
 
 .config-panel { grid-area: config; }
@@ -791,7 +822,7 @@ section.section {
 .paystack-logo { font-weight: 700; font-size: 15px; color: #00c3f7; }
 
 /* order sidebar */
-.order-sidebar { position: sticky; top: calc(var(--nav-h) + 16px); }
+.order-sidebar { position: sticky; top: calc(var(--nav-space) + 16px); }
 
 .order-sidebar-box {
   border: 1px solid var(--border);
@@ -1758,4 +1789,15 @@ button.pay-method { font: inherit; color: inherit; background: var(--white); }
   .rc-sheet { filter: none; }
   .receipt { -webkit-mask: none; mask: none; background: #fff; }
   .receipt::after { display: none; }
+}
+
+/* ─── Glass nav: hero sits under the floating pill (homepage) ── */
+.hero {
+  min-height: 100svh;
+  margin-top: calc(-1 * var(--nav-space));
+  padding-top: calc(var(--nav-space) + 60px);
+}
+@media (max-width: 600px) {
+  :root { --nav-h: 56px; --nav-top: 10px; }
+  header { padding: 0 6px 0 20px; }
 }
