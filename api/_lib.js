@@ -116,6 +116,11 @@ function publicView(data, check) {
     paid: data.status === 'success',
     amountOk: check.ok,
     amount: check.paid,
+    // Server-priced total from our own price table (never the browser's).
+    expectedTotal: check.expected ? check.expected.total : null,
+    balanceDue: check.expected ? Math.max(0, check.expected.total - check.paid) : null,
+    // exact | over | under | unknown — the browser only shows success for exact/over.
+    amountStatus: !check.expected ? 'unknown' : (check.paid === check.expected.total ? 'exact' : (check.paid > check.expected.total ? 'over' : 'under')),
     currency: data.currency,
     paidAt: data.paid_at || data.paidAt || null,
     channel: data.channel || null,

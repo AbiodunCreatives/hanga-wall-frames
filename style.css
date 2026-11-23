@@ -2197,3 +2197,15 @@ html.kb-open .toast { transform: translateY(20px) !important; }
 /* <picture> wrappers (WebP + JPG fallback) behave like the plain <img> they wrap */
 .gallery-card picture, .mini-thumb picture { display: block; width: 100%; }
 .mini-thumb picture { height: 100%; }
+
+/* ─── Payment mismatch screen (underpaid) ─────────────────────── */
+.mm-screen { border-color: rgba(201, 135, 30, 0.45); box-shadow: var(--gl-light-shadow), 0 0 0 1px rgba(201, 135, 30, 0.12) inset; }
+.mm-icon { width: 84px; height: 84px; display: block; margin: 0 auto 16px; }
+.mm-icon circle { fill: #fdf1dc; stroke: #c9871e; stroke-width: 4; }
+.mm-icon path { stroke: #b06f0c; stroke-width: 7; stroke-linecap: round; fill: none; }
+.mm-icon .mm-dot { fill: #b06f0c; stroke: none; }
+.mm-screen h1 { font-size: clamp(24px, 5.6vw, 32px); margin-bottom: 8px; outline: none; }
+.mm-summary dd.mm-due { color: #a5520b; font-size: 16px; }
+.mm-wa { display: inline-flex; align-items: center; justify-content: center; width: 100%; max-width: 340px; margin: 6px auto 0; border-radius: 999px; padding: 14px 24px; font-weight: 700; text-decoration: none; }
+.mm-fine { font-size: 12.5px; color: var(--muted); margin-top: 14px; }
+.is-mismatch-view #receiptWrap, .is-mismatch-view .rc-actions, .is-mismatch-view #transferNote { display: none !important; }

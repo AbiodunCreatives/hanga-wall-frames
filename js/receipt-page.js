@@ -12,27 +12,37 @@
   var method = params.get('method') || order.method || 'request';
   document.querySelectorAll('[data-bank]').forEach(function (el) { el.textContent = (H.bank || {})[el.dataset.bank] || ''; });
 
-  var status = method === 'transfer' ? 'transfer' : 'pending', paystackRef = null;
-  try { var pd = JSON.parse(localStorage.getItem('hangaPaid') || '{}'); if (pd.ref === ref) { status = 'paid'; paystackRef = pd.paystackRef; } } catch (e) {}
+  // Status: pending | transfer | checking | paid | mismatch. "paid" is ONLY ever
+  // set from a server-side /api/verify answer, never from localStorage alone.
+  var status = method === 'transfer' ? 'transfer' : 'pending', paystackRef = null, paidAmount = null, verifyRef = psRef;
+  try {
+    // hangaPaid = verified paid before; hangaPayRef = a Paystack payment exists
+    // for this order (e.g. underpaid). Either way we re-verify with the server.
+    var pd = JSON.parse(localStorage.getItem('hangaPaid') || 'null') || {};
+    if (pd.ref !== ref) pd = JSON.parse(localStorage.getItem('hangaPayRef') || '{}');
+    if (pd.ref === ref && pd.paystackRef) { status = 'checking'; paystackRef = pd.paystackRef; verifyRef = verifyRef || pd.paystackRef; }
+  } catch (e) {}
+  if (psRef) status = 'checking';
   var pk = H.paystackPublicKey || '', attempt = 0, configDone = !!pk;
 
   function render() {
     H.renderReceipt($('receipt'), order, { ref: ref, status: status, paystackRef: paystackRef, date: order.placedAt });
-    var paid = status === 'paid';
-    $('confirmTitle').textContent = paid ? 'Payment successful' : 'Your Hanga receipt';
+    var paid = status === 'paid', mismatch = status === 'mismatch', checking = status === 'checking';
+    $('confirmTitle').textContent = paid ? 'Payment successful' : (mismatch ? "Payment doesn't match your order" : 'Your Hanga receipt');
     // Receipt + one PAY button. Orders reach Hanga by email automatically.
-    var hidePay = paid || !pk || !order.price;
+    var hidePay = paid || mismatch || checking || !pk || !order.price;
     $('payBtn').hidden = hidePay; $('payNote').hidden = true;
     $('payAmt').textContent = order.price ? H.formatNaira(order.price) : '';
     $('payBtn').setAttribute('aria-label', 'Pay ' + (order.price ? H.formatNaira(order.price) : '') + ' securely with Paystack');
     $('continueLink').hidden = !paid;
     // One primary action under the receipt: Paystack, or WhatsApp when payments are off.
     // WhatsApp only as a last resort when online payment can't load at all.
-    var wa = $('sendWhatsApp'), waFallback = !paid && !pk && configDone && !!H.whatsappNumber && !!order.price;
+    var wa = $('sendWhatsApp'), waFallback = !paid && !mismatch && !checking && !pk && configDone && !!H.whatsappNumber && !!order.price;
     wa.hidden = !waFallback;
     if (waFallback) { $('primarySlot').appendChild(wa); wa.className = 'btn rc-btn rc-btn-wa'; wa.textContent = 'Send order on WhatsApp'; }
     showSuccess(paid);
-    if (method === 'transfer' && H.bank && H.bank.confirmed && !paid) { $('transferNote').classList.remove('hidden'); $('transferAmount').textContent = H.formatNaira(order.price); }
+    showMismatch(mismatch);
+    if (method === 'transfer' && H.bank && H.bank.confirmed && !paid && !mismatch) { $('transferNote').classList.remove('hidden'); $('transferAmount').textContent = H.formatNaira(order.price); }
   }
 
   // Paid: swap the receipt view for the success screen (receipt stays one tap away).
@@ -49,7 +59,7 @@
     if (R) {
       rows.push(['Items', R.rows.map(function (r) { return r.name; }).join(', ')]);
       rows.push(['Frame', [order.size ? order.size + '"' : '', H.styleText(order.style), H.setLabel(R.n)].filter(Boolean).join(' · ')]);
-      rows.push(['Amount paid', H.formatNaira(R.total)]);
+      rows.push(['Amount paid', H.formatNaira(paidAmount != null ? paidAmount : R.total)]);
     }
     if (paystackRef) rows.push(['Paystack ref', paystackRef]);
     rows.push(['Delivery', 'Fee confirmed after your order']);
@@ -63,8 +73,39 @@
       try { $('okTitle').focus({ preventScroll: true }); } catch (e) {}
     }
   }
+  // Underpaid: no success screen, no receipt, no downloads — just the
+  // server-verified numbers and a way to reach Hanga.
+  var mm = null;
+  function showMismatch(on) {
+    var sc = $('mismatchScreen');
+    sc.hidden = !on;
+    document.body.classList.toggle('is-mismatch-view', on);
+    if (!on || !mm) return;
+    $('mmRef').textContent = ref;
+    var dl = $('mmSummary'); dl.textContent = '';
+    var due = mm.balanceDue;
+    var rows = [
+      ['Amount paid', H.formatNaira(mm.amount)],
+      ['Order total', mm.expectedTotal != null ? H.formatNaira(mm.expectedTotal) : 'To be confirmed by Hanga'],
+      ['Balance due', due != null ? H.formatNaira(due) : 'To be confirmed by Hanga']
+    ];
+    if (mm.reference && mm.reference !== ref) rows.push(['Paystack ref', mm.reference]);
+    rows.forEach(function (r) { var dt = document.createElement('dt'), dd = document.createElement('dd'); dt.textContent = r[0]; dd.textContent = r[1]; if (r[0] === 'Balance due') dd.className = 'mm-due'; dl.append(dt, dd); });
+    var wa = $('mmWhatsApp');
+    var msg = 'Hi Hanga, my payment does not match my order.\n\nOrder reference: ' + ref +
+      (mm.reference && mm.reference !== ref ? '\nPaystack reference: ' + mm.reference : '') +
+      '\nAmount paid: ' + H.formatNaira(mm.amount) +
+      '\nOrder total: ' + (mm.expectedTotal != null ? H.formatNaira(mm.expectedTotal) : 'to be confirmed') +
+      '\nBalance due: ' + (due != null ? H.formatNaira(due) : 'to be confirmed') +
+      '\n\nPlease help me complete or refund this payment.';
+    var link = H.whatsappLink(msg); // wa.me + encodeURIComponent
+    wa.hidden = !link; if (link) wa.href = link;
+    window.scrollTo(0, 0);
+    try { $('mmTitle').focus({ preventScroll: true }); } catch (e) {}
+  }
   function receiptOpts() { return { ref: ref, status: status, paystackRef: paystackRef, date: order.placedAt, paidAt: paidAt }; }
   function doDownload(kind, btn) {
+    if (status !== 'paid') return; // receipts only for server-confirmed, fully paid orders
     var label = btn.textContent; btn.disabled = true; btn.textContent = 'Preparing…';
     H.downloadReceipt(kind, order, receiptOpts())
       .catch(function () { $('okNote').textContent = 'Could not create the file. Please try again, or take a screenshot of your receipt.'; })
@@ -96,35 +137,64 @@
     if (H.whatsappNumber) { $('sendWhatsApp').href = H.whatsappLink('Hi Hanga! Here is my order:\n\n' + summaryText()); }
     $('uploadMsg').hidden = !H.orderPieces(order).some(function (p) { return p.isUpload; });
   }
-  function alertBox(msg, kind, retry) {
+  function alertBox(msg, kind, retry, recheck) {
     var a = $('payAlert'); a.textContent = ''; a.className = 'rc-alert ' + (kind || '');
     a.appendChild(document.createTextNode(msg + ' '));
     if (retry) { var b = document.createElement('button'); b.type = 'button'; b.className = 'rc-link'; b.textContent = 'Retry payment'; b.onclick = pay; a.appendChild(b); }
+    if (recheck) { var c = document.createElement('button'); c.type = 'button'; c.className = 'rc-link'; c.textContent = 'Check again'; c.onclick = function () { alertBox('Confirming your payment with Paystack…', 'is-info'); verify(recheck); }; a.appendChild(c); }
     a.hidden = false;
   }
 
   function loadScript(src) {
     return new Promise(function (res, rej) { if (window.PaystackPop) return res(); var s = document.createElement('script'); s.src = src; s.onload = res; s.onerror = rej; document.head.appendChild(s); });
   }
+  function forgetPaid(all) {
+    try {
+      var keys = all ? ['hangaPaid', 'hangaPayRef'] : ['hangaPaid'];
+      keys.forEach(function (k) { var pd = JSON.parse(localStorage.getItem(k) || '{}'); if (pd.ref === ref) localStorage.removeItem(k); });
+    } catch (e) {}
+  }
+  function rememberPayRef(reference) { try { localStorage.setItem('hangaPayRef', JSON.stringify({ ref: ref, paystackRef: reference })); } catch (e) {} }
+  // Only called after /api/verify says paid AND the amount covers the order.
   function markPaid(reference) {
     status = 'paid'; paystackRef = reference;
     try { localStorage.setItem('hangaPaid', JSON.stringify({ ref: ref, paystackRef: reference })); } catch (e) {}
     render(); wireSend();
   }
+  function markMismatch(v) {
+    status = 'mismatch'; paystackRef = v.reference || paystackRef;
+    mm = { amount: Number(v.amount) || 0, expectedTotal: v.expectedTotal != null ? Number(v.expectedTotal) : null, balanceDue: v.balanceDue != null ? Number(v.balanceDue) : null, reference: v.reference || '' };
+    forgetPaid();
+    $('payAlert').hidden = true;
+    render();
+  }
   function verify(reference) {
-    return fetch('/api/verify?reference=' + encodeURIComponent(reference)).then(function (r) { return r.json(); }).then(function (v) {
+    if (!reference) return Promise.resolve();
+    return fetch('/api/verify?reference=' + encodeURIComponent(reference), { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (v) {
       if (v.ok && v.paid) {
-        if (!order.price && v.order) order = Object.assign({}, v.order, { price: v.order.total });
+        if (!order.price && v.order) order = Object.assign({}, v.order, { price: v.expectedTotal != null ? v.expectedTotal : v.order.total });
         paidAt = v.paidAt || null;
+        if (v.amountStatus !== 'exact' && v.amountStatus !== 'over') return markMismatch(v);
+        paidAmount = Number(v.amount) || null;
         markPaid(v.reference);
         $('payAlert').hidden = true;
-        $('okNote').textContent = v.amountOk ? 'Confirmed by Paystack ✓' + (v.notified ? ' Your order has been sent to Hanga.' : '') : 'Payment received. We will double-check the amount and contact you.';
+        $('okNote').textContent = v.amountStatus === 'over'
+          ? 'Confirmed by Paystack ✓ You paid ' + H.formatNaira(v.amount - v.expectedTotal) + ' more than the order total. Hanga will sort out the difference with you.'
+          : 'Confirmed by Paystack ✓' + (v.notified ? ' Your order has been sent to Hanga.' : '');
       } else if (v.ok && !v.paid) {
-        if (status !== 'paid') alertBox('Payment was not completed (' + (v.status || 'unknown') + '). No money was taken.', 'is-warn', true);
-      } else if (status === 'paid') {
-        $('okNote').textContent = 'Payment received — awaiting confirmation. Keep your reference handy.';
+        forgetPaid(true);
+        status = method === 'transfer' ? 'transfer' : 'pending'; paystackRef = null; render();
+        alertBox('Payment was not completed (' + (v.status || 'unknown') + '). No money was taken.', 'is-warn', true);
+      } else {
+        unconfirmed(reference);
       }
-    }).catch(function () { if (status === 'paid') $('okNote').textContent = 'Payment received — awaiting confirmation. Keep your reference handy.'; });
+    }).catch(function () { unconfirmed(reference); });
+  }
+  // Couldn't reach Paystack: never show success; never invite a second payment.
+  function unconfirmed(reference) {
+    if (status === 'paid' || status === 'mismatch') return;
+    status = 'checking'; render();
+    alertBox("We couldn't confirm your payment yet. Please don't pay again — check again in a minute or contact Hanga.", 'is-warn', false, reference);
   }
   function pay() {
     if (!pk || !order.price) return;
@@ -146,7 +216,7 @@
             { display_name: 'Items', variable_name: 'items', value: meta.items.map(function (i) { return i.name; }).join(', ') + ' (' + meta.size + '", ' + meta.style + ', ' + meta.set + ')' }
           ]
         },
-        onSuccess: function (tx) { $('payBtn').disabled = false; markPaid(tx.reference); $('okNote').textContent = 'Confirming with Paystack…'; verify(tx.reference); },
+        onSuccess: function (tx) { $('payBtn').disabled = false; status = 'checking'; paystackRef = tx.reference; rememberPayRef(tx.reference); render(); alertBox('Confirming your payment with Paystack…', 'is-info'); verify(tx.reference); },
         onCancel: function () { $('payBtn').disabled = false; alertBox('Payment not completed. Your order is still saved.', 'is-warn', true); },
         onError: function (err) { $('payBtn').disabled = false; alertBox('Paystack could not start (' + ((err && err.message) || 'error') + ').', 'is-warn', true); }
       });
@@ -155,7 +225,7 @@
   $('payBtn').addEventListener('click', pay);
 
   render(); wireSend();
-  if (psRef) verify(psRef);
+  if (status === 'checking') { alertBox('Confirming your payment with Paystack…', 'is-info'); verify(verifyRef); }
   if (!pk) {
     fetch('/api/config').then(function (r) { return r.ok ? r.json() : {}; })
       .then(function (c) { if (c && c.paystackPublicKey) pk = c.paystackPublicKey; })
