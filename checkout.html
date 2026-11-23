@@ -59,7 +59,7 @@
         </div>
       </div>
     </div>
-    <div style="margin-top:16px; padding:16px; background:var(--cream); border-radius:var(--radius); font-size:13px; color:var(--muted); line-height:1.75">
+    <div class="delivery-card" style="margin-top:16px; padding:16px 18px; font-size:13px; color:var(--muted); line-height:1.75">
       <strong style="color:var(--black)">📦 Delivery Info</strong><br>
       Hanga is based in Ado Ekiti, Ekiti State.<br>
       Within Ekiti and Ondo State: 1 to 2 business days<br>
@@ -137,6 +137,12 @@
 
 </div>
 
+<!-- Mobile: floating glass total + place order pill -->
+<div class="co-pill" id="coPill" aria-hidden="true">
+  <div class="co-pill-total"><span>Total</span><strong id="coPillTotal">₦0</strong></div>
+  <button type="button" class="btn btn-gold" tabindex="-1" onclick="placeOrder()">Place Order →</button>
+</div>
+
 <!-- ─── Toast ────────────────────────────────────────────────── -->
 <div class="toast" id="toast"></div>
 
@@ -209,6 +215,18 @@ if (nPieces > 1) {
   document.getElementById('sidebarFramePrice').textContent = HANGA.formatNaira(order.price);
 }
 document.getElementById('sidebarTotal').textContent = HANGA.formatNaira(order.price) + ' + delivery';
+document.getElementById('coPillTotal').textContent = HANGA.formatNaira(order.price);
+// Floating pill shows only while the real "Place Order" button is off-screen.
+(function () {
+  var pill = document.getElementById('coPill'), btn = document.getElementById('placeOrderBtn');
+  if (!pill || !btn || !('IntersectionObserver' in window)) return;
+  new IntersectionObserver(function (es) {
+    var show = !es[0].isIntersecting;
+    pill.classList.toggle('is-ready', show);
+    pill.setAttribute('aria-hidden', String(!show));
+    pill.querySelector('button').tabIndex = show ? 0 : -1;
+  }).observe(btn);
+})();
 
 const sidebarImg = document.getElementById('sidebarImg');
 const pics = pieces.map(p => p.imageData).filter(Boolean);

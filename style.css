@@ -2025,3 +2025,157 @@ button.pay-method { font: inherit; color: inherit; background: var(--white); }
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
   .gallery-section .makers-empty { background: #26221c; }
 }
+
+/* ═══ Premium glass system (every card) ══════════════════════════════
+   Light frosted glass on light sections, smoky glass on dark ones.
+   Images stay crisp: glass is on the card frame / info area only. */
+:root {
+  --gl-blur: blur(16px) saturate(170%);
+  --gl-light: rgba(255, 255, 255, 0.62);
+  --gl-light-inner: rgba(255, 255, 255, 0.55);
+  --gl-light-border: rgba(255, 255, 255, 0.75);
+  --gl-light-rim: rgba(200, 169, 110, 0.22);
+  --gl-light-shadow: 0 1px 0 rgba(255, 255, 255, 0.8) inset, 0 0 0 1px var(--gl-light-rim), 0 14px 38px -18px rgba(26, 26, 26, 0.28);
+  --gl-dark: rgba(38, 34, 28, 0.55);
+  --gl-dark-border: rgba(232, 205, 150, 0.22);
+  --gl-dark-shadow: 0 1px 0 rgba(255, 255, 255, 0.08) inset, 0 18px 44px -20px rgba(0, 0, 0, 0.75);
+  --gl-hover-shadow: 0 1px 0 rgba(255, 255, 255, 0.8) inset, 0 0 0 1px rgba(200, 169, 110, 0.55), 0 22px 46px -18px rgba(168, 137, 62, 0.4);
+  --gl-radius: 18px;
+}
+
+/* Soft warm light behind light sections so the frosting has something to catch */
+.hiw2-section, .pricing-section, .faq-section, .customize-layout, .checkout-layout, .about-hero, section.section:not(.gallery-section) {
+  background-image:
+    radial-gradient(42rem 26rem at 8% 0%, rgba(200, 169, 110, 0.16), transparent 70%),
+    radial-gradient(36rem 24rem at 100% 100%, rgba(200, 169, 110, 0.12), transparent 70%);
+}
+.gallery-section, .values-section {
+  background-image:
+    radial-gradient(40rem 26rem at 0% 0%, rgba(200, 169, 110, 0.14), transparent 70%),
+    radial-gradient(36rem 24rem at 100% 100%, rgba(168, 137, 62, 0.12), transparent 70%) !important;
+}
+
+/* Light glass cards */
+.hiw2-card, .pv-card, .price-card, .testimonial-card, .faq-list details,
+.bld-step, .bld-summary, .order-summary-box, .order-sidebar-box,
+.confirm-send, .confirm-transfer, .ok-screen, .pay-panel {
+  background: var(--gl-light);
+  -webkit-backdrop-filter: var(--gl-blur);
+  backdrop-filter: var(--gl-blur);
+  border: 1px solid var(--gl-light-border);
+  border-radius: var(--gl-radius);
+  box-shadow: var(--gl-light-shadow);
+}
+.ok-screen { border-radius: 28px; }
+.pay-panel { border-radius: 14px; }
+.pay-panel--paystack { background: rgba(232, 248, 254, 0.6); border-color: rgba(0, 195, 247, 0.28); }
+.faq-list details { overflow: hidden; }
+.bld-summary.is-ready { border-color: rgba(200, 169, 110, 0.7); box-shadow: var(--gl-hover-shadow); }
+.order-sidebar-box .sidebar-header { background: rgba(26, 26, 26, 0.86); -webkit-backdrop-filter: var(--gl-blur); backdrop-filter: var(--gl-blur); }
+.ok-ref { background: rgba(255, 255, 255, 0.7); }
+
+/* Inner option cards (inside a glass step): lighter fill, no second blur */
+.bld-set, .bld-qty-opt, .bld-step .swatch, .bld-step .size-grid .chip, .bld-step .upload-zone {
+  background: var(--gl-light-inner);
+  border-color: rgba(200, 169, 110, 0.28);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.85) inset, 0 6px 16px -10px rgba(26, 26, 26, 0.18);
+}
+.bld-set-art { background: rgba(241, 236, 228, 0.7); }
+.bld-qty-opt.selected, .bld-step .size-grid .chip.selected {
+  background: rgba(26, 26, 26, 0.9); color: #fff; border-color: rgba(26, 26, 26, 0.9);
+  box-shadow: 0 0 0 3px rgba(200, 169, 110, 0.35), 0 10px 24px -10px rgba(26, 26, 26, 0.5);
+}
+.bld-set.selected, .bld-step .swatch.selected { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(200, 169, 110, 0.35), 0 10px 24px -12px rgba(168, 137, 62, 0.45); }
+.bld-step .source-tabs { background: rgba(255, 255, 255, 0.5); border-color: rgba(200, 169, 110, 0.28); }
+
+/* Dark smoky glass cards (gallery, values) */
+.gallery-card {
+  background: var(--gl-dark);
+  -webkit-backdrop-filter: var(--gl-blur);
+  backdrop-filter: var(--gl-blur);
+  border: 1px solid var(--gl-dark-border);
+  border-radius: var(--gl-radius);
+  box-shadow: var(--gl-dark-shadow);
+}
+.gallery-card-body { background: transparent; }
+.gallery-card:hover { border-color: rgba(232, 205, 150, 0.6); box-shadow: 0 1px 0 rgba(255,255,255,0.1) inset, 0 0 32px -8px rgba(200, 169, 110, 0.35), 0 22px 48px -18px rgba(0, 0, 0, 0.8); }
+.value-card {
+  padding: 28px 22px;
+  background: var(--gl-dark);
+  -webkit-backdrop-filter: var(--gl-blur);
+  backdrop-filter: var(--gl-blur);
+  border: 1px solid var(--gl-dark-border);
+  border-radius: var(--gl-radius);
+  box-shadow: var(--gl-dark-shadow);
+}
+
+/* Hover lift + glow (hiw2 cards already lift via their own animation rules) */
+.pv-card, .price-card, .testimonial-card, .faq-list details, .value-card, .bld-step {
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+.pv-card:hover, .price-card:hover, .testimonial-card:hover, .value-card:hover { transform: translateY(-3px); box-shadow: var(--gl-hover-shadow); border-color: rgba(200, 169, 110, 0.6); }
+.value-card:hover { box-shadow: 0 0 32px -8px rgba(200, 169, 110, 0.35), var(--gl-dark-shadow); }
+.faq-list details:hover, .bld-step:hover { box-shadow: var(--gl-hover-shadow); }
+.hiw2-step:hover .hiw2-card { box-shadow: var(--gl-hover-shadow); border-color: rgba(200, 169, 110, 0.6); }
+
+@media (prefers-reduced-motion: reduce) {
+  .pv-card:hover, .price-card:hover, .testimonial-card:hover, .value-card:hover,
+  .gallery-card:hover, .bld-set:hover, .bld-qty-opt:hover { transform: none; }
+}
+
+/* ─── Floating glass checkout pill (builder + checkout) ─────────── */
+.bld-mobilebar, .co-pill {
+  display: flex; position: fixed; z-index: 90;
+  left: 50%; right: auto; bottom: calc(14px + env(safe-area-inset-bottom));
+  width: min(560px, calc(100% - 24px));
+  align-items: center; justify-content: space-between; gap: 12px;
+  padding: 8px 8px 8px 24px;
+  border-radius: 999px;
+  background: var(--glass-bg, rgba(248, 245, 240, 0.72));
+  -webkit-backdrop-filter: blur(18px) saturate(180%);
+  backdrop-filter: blur(18px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-top: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 0 0 1px rgba(200, 169, 110, 0.22), 0 18px 44px -14px rgba(26, 26, 26, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  transform: translate(-50%, calc(100% + 40px)); opacity: 0;
+  transition: transform 0.35s cubic-bezier(.2,.7,.2,1), opacity 0.25s ease;
+}
+.bld-mobilebar.is-ready, .co-pill.is-ready { transform: translate(-50%, 0); opacity: 1; }
+.bld-mobilebar-total span, .co-pill-total span { display: block; font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+.bld-mobilebar-total strong, .co-pill-total strong { font-size: 18px; color: var(--black); white-space: nowrap; }
+.bld-mobilebar .btn, .co-pill .btn { border-radius: 999px; padding: 13px 26px; white-space: nowrap; flex: none; }
+body:has(.bld-mobilebar.is-ready) footer, body:has(.co-pill.is-ready) footer { padding-bottom: calc(110px + env(safe-area-inset-bottom)); }
+body:has(.bld-mobilebar.is-ready) .customize-layout { padding-bottom: 96px; }
+.co-pill { display: none; }
+@media (max-width: 900px) {
+  .co-pill { display: flex; }
+  body:has(.co-pill.is-ready) .checkout-layout { padding-bottom: 104px; }
+}
+@media (max-width: 380px) { .bld-mobilebar, .co-pill { padding-left: 18px; } .bld-mobilebar .btn, .co-pill .btn { padding: 12px 18px; } }
+@media (prefers-reduced-motion: reduce) { .bld-mobilebar, .co-pill { transition: opacity 0.2s; } }
+
+/* Solid fallback when backdrop-filter is unsupported */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .hiw2-card, .pv-card, .price-card, .testimonial-card, .faq-list details, .bld-step, .bld-summary,
+  .order-summary-box, .order-sidebar-box, .confirm-send, .confirm-transfer, .ok-screen, .pay-panel { background: #fffdf9; }
+  .gallery-card, .value-card { background: #24201b; }
+  .bld-mobilebar, .co-pill { background: #f8f5f0; }
+}
+/* Preview panel frame (room canvas stays crisp inside) */
+.frame-preview-wrap {
+  background: var(--gl-light);
+  -webkit-backdrop-filter: var(--gl-blur); backdrop-filter: var(--gl-blur);
+  border: 1px solid var(--gl-light-border); border-radius: var(--gl-radius);
+  box-shadow: var(--gl-light-shadow);
+}
+.frame-preview-wrap canvas { border-radius: 12px; }
+/* Keep toasts above the floating pills */
+body:has(.bld-mobilebar.is-ready) .toast, body:has(.co-pill.is-ready) .toast { bottom: calc(100px + env(safe-area-inset-bottom)); }
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) { .frame-preview-wrap { background: #fffdf9; } }
+.delivery-card, .pricing-set-note {
+  background: var(--gl-light);
+  -webkit-backdrop-filter: var(--gl-blur); backdrop-filter: var(--gl-blur);
+  border: 1px solid var(--gl-light-border); box-shadow: var(--gl-light-shadow);
+}
+.delivery-card { border-radius: 14px; }
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) { .delivery-card, .pricing-set-note { background: #fffdf9; } }
