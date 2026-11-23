@@ -161,6 +161,38 @@ window.HANGA = {
     chips.forEach(function (c) { c.addEventListener('click', function () { setTimeout(sync, 0); }); });
   });
 
+  // ── Mobile keyboard handling ─────────────────────────────────
+  // Hide floating bottom bars while a field is focused / the keyboard is up,
+  // and keep the focused field centred in the visible area so users see what they type.
+  (function () {
+    var root = document.documentElement, vv = window.visualViewport, active = null, t;
+    function isField(el) {
+      return el && (el.tagName === 'TEXTAREA' || el.tagName === 'SELECT' ||
+        (el.tagName === 'INPUT' && !/^(checkbox|radio|button|submit|file|range|color|hidden)$/i.test(el.type)));
+    }
+    function reveal() {
+      if (!active || document.activeElement !== active) return;
+      var top = active.getBoundingClientRect().top, h = vv ? vv.height : window.innerHeight;
+      var bottom = active.getBoundingClientRect().bottom;
+      if (top < 80 || bottom > h - 16) {
+        try { active.scrollIntoView({ block: 'center', behavior: 'smooth' }); } catch (e) { active.scrollIntoView(); }
+      }
+    }
+    function sync() {
+      var kb = vv ? (window.innerHeight - vv.height > 120) : false;
+      root.classList.toggle('kb-open', !!(active || kb));
+    }
+    document.addEventListener('focusin', function (e) {
+      if (!isField(e.target)) return;
+      active = e.target; sync();
+      clearTimeout(t); t = setTimeout(reveal, 300);
+    });
+    document.addEventListener('focusout', function () {
+      setTimeout(function () { if (!isField(document.activeElement)) { active = null; sync(); } }, 50);
+    });
+    if (vv) vv.addEventListener('resize', function () { sync(); clearTimeout(t); t = setTimeout(reveal, 120); });
+  })();
+
   // ── Footer year ───────────────────────────────────────────────
   document.querySelectorAll('[data-year]').forEach(function (el) { el.textContent = new Date().getFullYear(); });
 })();

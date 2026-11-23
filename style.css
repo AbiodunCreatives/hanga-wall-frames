@@ -2179,3 +2179,17 @@ body:has(.bld-mobilebar.is-ready) .toast, body:has(.co-pill.is-ready) .toast { b
 }
 .delivery-card { border-radius: 14px; }
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) { .delivery-card, .pricing-set-note { background: #fffdf9; } }
+
+/* ─── Mobile keyboard: no focus zoom, no layout jump ─────────── */
+/* iOS zooms the page when a focused field's text is under 16px. */
+input, textarea, select { font-size: 16px; }
+@media (max-width: 900px) {
+  .form-group input, .form-group textarea, .form-group select { font-size: 16px; }
+  .form-group textarea { resize: none; }
+}
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+/* While typing, floating bottom bars step aside so they don't ride on the keyboard. */
+html.kb-open .bld-mobilebar, html.kb-open .co-pill, html.kb-open .toast {
+  opacity: 0 !important; pointer-events: none !important; transform: translate(-50%, calc(100% + 40px)) !important;
+}
+html.kb-open .toast { transform: translateY(20px) !important; }
