@@ -89,12 +89,6 @@
       </div>
       <div class="form-row full">
         <div class="form-group">
-          <label for="email">Email</label>
-          <input type="email" id="email" autocomplete="email" inputmode="email" placeholder="you@example.com" required>
-        </div>
-      </div>
-      <div class="form-row full">
-        <div class="form-group">
           <label for="address">Delivery Address</label>
           <textarea id="address" autocomplete="street-address" rows="3" placeholder="House number, street, area, city and state" required></textarea>
         </div>
@@ -131,7 +125,7 @@
       <!-- Shown while neither Paystack nor bank details are switched on in js/site.js -->
       <div id="requestPanel" class="pay-panel hidden">
         <strong>Next: your receipt</strong><br>
-        Place your order to get your receipt and order reference. From there you can pay securely with Paystack (when available) or send your order to us on WhatsApp or email. We will confirm your delivery fee after your order.
+        Place your order to get your receipt and order reference. From there you can pay securely with Paystack. We will confirm your delivery fee after your order.
       </div>
     </div>
 
@@ -258,7 +252,7 @@ selectPayMethod(activePayMethod);
 
 // ── Validation ─────────────────────────────────────────────────
 function validate() {
-  for (const id of ['name','phone','email','address']) {
+  for (const id of ['name','phone','address']) {
     const el = document.getElementById(id);
     if (!el.value.trim()) {
       el.style.borderColor = '#e55';
@@ -267,11 +261,6 @@ function validate() {
       el.addEventListener('input', () => el.style.borderColor = '', { once: true });
       return false;
     }
-  }
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(document.getElementById('email').value.trim())) {
-    showToast('Please enter a valid email address.');
-    document.getElementById('email').focus();
-    return false;
   }
   if (document.getElementById('phone').value.replace(/\D/g, '').length < 10) {
     showToast('Please enter a valid phone number.');
@@ -287,7 +276,7 @@ function genRef() { return 'HNG-' + Date.now().toString(36).toUpperCase() + '-' 
 function customerDetails() {
   const v = id => document.getElementById(id).value.trim();
   return {
-    name: v('name'), phone: v('phone'), email: v('email'), address: v('address')
+    name: v('name'), phone: v('phone'), address: v('address')
   };
 }
 

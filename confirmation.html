@@ -58,10 +58,7 @@
     <button type="button" class="rc-link ok-toggle" id="toggleReceipt" aria-expanded="false" aria-controls="receiptWrap">View full receipt</button>
   </section>
 
-  <div class="rc-intro no-print">
-    <h1 id="confirmTitle">Your receipt</h1>
-    <p id="confirmMsg">Thank you for ordering with Hanga.</p>
-  </div>
+  <h1 class="visually-hidden" id="confirmTitle">Your Hanga receipt</h1>
 
   <div class="rc-sheet" id="receiptWrap">
     <article class="receipt" id="receipt" aria-label="Order receipt"></article>
@@ -70,7 +67,7 @@
   <!-- Actions: receipt first, then ONE primary button, then secondary actions -->
   <section class="rc-actions no-print" aria-label="Next steps">
     <div class="rc-primary" id="primarySlot">
-      <button type="button" class="btn rc-btn rc-btn-pay" id="payBtn" hidden>Pay <span id="payAmt"></span> with Paystack</button>
+      <button type="button" class="btn rc-btn rc-btn-pay" id="payBtn" hidden>PAY <span id="payAmt"></span></button>
     </div>
     <p class="rc-pay-note" id="payNote" hidden>Card, bank transfer or USSD · secured by Paystack</p>
     <div class="rc-alert" id="payAlert" role="status" hidden></div>
@@ -78,7 +75,7 @@
       <a href="#" class="btn rc-btn rc-btn-sec" id="sendWhatsApp" hidden target="_blank" rel="noopener">Send on WhatsApp</a>
     </div>
     <p id="uploadMsg" class="rc-upload" hidden><strong>Framing your own photo or artwork?</strong> Please send us the original file (PDF or full-size image, not a screenshot) so it prints sharply.</p>
-    <a href="customize.html" class="rc-continue">Continue shopping →</a>
+    <a href="customize.html" class="rc-continue" id="continueLink" hidden>Continue shopping →</a>
   </section>
 
   <div id="transferNote" class="hidden confirm-transfer no-print">

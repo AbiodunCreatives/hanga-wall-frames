@@ -1,4 +1,4 @@
-/* confirmation.html: receipt + Pay with Paystack + WhatsApp/email fallback. */
+/* confirmation.html: receipt + PAY button (Paystack) + success screen. */
 (function () {
   var H = window.HANGA;
   var params = new URLSearchParams(location.search);
@@ -14,22 +14,23 @@
 
   var status = method === 'transfer' ? 'transfer' : 'pending', paystackRef = null;
   try { var pd = JSON.parse(localStorage.getItem('hangaPaid') || '{}'); if (pd.ref === ref) { status = 'paid'; paystackRef = pd.paystackRef; } } catch (e) {}
-  var pk = H.paystackPublicKey || '', attempt = 0;
+  var pk = H.paystackPublicKey || '', attempt = 0, configDone = !!pk;
 
   function render() {
     H.renderReceipt($('receipt'), order, { ref: ref, status: status, paystackRef: paystackRef, date: order.placedAt });
     var paid = status === 'paid';
-    $('confirmTitle').textContent = paid ? 'Payment received, thank you!' : 'Your receipt';
-    $('confirmMsg').textContent = paid
-      ? 'Hanga has your paid order and will be in touch about delivery. We will confirm your delivery fee after your order.'
-      : (pk && order.email ? 'Your order is saved. Pay below, or send it to us on WhatsApp.' : 'Your order is saved. Send it to us on WhatsApp to finish, and we will confirm your total and how to pay.');
-    var hidePay = paid || !pk || !order.price || !order.email;
-    $('payBtn').hidden = hidePay; $('payNote').hidden = hidePay;
+    $('confirmTitle').textContent = paid ? 'Payment successful' : 'Your Hanga receipt';
+    // Receipt + one PAY button. Orders reach Hanga by email automatically.
+    var hidePay = paid || !pk || !order.price;
+    $('payBtn').hidden = hidePay; $('payNote').hidden = true;
     $('payAmt').textContent = order.price ? H.formatNaira(order.price) : '';
+    $('payBtn').setAttribute('aria-label', 'Pay ' + (order.price ? H.formatNaira(order.price) : '') + ' securely with Paystack');
+    $('continueLink').hidden = !paid;
     // One primary action under the receipt: Paystack, or WhatsApp when payments are off.
-    var wa = $('sendWhatsApp'), waPrimary = hidePay && !paid && !!H.whatsappNumber;
-    if (waPrimary) { $('primarySlot').appendChild(wa); wa.className = 'btn rc-btn rc-btn-wa'; wa.textContent = 'Send order on WhatsApp'; }
-    else { $('secondarySlot').appendChild(wa); wa.className = 'btn rc-btn rc-btn-sec'; wa.textContent = paid ? 'Message us on WhatsApp' : 'Send on WhatsApp'; }
+    // WhatsApp only as a last resort when online payment can't load at all.
+    var wa = $('sendWhatsApp'), waFallback = !paid && !pk && configDone && !!H.whatsappNumber && !!order.price;
+    wa.hidden = !waFallback;
+    if (waFallback) { $('primarySlot').appendChild(wa); wa.className = 'btn rc-btn rc-btn-wa'; wa.textContent = 'Send order on WhatsApp'; }
     showSuccess(paid);
     if (method === 'transfer' && H.bank && H.bank.confirmed && !paid) { $('transferNote').classList.remove('hidden'); $('transferAmount').textContent = H.formatNaira(order.price); }
   }
@@ -88,18 +89,17 @@
       if (R.discount) lines.push(H.setLabel(R.n) + ' set discount: −' + H.formatNaira(R.discount));
       lines.push('Delivery: to be confirmed', 'TOTAL: ' + H.formatNaira(R.total));
     }
-    lines.push('', 'Name: ' + (order.name || ''), 'Phone: ' + (order.phone || ''), 'Email: ' + (order.email || ''), 'Delivery address: ' + (order.address || ''));
+    lines.push('', 'Name: ' + (order.name || ''), 'Phone: ' + (order.phone || ''), 'Delivery address: ' + (order.address || ''));
     return lines.join('\n');
   }
   function wireSend() {
-    if (H.whatsappNumber) { $('sendWhatsApp').href = H.whatsappLink('Hi Hanga! Here is my order:\n\n' + summaryText()); $('sendWhatsApp').hidden = false; }
+    if (H.whatsappNumber) { $('sendWhatsApp').href = H.whatsappLink('Hi Hanga! Here is my order:\n\n' + summaryText()); }
     $('uploadMsg').hidden = !H.orderPieces(order).some(function (p) { return p.isUpload; });
   }
   function alertBox(msg, kind, retry) {
     var a = $('payAlert'); a.textContent = ''; a.className = 'rc-alert ' + (kind || '');
     a.appendChild(document.createTextNode(msg + ' '));
     if (retry) { var b = document.createElement('button'); b.type = 'button'; b.className = 'rc-link'; b.textContent = 'Retry payment'; b.onclick = pay; a.appendChild(b); }
-    if (retry && H.whatsappNumber) { var w = document.createElement('a'); w.className = 'rc-link'; w.href = $('sendWhatsApp').href; w.target = '_blank'; w.rel = 'noopener'; w.textContent = 'Order via WhatsApp instead'; a.append(' · ', w); }
     a.hidden = false;
   }
 
@@ -127,13 +127,13 @@
     }).catch(function () { if (status === 'paid') $('okNote').textContent = 'Payment received — awaiting confirmation. Keep your reference handy.'; });
   }
   function pay() {
-    if (!pk || !order.price || !order.email) return;
+    if (!pk || !order.price) return;
     $('payAlert').hidden = true; $('payBtn').disabled = true; attempt++;
     var meta = H.paystackOrder(order, ref);
     loadScript('https://js.paystack.co/v2/inline.js').then(function () {
       new window.PaystackPop().newTransaction({
         key: pk,
-        email: order.email,
+        email: H.payEmail(order), // placeholder; we don't collect customer email
         amount: Math.round(Number(order.price) * 100), // kobo; delivery is confirmed after the order
         currency: 'NGN',
         reference: attempt === 1 ? ref : ref + '-R' + attempt, // Paystack refuses a reused reference
@@ -158,6 +158,8 @@
   if (psRef) verify(psRef);
   if (!pk) {
     fetch('/api/config').then(function (r) { return r.ok ? r.json() : {}; })
-      .then(function (c) { if (c && c.paystackPublicKey) { pk = c.paystackPublicKey; render(); } }).catch(function () {});
+      .then(function (c) { if (c && c.paystackPublicKey) pk = c.paystackPublicKey; })
+      .catch(function () {})
+      .then(function () { configDone = true; render(); });
   }
 })();

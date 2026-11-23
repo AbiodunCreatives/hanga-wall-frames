@@ -184,7 +184,9 @@ async function notifyPaid(data, check, source) {
   if (!data || data.status !== 'success') return { skipped: 'not paid' };
   const mail = receiptEmail(data, check);
   const owner = process.env.OWNER_EMAIL || 'hello@hanga.ng';
-  const cust = ((check.order || {}).customer || {}).email;
+  // Placeholder payer emails (@orders.hanga.ng, used only to satisfy Paystack) are never mailed.
+  let cust = ((check.order || {}).customer || {}).email;
+  if (cust && /@orders\.hanga\.ng$/i.test(cust)) cust = '';
   const out = {};
   try {
     out.owner = await sendResend({ to: owner, subject: mail.subject, html: mail.html, text: mail.text, replyTo: cust, idempotencyKey: 'owner-' + data.reference });

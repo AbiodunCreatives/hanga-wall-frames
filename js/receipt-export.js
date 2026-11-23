@@ -42,9 +42,7 @@
     // Brand header
     y += 30; font('700 40px ' + SERIF); text('HANGA', W / 2 - 8, y, 'center');
     if (draw) { ctx.fillStyle = GOLD; ctx.textAlign = 'left'; ctx.fillText('.', W / 2 - 8 + ctx.measureText('HANGA').width / 2, y); }
-    y += 24; font('400 14px ' + SANS); text('Custom wall frames · Ado Ekiti, Ekiti State', W / 2, y, 'center', MUTED);
-    y += 18; font('400 13px ' + SANS); var wa = H.whatsappNumber ? ' · +' + String(H.whatsappNumber).replace(/^(\d{3})(\d{3})(\d{3})(\d+)$/, '$1 $2 $3 $4') : '';
-    text('hello@hanga.ng' + wa, W / 2, y, 'center', MUTED);
+    y += 28; font('italic 400 17px ' + SERIF); text('Make your wall speak.', W / 2, y, 'center', MUTED);
     y += 26; rule(y, true);
 
     // Status badge
@@ -95,7 +93,7 @@
 
     // Customer
     font('700 12px ' + SANS); text('CUSTOMER', x0, y, 'left', MUTED); y += 26;
-    [['Name', order.name], ['Email', order.email], ['Phone', order.phone], ['Delivery address', order.address],
+    [['Name', order.name], ['Phone', order.phone], ['Delivery address', order.address],
      ['City / State', [order.city, order.state].filter(Boolean).join(', ')], ['Notes', order.notes]]
       .filter(function (r) { return r[1]; })
       .forEach(function (r) {

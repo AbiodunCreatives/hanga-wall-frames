@@ -25,7 +25,7 @@
     pending:  { text: 'Payment pending', note: '', cls: 'is-pending' },
     transfer: { text: 'Awaiting bank transfer', note: 'Use your order reference as the transfer description.', cls: 'is-pending' },
     paid:     { text: 'Paid', note: '', cls: 'is-paid' },
-    failed:   { text: 'Payment not completed', note: 'No money was taken. You can try again or order on WhatsApp.', cls: 'is-failed' }
+    failed:   { text: 'Payment not completed', note: 'No money was taken. You can try again below.', cls: 'is-failed' }
   };
 
   H.receiptRows = function (o) {
@@ -48,6 +48,16 @@
 
   // Everything the server needs to process a paid order, sent to Paystack as
   // metadata (there is no database). Server re-prices it before trusting it.
+  // Paystack requires an email, but we no longer ask customers for one.
+  // Build a valid-format, non-deliverable placeholder from the phone number
+  // (orders.hanga.ng has no mail server). It is only sent to Paystack as the
+  // payer "email" and never shown on receipts or stored in the order.
+  H.payEmail = function (o) {
+    var d = String((o && o.phone) || '').replace(/\D/g, '');
+    if (d.startsWith('234')) d = '0' + d.slice(3);
+    return 'customer-' + (d || 'guest') + '@orders.hanga.ng';
+  };
+
   H.paystackOrder = function (o, ref) {
     var R = H.receiptRows(o), pieces = H.orderPieces(o);
     return {
@@ -63,7 +73,7 @@
       }),
       subtotal: R.subtotal, discount: R.discount, total: R.total,
       delivery: 'To be confirmed after order',
-      customer: { name: o.name || '', email: o.email || '', phone: o.phone || '', address: o.address || '', city: o.city || '', state: o.state || '', notes: o.notes || '' }
+      customer: { name: o.name || '', email: '', phone: o.phone || '', address: o.address || '', city: o.city || '', state: o.state || '', notes: o.notes || '' }
     };
   };
 
@@ -78,7 +88,7 @@
     // Header
     var head = el('div', 'rc-head');
     var brand = el('div', 'rc-brand'); brand.append('HANGA', el('span', null, '.'));
-    head.append(brand, el('div', 'rc-addr', 'Ado Ekiti, Ekiti State'), el('div', 'rc-addr', H.email || 'hello@hanga.ng'));
+    head.append(brand, el('div', 'rc-addr rc-tagline', 'Make your wall speak.'));
     root.appendChild(head);
 
     // Reference
@@ -152,7 +162,7 @@
     var cust = el('div', 'rc-cust');
     cust.appendChild(el('div', 'rc-label', 'Customer'));
     var cdl = el('dl', 'rc-meta');
-    [['Name', o.name], ['Email', o.email], ['Phone', o.phone], ['Deliver to', [o.address, o.city, o.state].filter(Boolean).join(', ')], ['Notes', o.notes]]
+    [['Name', o.name], ['Phone', o.phone], ['Deliver to', [o.address, o.city, o.state].filter(Boolean).join(', ')], ['Notes', o.notes]]
       .forEach(function (p) { if (p[1]) { var d = el('div'); d.append(el('dt', null, p[0]), el('dd', null, p[1])); cdl.appendChild(d); } });
     cust.appendChild(cdl);
     root.appendChild(cust);
