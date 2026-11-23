@@ -84,6 +84,16 @@ function publicView(data, check) {
   };
 }
 
+// Nigerian phone -> wa.me link (owner taps it to message the customer).
+function waLink(phone, text) {
+  let d = String(phone || '').replace(/\D/g, '');
+  if (!d) return '';
+  if (d.startsWith('0')) d = '234' + d.slice(1);
+  else if (d.length === 10) d = '234' + d;
+  if (d.length < 11 || d.length > 15) return '';
+  return 'https://wa.me/' + d + (text ? '?text=' + encodeURIComponent(text) : '');
+}
+
 // Full owner receipt, HTML + plain text.
 function receiptEmail(data, check) {
   const o = check.order || {}, c = o.customer || {}, exp = check.expected;
@@ -100,6 +110,7 @@ function receiptEmail(data, check) {
   const when = data.paid_at ? new Date(data.paid_at).toLocaleString('en-NG', { timeZone: 'Africa/Lagos', dateStyle: 'medium', timeStyle: 'short' }) + ' (WAT)' : '';
   const custRows = [['Name', c.name], ['Email', c.email], ['Phone', c.phone], ['Delivery address', c.address], ['City / State', [c.city, c.state].filter(Boolean).join(', ')], ['Notes', c.notes]].filter(r => r[1]);
   const uploads = (o.items || []).some(i => i.isUpload);
+  const wa = waLink(c.phone, 'Hi ' + (c.name || '').split(' ')[0] + ', this is Hanga. Thank you for your order ' + ref + '! ');
 
   const text = [
     'NEW PAID ORDER — ' + ref, warn, '',
@@ -114,6 +125,7 @@ function receiptEmail(data, check) {
     'Delivery: to be confirmed with the customer',
     'TOTAL PAID: ' + naira(check.paid),
     '', 'CUSTOMER', ...custRows.map(r => r[0] + ': ' + r[1]),
+    wa ? 'WhatsApp the customer: ' + wa : '',
     uploads ? '\nThis order includes the customer\'s own file(s). Ask them to send the original file(s) on WhatsApp or email.' : '',
     '\nNext: confirm the delivery fee with the customer, then start framing.'
   ].filter(l => l !== '').join('\n');
@@ -144,6 +156,7 @@ ${o.discount ? `<tr><td>${esc(SET_LABELS[n])} set discount</td><td style="text-a
 </table>
 <h3 style="font-size:13px;letter-spacing:1px;color:#777;margin:20px 0 6px">CUSTOMER</h3>
 <table style="width:100%;font-size:13px">${custRows.map(r => `<tr><td style="color:#777;width:140px;vertical-align:top">${esc(r[0])}</td><td>${esc(r[1]).replace(/\n/g, '<br>')}</td></tr>`).join('')}</table>
+${wa ? `<p style="margin:14px 0"><a href="${esc(wa)}" style="display:inline-block;background:#25D366;color:#fff;text-decoration:none;font-weight:bold;padding:10px 18px;border-radius:999px;font-size:14px">Message ${esc(c.name || 'customer')} on WhatsApp</a></p>` : ''}
 ${uploads ? '<p style="font-size:13px;background:#fff6e0;padding:10px;border-radius:4px">This order includes the customer\'s own file(s). Ask them to send the original file(s) on WhatsApp or email.</p>' : ''}
 <p style="font-size:13px;color:#555;border-top:1px dashed #ccc;padding-top:12px">Next: confirm the delivery fee with the customer, then start framing.</p>
 </div></div></body></html>`;
@@ -164,4 +177,26 @@ async function sendResend({ to, subject, html, text, replyTo, idempotencyKey }) 
   return j;
 }
 
-module.exports = { PRICES, SET_DISCOUNTS, naira, expectedTotal, verifySignature, paystackVerify, checkPayment, publicView, receiptEmail, sendResend, readMetaOrder };
+// Email the owner about a paid order. Called from BOTH the webhook and
+// /api/verify so it still fires if the webhook isn't set up; Resend's
+// Idempotency-Key ("owner-<paystack ref>") makes the second call a no-op.
+async function notifyPaid(data, check, source) {
+  if (!data || data.status !== 'success') return { skipped: 'not paid' };
+  const mail = receiptEmail(data, check);
+  const owner = process.env.OWNER_EMAIL || 'hello@hanga.ng';
+  const cust = ((check.order || {}).customer || {}).email;
+  const out = {};
+  try {
+    out.owner = await sendResend({ to: owner, subject: mail.subject, html: mail.html, text: mail.text, replyTo: cust, idempotencyKey: 'owner-' + data.reference });
+  } catch (e) { out.ownerError = e.message; }
+  // Customer copy needs a verified sending domain (onboarding@resend.dev only
+  // delivers to the Resend account owner), so it is opt-in.
+  if (cust && process.env.SEND_CUSTOMER_COPY === 'true') {
+    try { out.customer = await sendResend({ to: cust, subject: 'Your Hanga receipt ' + mail.ref, html: mail.html, text: mail.text, replyTo: owner, idempotencyKey: 'cust-' + data.reference }); }
+    catch (e) { out.customerError = e.message; }
+  }
+  console.log('[hanga] paid order', mail.ref, data.reference, 'via', source, check.ok ? 'OK' : check.problems.join('; '), 'email:', JSON.stringify(out));
+  return out;
+}
+
+module.exports = { notifyPaid, waLink, PRICES, SET_DISCOUNTS, naira, expectedTotal, verifySignature, paystackVerify, checkPayment, publicView, receiptEmail, sendResend, readMetaOrder };

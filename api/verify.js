@@ -1,5 +1,6 @@
 // GET /api/verify?reference=... — called by the receipt page after Paystack
-// returns. Read-only: it never sends email (the webhook does that, once).
+// returns. On a fresh successful payment it also emails the owner (same
+// idempotent send as the webhook, so the owner gets one email either way).
 'use strict';
 const L = require('./_lib');
 
@@ -19,7 +20,15 @@ module.exports = async function handler(req, res) {
   try {
     const data = await L.paystackVerify(reference, secret);
     const check = L.checkPayment(data);
-    return send(res, 200, Object.assign({ ok: true }, L.publicView(data, check)));
+    let notified = false;
+    // Only for recent payments: stops an old reference re-triggering email
+    // after Resend's 24h idempotency window.
+    const paidAt = Date.parse(data.paid_at || data.paidAt || '');
+    if (data.status === 'success' && (!paidAt || Date.now() - paidAt < 20 * 3600 * 1000)) {
+      const r = await L.notifyPaid(data, check, 'verify').catch(() => ({}));
+      notified = !!(r && r.owner && !r.owner.skipped);
+    }
+    return send(res, 200, Object.assign({ ok: true, notified }, L.publicView(data, check)));
   } catch (e) {
     return send(res, 502, { ok: false, error: 'verify_failed', message: String(e.message || e).slice(0, 200) });
   }

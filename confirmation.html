@@ -37,12 +37,33 @@
 
 <!-- ─── Receipt (rendered by js/receipt.js) ─────────────────── -->
 <main class="rc-page" id="main" tabindex="-1">
+  <!-- Shown only once Paystack confirms payment -->
+  <section class="ok-screen no-print" id="successScreen" hidden aria-labelledby="okTitle">
+    <svg class="ok-check" viewBox="0 0 96 96" aria-hidden="true">
+      <circle class="ok-ring" cx="48" cy="48" r="44"/>
+      <path class="ok-tick" d="M28 49 l13 13 l27 -28"/>
+    </svg>
+    <h1 id="okTitle" tabindex="-1">Payment successful</h1>
+    <p class="ok-sub">Thank you! Hanga has your order and will contact you about delivery.</p>
+    <div class="ok-ref">
+      <span class="ok-label">Order reference</span>
+      <strong id="okRef">—</strong>
+    </div>
+    <dl class="ok-summary" id="okSummary"></dl>
+    <p class="ok-note" id="okNote" role="status"></p>
+    <div class="ok-downloads">
+      <button type="button" class="btn btn-primary ok-dl" id="dlPdf">Download receipt (PDF)</button>
+      <button type="button" class="btn ok-dl ok-dl-alt" id="dlPng">Save as image (PNG)</button>
+    </div>
+    <button type="button" class="rc-link ok-toggle" id="toggleReceipt" aria-expanded="false" aria-controls="receiptWrap">View full receipt</button>
+  </section>
+
   <div class="rc-intro no-print">
     <h1 id="confirmTitle">Your receipt</h1>
     <p id="confirmMsg">Thank you for ordering with Hanga.</p>
   </div>
 
-  <div class="rc-sheet">
+  <div class="rc-sheet" id="receiptWrap">
     <article class="receipt" id="receipt" aria-label="Order receipt"></article>
   </div>
 
@@ -103,6 +124,7 @@
 
 <script src="js/site.js"></script>
 <script src="js/receipt.js"></script>
+<script src="js/receipt-export.js"></script>
 <script src="js/receipt-page.js"></script>
 
 </body>

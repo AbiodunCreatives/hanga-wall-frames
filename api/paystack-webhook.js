@@ -1,5 +1,5 @@
 // POST /api/paystack-webhook — set this URL in Paystack → Settings → API Keys & Webhooks.
-// The ONLY place the owner email is sent from, so each paid order produces one email.
+// Sends the owner email (shared with /api/verify; idempotent per Paystack reference).
 'use strict';
 const L = require('./_lib');
 
@@ -29,15 +29,7 @@ module.exports = async function handler(req, res) {
       // Never trust the webhook body alone: re-check with Paystack.
       const data = await L.paystackVerify(event.data.reference, secret);
       const check = L.checkPayment(data);
-      const mail = L.receiptEmail(data, check);
-      const owner = process.env.OWNER_EMAIL || 'hello@hanga.ng';
-      const cust = (check.order.customer || {}).email;
-      const r = await L.sendResend({ to: owner, subject: mail.subject, html: mail.html, text: mail.text, replyTo: cust, idempotencyKey: 'owner-' + data.reference });
-      console.log('[hanga] paid order', mail.ref, data.reference, check.ok ? 'OK' : check.problems.join('; '), 'email:', JSON.stringify(r));
-      if (cust && process.env.SEND_CUSTOMER_COPY === 'true' && data.status === 'success') {
-        await L.sendResend({ to: cust, subject: 'Your Hanga receipt ' + mail.ref, html: mail.html, text: mail.text, replyTo: owner, idempotencyKey: 'cust-' + data.reference })
-          .catch(e => console.error('[hanga] customer copy failed', e.message));
-      }
+      await L.notifyPaid(data, check, 'webhook');
     } catch (e) {
       // Still 200: Paystack would otherwise retry for days. Paystack's own
       // merchant email + dashboard still show the payment.

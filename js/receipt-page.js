@@ -30,8 +30,53 @@
     var wa = $('sendWhatsApp'), waPrimary = hidePay && !paid && !!H.whatsappNumber;
     if (waPrimary) { $('primarySlot').appendChild(wa); wa.className = 'btn rc-btn rc-btn-wa'; wa.textContent = 'Send order on WhatsApp'; }
     else { $('secondarySlot').appendChild(wa); wa.className = 'btn rc-btn rc-btn-sec'; wa.textContent = paid ? 'Message us on WhatsApp' : 'Send on WhatsApp'; }
+    showSuccess(paid);
     if (method === 'transfer' && H.bank && H.bank.confirmed && !paid) { $('transferNote').classList.remove('hidden'); $('transferAmount').textContent = H.formatNaira(order.price); }
   }
+
+  // Paid: swap the receipt view for the success screen (receipt stays one tap away).
+  var successShown = false, paidAt = null;
+  function showSuccess(paid) {
+    var ok = $('successScreen');
+    ok.hidden = !paid;
+    document.body.classList.toggle('is-paid-view', paid);
+    if (!paid) return;
+    $('okRef').textContent = ref;
+    var R = order.price ? H.receiptRows(order) : null, dl = $('okSummary');
+    dl.textContent = '';
+    var rows = [];
+    if (R) {
+      rows.push(['Items', R.rows.map(function (r) { return r.name; }).join(', ')]);
+      rows.push(['Frame', [order.size ? order.size + '"' : '', H.styleText(order.style), H.setLabel(R.n)].filter(Boolean).join(' · ')]);
+      rows.push(['Amount paid', H.formatNaira(R.total)]);
+    }
+    if (paystackRef) rows.push(['Paystack ref', paystackRef]);
+    rows.push(['Delivery', 'Fee confirmed after your order']);
+    rows.forEach(function (r) { var dt = document.createElement('dt'), dd = document.createElement('dd'); dt.textContent = r[0]; dd.textContent = r[1]; dl.append(dt, dd); });
+    var canDl = !!order.price;
+    $('dlPdf').disabled = !canDl; $('dlPng').disabled = !canDl;
+    if (!successShown) {
+      successShown = true;
+      $('receiptWrap').hidden = true;
+      window.scrollTo(0, 0);
+      try { $('okTitle').focus({ preventScroll: true }); } catch (e) {}
+    }
+  }
+  function receiptOpts() { return { ref: ref, status: status, paystackRef: paystackRef, date: order.placedAt, paidAt: paidAt }; }
+  function doDownload(kind, btn) {
+    var label = btn.textContent; btn.disabled = true; btn.textContent = 'Preparing…';
+    H.downloadReceipt(kind, order, receiptOpts())
+      .catch(function () { $('okNote').textContent = 'Could not create the file. Please try again, or take a screenshot of your receipt.'; })
+      .then(function () { btn.disabled = false; btn.textContent = label; });
+  }
+  $('dlPdf').addEventListener('click', function () { doDownload('pdf', this); });
+  $('dlPng').addEventListener('click', function () { doDownload('png', this); });
+  $('toggleReceipt').addEventListener('click', function () {
+    var w = $('receiptWrap'), open = w.hidden;
+    w.hidden = !open; this.setAttribute('aria-expanded', String(open));
+    this.textContent = open ? 'Hide full receipt' : 'View full receipt';
+    if (open) w.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
 
   function summaryText() {
     var R = order.price ? H.receiptRows(order) : null;
@@ -70,14 +115,16 @@
     return fetch('/api/verify?reference=' + encodeURIComponent(reference)).then(function (r) { return r.json(); }).then(function (v) {
       if (v.ok && v.paid) {
         if (!order.price && v.order) order = Object.assign({}, v.order, { price: v.order.total });
+        paidAt = v.paidAt || null;
         markPaid(v.reference);
-        alertBox(v.amountOk ? 'Payment confirmed by Paystack ✓' : 'Payment received. We will double-check the amount and contact you.', 'is-ok');
+        $('payAlert').hidden = true;
+        $('okNote').textContent = v.amountOk ? 'Confirmed by Paystack ✓' + (v.notified ? ' Your order has been sent to Hanga.' : '') : 'Payment received. We will double-check the amount and contact you.';
       } else if (v.ok && !v.paid) {
         if (status !== 'paid') alertBox('Payment was not completed (' + (v.status || 'unknown') + '). No money was taken.', 'is-warn', true);
       } else if (status === 'paid') {
-        alertBox('Payment received — awaiting confirmation. Keep your reference handy.', 'is-ok');
+        $('okNote').textContent = 'Payment received — awaiting confirmation. Keep your reference handy.';
       }
-    }).catch(function () { if (status === 'paid') alertBox('Payment received — awaiting confirmation. Keep your reference handy.', 'is-ok'); });
+    }).catch(function () { if (status === 'paid') $('okNote').textContent = 'Payment received — awaiting confirmation. Keep your reference handy.'; });
   }
   function pay() {
     if (!pk || !order.price || !order.email) return;
@@ -99,7 +146,7 @@
             { display_name: 'Items', variable_name: 'items', value: meta.items.map(function (i) { return i.name; }).join(', ') + ' (' + meta.size + '", ' + meta.style + ', ' + meta.set + ')' }
           ]
         },
-        onSuccess: function (tx) { $('payBtn').disabled = false; markPaid(tx.reference); alertBox('Payment successful. Confirming with Paystack…', 'is-ok'); verify(tx.reference); },
+        onSuccess: function (tx) { $('payBtn').disabled = false; markPaid(tx.reference); $('okNote').textContent = 'Confirming with Paystack…'; verify(tx.reference); },
         onCancel: function () { $('payBtn').disabled = false; alertBox('Payment not completed. Your order is still saved.', 'is-warn', true); },
         onError: function (err) { $('payBtn').disabled = false; alertBox('Paystack could not start (' + ((err && err.message) || 'error') + ').', 'is-warn', true); }
       });

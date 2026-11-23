@@ -54,11 +54,16 @@ Save.
    list, and emails the full receipt to `OWNER_EMAIL`:
    subject **"New paid order HNG-… — ₦total"**. If the amount doesn't match the
    price list the subject starts with **⚠ CHECK AMOUNT**.
-   The email is sent **only** from the webhook, with a Resend idempotency key per
-   Paystack reference, so you get one email per order even if the customer
-   closes the page.
-4. The customer's receipt calls `/api/verify` and flips to **PAID** with the
-   Paystack reference. If they close the popup, the receipt stays
+   The email includes a **WhatsApp button** to message the customer.
+   It is sent from **both** the webhook and `/api/verify` (whichever runs first),
+   with the same Resend idempotency key per Paystack reference (`owner-<ref>`),
+   so you get exactly one email per order — even if the webhook URL isn't set
+   yet, or the customer closes the page before verify runs.
+   (WhatsApp auto-send would need the WhatsApp Business API, so it isn't used.)
+4. The customer's page calls `/api/verify` and switches to a **Payment
+   successful** screen (animated checkmark, order reference, summary) with
+   **Download receipt (PDF)** and **Save as image (PNG)**, drawn in the browser
+   from the real order data. If they close the popup, the receipt stays
    "Payment pending" with **Retry payment** and **Order via WhatsApp instead**.
 5. Paystack also sends its own "successful transaction" email to the merchant
    account, and every payment is in the Paystack dashboard.
