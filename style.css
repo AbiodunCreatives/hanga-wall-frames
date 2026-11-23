@@ -220,6 +220,7 @@ header {
   position: absolute;
   inset: 0;
   background: url('images/hero-bg.jpg') center 35%/cover no-repeat;
+  background-image: image-set(url("images/hero-bg.webp") type("image/webp"), url("images/hero-bg.jpg") type("image/jpeg"));
   opacity: 0.55;
   z-index: 0;
 }
