@@ -141,13 +141,10 @@
   <div class="gallery-filters" role="group" aria-label="Filter gallery by category">
     <button type="button" class="filter-chip active" data-filter="featured" onclick="filterGallery('featured', this)">Featured</button>
     <button type="button" class="filter-chip" data-filter="all" onclick="filterGallery('all', this)">All</button>
-    <button type="button" class="filter-chip" data-filter="motivational" onclick="filterGallery('motivational', this)">Motivational</button>
     <button type="button" class="filter-chip" data-filter="classic-art" onclick="filterGallery('classic-art', this)">Classic Art</button>
-    <button type="button" class="filter-chip" data-filter="nature" onclick="filterGallery('nature', this)">Nature &amp; Botanicals</button>
-    <button type="button" class="filter-chip" data-filter="landscapes" onclick="filterGallery('landscapes', this)">Landscape</button>
-    <button type="button" class="filter-chip" data-filter="abstract" onclick="filterGallery('abstract', this)">Abstract</button>
     <button type="button" class="filter-chip" data-filter="portraits" onclick="filterGallery('portraits', this)">Portrait</button>
-    <button type="button" class="filter-chip" data-filter="urban" onclick="filterGallery('urban', this)">Urban</button>
+    <button type="button" class="filter-chip" data-filter="landscapes" onclick="filterGallery('landscapes', this)">Landscape</button>
+    <button type="button" class="filter-chip filter-chip-makers" data-filter="makers" onclick="filterGallery('makers', this)">Featured Makers</button>
   </div>
 
   <div class="gallery-grid" id="galleryGrid">
@@ -155,7 +152,7 @@
       <img class="gallery-card-img" src="images/thumbs/build-in-silence.jpg" alt="Build in Silence – motivational mountain quote print" loading="lazy" decoding="async">
       <div class="gallery-card-body"><h3>Build in Silence</h3><p>Motivational · Monochrome</p></div>
     </a>
-    <a class="gallery-card" href="customize.html?image=one-percent" data-category="motivational">
+    <a class="gallery-card" href="customize.html?image=one-percent" data-category="featured motivational">
       <img class="gallery-card-img" src="images/thumbs/one-percent.jpg" alt="1% Better Every Day – motivational typography print" loading="lazy" decoding="async">
       <div class="gallery-card-body"><h3>1% Better Every Day</h3><p>Motivational · Typography</p></div>
     </a>
@@ -167,29 +164,13 @@
       <img class="gallery-card-img" src="images/thumbs/classic-roadster.jpg" alt="Classic Roadster – black bicycle minimal photography" loading="lazy" decoding="async">
       <div class="gallery-card-body"><h3>Classic Roadster</h3><p>Urban · Minimal B&amp;W</p></div>
     </a>
-    <a class="gallery-card" href="customize.html?image=dont-overthink" data-category="featured motivational">
-      <img class="gallery-card-img" src="images/thumbs/dont-overthink.jpg" alt="Don't Overthink It – bold graphic poster" loading="lazy" decoding="async">
-      <div class="gallery-card-body"><h3>Don't Overthink It</h3><p>Motivational · Graphic art</p></div>
-    </a>
-    <a class="gallery-card" href="customize.html?image=if-you-want" data-category="motivational">
-      <img class="gallery-card-img" src="images/thumbs/if-you-want.jpg" alt="If You Want You Can – boho motivational art" loading="lazy" decoding="async">
-      <div class="gallery-card-body"><h3>If You Want, You Can</h3><p>Motivational · Boho</p></div>
-    </a>
-    <a class="gallery-card" href="customize.html?image=van-gogh-self-portrait" data-category="portraits classic-art">
+    <a class="gallery-card" href="customize.html?image=van-gogh-self-portrait" data-category="featured portraits classic-art">
       <img class="gallery-card-img" src="images/thumbs/van-gogh-self-portrait.jpg" alt="Self-Portrait – Vincent van Gogh" loading="lazy" decoding="async">
       <div class="gallery-card-body"><h3>Self-Portrait</h3><p>Vincent van Gogh · Portraits</p></div>
-    </a>
-    <a class="gallery-card" href="customize.html?image=monet-water-lilies" data-category="featured nature classic-art">
-      <img class="gallery-card-img" src="images/thumbs/monet-water-lilies.jpg" alt="Water Lilies – Claude Monet" loading="lazy" decoding="async">
-      <div class="gallery-card-body"><h3>Water Lilies</h3><p>Claude Monet · Nature &amp; Botanical</p></div>
     </a>
     <a class="gallery-card" href="customize.html?image=van-gogh-straw-hat" data-category="portraits classic-art">
       <img class="gallery-card-img" src="images/thumbs/van-gogh-straw-hat.jpg" alt="Self-Portrait with a Straw Hat – Vincent van Gogh" loading="lazy" decoding="async">
       <div class="gallery-card-body"><h3>Self-Portrait with a Straw Hat</h3><p>Vincent van Gogh · Portraits</p></div>
-    </a>
-    <a class="gallery-card" href="customize.html?image=van-gogh-roses" data-category="nature classic-art">
-      <img class="gallery-card-img" src="images/thumbs/van-gogh-roses.jpg" alt="Roses – Vincent van Gogh" loading="lazy" decoding="async">
-      <div class="gallery-card-body"><h3>Roses</h3><p>Vincent van Gogh · Nature &amp; Botanical</p></div>
     </a>
     <a class="gallery-card" href="customize.html?image=renoir-two-sisters" data-category="portraits classic-art">
       <img class="gallery-card-img" src="images/thumbs/renoir-two-sisters.jpg" alt="Two Sisters – Pierre-Auguste Renoir" loading="lazy" decoding="async">
@@ -203,27 +184,15 @@
       <img class="gallery-card-img" src="images/thumbs/van-gogh-bedroom.jpg" alt="The Bedroom – Vincent van Gogh" loading="lazy" decoding="async">
       <div class="gallery-card-body"><h3>The Bedroom</h3><p>Vincent van Gogh · Classic Art</p></div>
     </a>
-    <a class="gallery-card" href="customize.html?image=van-gogh-irises" data-category="featured nature classic-art">
-      <img class="gallery-card-img" src="images/thumbs/van-gogh-irises.jpg" alt="Irises – Vincent van Gogh" loading="lazy" decoding="async">
-      <div class="gallery-card-body"><h3>Irises</h3><p>Vincent van Gogh · Nature &amp; Botanical</p></div>
-    </a>
     <a class="gallery-card" href="customize.html?image=van-gogh-cypresses" data-category="landscapes nature classic-art">
       <img class="gallery-card-img" src="images/thumbs/van-gogh-cypresses.jpg" alt="Cypresses – Vincent van Gogh" loading="lazy" decoding="async">
       <div class="gallery-card-body"><h3>Cypresses</h3><p>Vincent van Gogh · Landscapes</p></div>
-    </a>
-    <a class="gallery-card" href="customize.html?image=redoute-empress-rose" data-category="nature">
-      <img class="gallery-card-img" src="images/thumbs/redoute-empress-rose.jpg" alt="Empress Josephine Rose – Pierre-Joseph Redouté" loading="lazy" decoding="async">
-      <div class="gallery-card-body"><h3>Empress Josephine Rose</h3><p>Pierre-Joseph Redouté · Nature &amp; Botanical</p></div>
-    </a>
-    <a class="gallery-card" href="customize.html?image=van-gogh-sunflowers" data-category="featured nature classic-art">
-      <img class="gallery-card-img" src="images/thumbs/van-gogh-sunflowers.jpg" alt="Sunflowers – Vincent van Gogh" loading="lazy" decoding="async">
-      <div class="gallery-card-body"><h3>Sunflowers</h3><p>Vincent van Gogh · Nature &amp; Botanical</p></div>
     </a>
     <a class="gallery-card" href="customize.html?image=van-gogh-wheat-field" data-category="featured landscapes classic-art">
       <img class="gallery-card-img" src="images/thumbs/van-gogh-wheat-field.jpg" alt="Wheat Field with Cypresses – Vincent van Gogh" loading="lazy" decoding="async">
       <div class="gallery-card-body"><h3>Wheat Field with Cypresses</h3><p>Vincent van Gogh · Landscapes</p></div>
     </a>
-    <a class="gallery-card" href="customize.html?image=mucha-zodiac" data-category="classic-art portraits">
+    <a class="gallery-card" href="customize.html?image=mucha-zodiac" data-category="featured classic-art portraits">
       <img class="gallery-card-img" src="images/thumbs/mucha-zodiac.jpg" alt="The Zodiac – Alphonse Mucha" loading="lazy" decoding="async">
       <div class="gallery-card-body"><h3>The Zodiac</h3><p>Alphonse Mucha · Classic Art</p></div>
     </a>
@@ -231,17 +200,9 @@
       <img class="gallery-card-img" src="images/thumbs/gauguin-tehamana.jpg" alt="Tehamana – Paul Gauguin" loading="lazy" decoding="async">
       <div class="gallery-card-body"><h3>Tehamana</h3><p>Paul Gauguin · Portraits</p></div>
     </a>
-    <a class="gallery-card" href="customize.html?image=caillebotte-paris-street" data-category="urban classic-art landscapes">
+    <a class="gallery-card" href="customize.html?image=caillebotte-paris-street" data-category="featured urban classic-art landscapes">
       <img class="gallery-card-img" src="images/thumbs/caillebotte-paris-street.jpg" alt="Paris Street, Rainy Day – Gustave Caillebotte" loading="lazy" decoding="async">
       <div class="gallery-card-body"><h3>Paris Street, Rainy Day</h3><p>Gustave Caillebotte · Urban</p></div>
-    </a>
-    <a class="gallery-card" href="customize.html?image=van-gogh-orchard" data-category="nature landscapes classic-art">
-      <img class="gallery-card-img" src="images/thumbs/van-gogh-orchard.jpg" alt="The Flowering Orchard – Vincent van Gogh" loading="lazy" decoding="async">
-      <div class="gallery-card-body"><h3>The Flowering Orchard</h3><p>Vincent van Gogh · Nature &amp; Botanical</p></div>
-    </a>
-    <a class="gallery-card" href="customize.html?image=monet-lily-pond" data-category="nature landscapes classic-art">
-      <img class="gallery-card-img" src="images/thumbs/monet-lily-pond.jpg" alt="Water Lily Pond – Claude Monet" loading="lazy" decoding="async">
-      <div class="gallery-card-body"><h3>Water Lily Pond</h3><p>Claude Monet · Nature &amp; Botanical</p></div>
     </a>
     <a class="gallery-card" href="customize.html?image=rembrandt-gold-chain" data-category="portraits classic-art">
       <img class="gallery-card-img" src="images/thumbs/rembrandt-gold-chain.jpg" alt="Old Man with a Gold Chain – Rembrandt" loading="lazy" decoding="async">
@@ -259,17 +220,9 @@
       <img class="gallery-card-img" src="images/thumbs/monet-cliff-walk.jpg" alt="Cliff Walk at Pourville – Claude Monet" loading="lazy" decoding="async">
       <div class="gallery-card-body"><h3>Cliff Walk at Pourville</h3><p>Claude Monet · Landscapes</p></div>
     </a>
-    <a class="gallery-card" href="customize.html?image=cezanne-tulips" data-category="nature classic-art">
-      <img class="gallery-card-img" src="images/thumbs/cezanne-tulips.jpg" alt="The Vase of Tulips – Paul Cézanne" loading="lazy" decoding="async">
-      <div class="gallery-card-body"><h3>The Vase of Tulips</h3><p>Paul Cézanne · Nature &amp; Botanical</p></div>
-    </a>
     <a class="gallery-card" href="customize.html?image=monet-saint-lazare" data-category="urban classic-art">
       <img class="gallery-card-img" src="images/thumbs/monet-saint-lazare.jpg" alt="Gare Saint-Lazare – Claude Monet" loading="lazy" decoding="async">
       <div class="gallery-card-body"><h3>Gare Saint-Lazare</h3><p>Claude Monet · Urban</p></div>
-    </a>
-    <a class="gallery-card" href="customize.html?image=redoute-crown-imperial" data-category="nature">
-      <img class="gallery-card-img" src="images/thumbs/redoute-crown-imperial.jpg" alt="Crown Imperial – Pierre-Joseph Redouté" loading="lazy" decoding="async">
-      <div class="gallery-card-body"><h3>Crown Imperial</h3><p>Pierre-Joseph Redouté · Nature &amp; Botanical</p></div>
     </a>
     <a class="gallery-card" href="customize.html?image=seurat-grande-jatte" data-category="classic-art landscapes">
       <img class="gallery-card-img" src="images/thumbs/seurat-grande-jatte.jpg" alt="A Sunday on La Grande Jatte – Georges Seurat" loading="lazy" decoding="async">
@@ -279,10 +232,6 @@
       <img class="gallery-card-img" src="images/thumbs/kandinsky-improvisation-30.jpg" alt="Improvisation No. 30 – Vasily Kandinsky" loading="lazy" decoding="async">
       <div class="gallery-card-body"><h3>Improvisation No. 30</h3><p>Vasily Kandinsky · Abstract</p></div>
     </a>
-    <a class="gallery-card" href="customize.html?image=redoute-gloriosa" data-category="nature">
-      <img class="gallery-card-img" src="images/thumbs/redoute-gloriosa.jpg" alt="Gloriosa Superba – Pierre-Joseph Redouté" loading="lazy" decoding="async">
-      <div class="gallery-card-body"><h3>Gloriosa Superba</h3><p>Pierre-Joseph Redouté · Nature &amp; Botanical</p></div>
-    </a>
     <a class="gallery-card" href="customize.html?image=fayum-woman-in-red" data-category="portraits">
       <img class="gallery-card-img" src="images/thumbs/fayum-woman-in-red.jpg" alt="Woman in Red – Fayum, Roman Egypt" loading="lazy" decoding="async">
       <div class="gallery-card-body"><h3>Woman in Red</h3><p>Fayum, Roman Egypt · Portraits</p></div>
@@ -291,6 +240,16 @@
       <img class="gallery-card-img" src="images/thumbs/mondrian-lozenge.jpg" alt="Lozenge Composition – Piet Mondrian" loading="lazy" decoding="async">
       <div class="gallery-card-body"><h3>Lozenge Composition</h3><p>Piet Mondrian · Abstract</p></div>
     </a>
+  </div>
+  <div class="makers-empty" data-makers-empty hidden>
+    <span class="makers-badge">Featured Makers</span>
+    <h3>Coming soon: work from Nigerian frame makers we love</h3>
+    <p>We're inviting a few talented framers and artists to show their pieces here. You'll be able to order their work with the same easy checkout.</p>
+    <div class="makers-cta">
+      <span class="makers-ask">Are you a frame maker?</span>
+      <a class="btn btn-primary" data-makers-wa href="#" target="_blank" rel="noopener">Get featured on WhatsApp</a>
+      <a class="makers-mail" data-makers-mail href="mailto:hello@hanga.ng?subject=Featured%20Makers">or email hello@hanga.ng</a>
+    </div>
   </div>
   <div class="gallery-more-wrap"><button type="button" class="btn btn-outline-dark gallery-more" id="galleryMore" hidden>Show all</button></div>
   <p class="collection-credit">Classic works from The Met and the Art Institute of Chicago. Public domain.</p>
@@ -505,6 +464,7 @@ function filterGallery(category, btn, expand) {
   const lim = galleryExpanded ? Infinity : galleryLimit();
   matches.forEach((card, i) => { card.hidden = i >= lim; });
   const more = document.getElementById('galleryMore');
+  root.querySelector('[data-makers-empty]').hidden = category !== 'makers';
   more.hidden = matches.length <= lim;
   more.textContent = 'Show all ' + matches.length + ' prints';
 }

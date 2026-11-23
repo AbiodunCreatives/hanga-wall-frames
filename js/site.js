@@ -99,6 +99,15 @@ window.HANGA = {
     return 'mailto:' + H.email + '?subject=' + encodeURIComponent(subject || '') + '&body=' + encodeURIComponent(body || '');
   };
 
+  // ── Featured Makers "get featured" CTA ──────────────────────
+  document.querySelectorAll('[data-makers-wa]').forEach(function (a) {
+    var link = H.whatsappLink("Hi Hanga! I'm a frame maker / artist and I'd love to be listed in Featured Makers. Here's a bit about my work: ");
+    if (link) a.href = link; else a.hidden = true;
+  });
+  document.querySelectorAll('[data-makers-mail]').forEach(function (a) {
+    if (H.email) { a.href = H.mailtoLink('Featured Makers — I would like to be featured', "Hi Hanga,\n\nI'm a frame maker / artist and I'd love to be listed in Featured Makers.\n\nName:\nCity:\nInstagram / portfolio:\n"); a.textContent = 'or email ' + H.email; }
+  });
+
   // ── Mobile menu ──────────────────────────────────────────────
   var toggle = document.getElementById('navToggle');
   var drawer = document.getElementById('navDrawer');
