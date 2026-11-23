@@ -11,11 +11,25 @@ const SET_LABELS = { 1: 'Single', 2: 'Pair', 3: 'Trio' };
 const naira = n => '₦' + Number(n || 0).toLocaleString('en-NG');
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 
+// ---- Input hygiene -------------------------------------------------------
+// One line of text: no control chars / CR / LF (stops header + subject injection).
+const line = (s, max) => String(s == null ? '' : s).replace(/[\u0000-\u001f\u007f-\u009f\u2028\u2029]+/g, ' ').replace(/\s+/g, ' ').trim().slice(0, max || 120);
+// Multi-line text (address / notes): keep \n, drop other control chars.
+const block = (s, max) => String(s == null ? '' : s).replace(/\r\n?/g, '\n').replace(/[\u0000-\u0009\u000b-\u001f\u007f-\u009f]+/g, ' ').replace(/\n{3,}/g, '\n\n').trim().slice(0, max || 500);
+const num = v => { const n = Number(v); return Number.isFinite(n) && n >= 0 && n < 1e7 ? n : null; };
+const REF_RE = /^HNG-[A-Z0-9]{4,12}-[A-Z0-9]{3,16}$/;          // our order references
+const STRONG_REF_RE = /^HNG-[A-Z0-9]{4,12}-[A-Z0-9]{10,16}$/;   // crypto-random refs (Nov 2026+)
+const PAYSTACK_REF_RE = /^HNG-[A-Z0-9]{4,12}-[A-Z0-9]{3,16}(-R\d{1,3})?$/;
+const EMAIL_RE = /^[^\s@<>",;]{1,64}@[A-Za-z0-9.-]{1,190}\.[A-Za-z]{2,24}$/;
+
 // Price the order from our own table — never trust a total sent by the browser.
 function expectedTotal(order) {
   const size = String((order && order.size) || '').replace(/["x]/g, m => (m === 'x' ? '×' : ''));
   const unit = PRICES[size];
-  const n = Math.min(3, Math.max(1, parseInt(order && order.pieces, 10) || ((order && order.items) || []).length || 1));
+  // The number of frames actually listed wins over a "pieces" claim, so a
+  // 3-frame order can't be priced as one.
+  const itemsN = ((order && order.items) || []).length;
+  const n = Math.min(3, Math.max(1, itemsN || parseInt(order && order.pieces, 10) || 1));
   if (!unit) return null;
   return { unit, n, subtotal: unit * n, discount: n > 1 ? (SET_DISCOUNTS[n] || 0) : 0, total: unit * n - (n > 1 ? (SET_DISCOUNTS[n] || 0) : 0) };
 }
@@ -36,13 +50,37 @@ async function paystackVerify(reference, secret) {
   return j.data;
 }
 
+// Metadata is browser-supplied: whitelist fields, coerce types, cap lengths.
 function readMetaOrder(data) {
   let meta = data && data.metadata;
   if (typeof meta === 'string') { try { meta = JSON.parse(meta); } catch (e) { meta = {}; } }
-  meta = meta || {};
-  let order = meta.order;
-  if (typeof order === 'string') { try { order = JSON.parse(order); } catch (e) { order = null; } }
-  return order || {};
+  meta = (meta && typeof meta === 'object') ? meta : {};
+  let o = meta.order;
+  if (typeof o === 'string') { try { o = JSON.parse(o); } catch (e) { o = null; } }
+  if (!o || typeof o !== 'object') return {};
+  const c = (o.customer && typeof o.customer === 'object') ? o.customer : {};
+  const items = Array.isArray(o.items) ? o.items : [];
+  const email = line(c.email, 254);
+  return {
+    ref: line(o.ref, 40),
+    placedAt: line(o.placedAt, 40) || null,
+    size: line(o.size, 12), style: line(o.style, 40),
+    pieces: parseInt(o.pieces, 10) || null,
+    set: line(o.set, 20), setName: o.setName ? line(o.setName, 60) : null,
+    unitPrice: num(o.unitPrice), subtotal: num(o.subtotal), discount: num(o.discount), total: num(o.total),
+    itemCount: items.length,
+    items: items.slice(0, 3).map(i => (i && typeof i === 'object' ? {
+      name: line(i.name || i.imageName, 80), imageId: line(i.imageId, 60) || null,
+      isUpload: !!i.isUpload, fileKind: i.fileKind === 'pdf' ? 'pdf' : (i.isUpload ? 'image' : null),
+      fileName: i.fileName ? line(i.fileName, 80) : null,
+      unit: num(i.unit), lineTotal: num(i.lineTotal)
+    } : { name: 'Frame' })),
+    customer: {
+      name: line(c.name, 80), email: EMAIL_RE.test(email) ? email : '',
+      phone: line(c.phone, 20), address: block(c.address, 300),
+      city: line(c.city, 60), state: line(c.state, 60), notes: block(c.notes, 500)
+    }
+  };
 }
 
 // Check a verified Paystack transaction against our own price table.
@@ -56,12 +94,21 @@ function checkPayment(data) {
   if (!exp) problems.push('Could not price this order (unknown size "' + (order.size || '') + '")');
   else if (paid !== exp.total) problems.push('Paid ' + naira(paid) + ' but price list says ' + naira(exp.total));
   if (order.total != null && Number(order.total) !== paid) problems.push('Paid ' + naira(paid) + ' but receipt total was ' + naira(order.total));
+  if (order.itemCount > 3) problems.push('Order lists ' + order.itemCount + ' frames (max 3)');
+  if (order.pieces && order.itemCount && order.pieces !== order.itemCount) problems.push('Pieces (' + order.pieces + ') does not match frames listed (' + order.itemCount + ')');
+  // The Paystack reference must belong to this order (ref, or ref-R<n> for a retry).
+  const pref = String(data.reference || '');
+  if (!order.ref || !(pref === order.ref || (pref.startsWith(order.ref + '-R') && /^-R\d{1,3}$/.test(pref.slice(order.ref.length))))) problems.push('Paystack reference does not match the order reference');
   return { order, expected: exp, paid, ok: problems.length === 0, problems };
 }
 
 // Sanitised view for the browser receipt (no Paystack internals).
 function publicView(data, check) {
   const o = check.order || {};
+  // Customer details only come back for crypto-random references; older,
+  // guessable references get the order summary without personal data.
+  const pii = STRONG_REF_RE.test(o.ref || '') && check.ok;
+  const cu = pii ? (o.customer || {}) : {};
   return {
     reference: data.reference,
     orderRef: o.ref || data.reference,
@@ -75,10 +122,9 @@ function publicView(data, check) {
     order: {
       ref: o.ref, size: o.size, style: o.style, pieces: o.pieces, setName: o.setName,
       unitPrice: o.unitPrice, discount: o.discount, subtotal: o.subtotal, total: o.total,
-      items: Array.isArray(o.items) ? o.items.map(i => ({ imageName: i.name || i.imageName, isUpload: !!i.isUpload, fileKind: i.fileKind || null })) : [],
-      name: o.customer && o.customer.name, email: o.customer && o.customer.email,
-      phone: o.customer && o.customer.phone, address: o.customer && o.customer.address,
-      city: o.customer && o.customer.city, state: o.customer && o.customer.state, notes: o.customer && o.customer.notes,
+      items: Array.isArray(o.items) ? o.items.map(i => ({ imageName: i.name, isUpload: !!i.isUpload, fileKind: i.fileKind || null })) : [],
+      name: cu.name, phone: cu.phone, address: cu.address,
+      city: cu.city, state: cu.state, notes: cu.notes,
       placedAt: o.placedAt
     }
   };
@@ -97,15 +143,15 @@ function waLink(phone, text) {
 // Full owner receipt, HTML + plain text.
 function receiptEmail(data, check) {
   const o = check.order || {}, c = o.customer || {}, exp = check.expected;
-  const n = Number(o.pieces) || (o.items || []).length || 1;
+  const n = (o.items || []).length || Number(o.pieces) || 1;
   const items = (o.items || []).map((it, i) => ({
     name: (it.name || it.imageName || 'Frame') + (it.isUpload ? (it.fileKind === 'pdf' ? ' (customer PDF' + (it.fileName ? ': ' + it.fileName : '') + ')' : ' (customer photo' + (it.fileName ? ': ' + it.fileName : '') + ')') : ''),
     piece: n > 1 ? 'Frame ' + (i + 1) + ' of ' + n : '',
     size: o.size, style: o.style, set: (SET_LABELS[n] || 'Single') + (o.setName && n > 1 ? ' · ' + o.setName : ''),
     qty: 1, unit: it.unit || o.unitPrice, total: it.lineTotal || it.unit || o.unitPrice
   }));
-  const ref = o.ref || data.reference;
-  const subject = (check.ok ? '' : '⚠ CHECK AMOUNT — ') + 'New paid order ' + ref + ' — ' + naira(check.paid);
+  const ref = line(o.ref || data.reference, 40);
+  const subject = line((check.ok ? '' : '⚠ CHECK AMOUNT — ') + 'New paid order ' + ref + ' — ' + naira(check.paid), 150);
   const warn = check.ok ? '' : 'CHECK BEFORE SHIPPING: ' + check.problems.join('; ');
   const when = data.paid_at ? new Date(data.paid_at).toLocaleString('en-NG', { timeZone: 'Africa/Lagos', dateStyle: 'medium', timeStyle: 'short' }) + ' (WAT)' : '';
   const custRows = [['Name', c.name], ['Email', c.email], ['Phone', c.phone], ['Delivery address', c.address], ['City / State', [c.city, c.state].filter(Boolean).join(', ')], ['Notes', c.notes]].filter(r => r[1]);
@@ -136,7 +182,7 @@ function receiptEmail(data, check) {
 <div style="background:#fff;border:1px solid #ddd;border-radius:6px;padding:24px">
 <div style="text-align:center;border-bottom:1px dashed #ccc;padding-bottom:14px">
 <div style="font:700 26px Georgia,serif;letter-spacing:2px">HANGA<span style="color:#c9a96e">.</span></div>
-<div style="font-size:12px;color:#777">Ado Ekiti, Ekiti State</div></div>
+<div style="font-size:12px;color:#777">Make your wall speak.</div></div>
 ${warn ? `<p style="background:#fdecea;color:#8a1f11;padding:10px 12px;border-radius:4px;font-weight:bold">${esc(warn)}</p>` : `<p style="background:#e8f5e9;color:#1b5e20;padding:10px 12px;border-radius:4px;font-weight:bold">PAID — verified with Paystack</p>`}
 <table style="width:100%;font-size:13px;margin:10px 0">
 <tr><td style="color:#777">Order reference</td><td style="text-align:right;font:700 18px monospace">${esc(ref)}</td></tr>
@@ -170,10 +216,10 @@ async function sendResend({ to, subject, html, text, replyTo, idempotencyKey }) 
   if (idempotencyKey) headers['Idempotency-Key'] = idempotencyKey; // Resend drops duplicates for 24h
   const r = await fetch('https://api.resend.com/emails', {
     method: 'POST', headers,
-    body: JSON.stringify({ from: process.env.RESEND_FROM || 'Hanga Orders <onboarding@resend.dev>', to: [to], subject, html, text, reply_to: replyTo || undefined })
+    body: JSON.stringify({ from: process.env.RESEND_FROM || 'Hanga Orders <onboarding@resend.dev>', to: [to], subject: line(subject, 150), html, text, reply_to: (replyTo && EMAIL_RE.test(replyTo)) ? replyTo : undefined })
   });
   const j = await r.json().catch(() => ({}));
-  if (!r.ok) throw new Error('Resend ' + r.status + ': ' + JSON.stringify(j));
+  if (!r.ok) throw new Error('Resend HTTP ' + r.status + (j && j.name ? ' ' + line(j.name, 60) : ''));
   return j;
 }
 
@@ -186,7 +232,7 @@ async function notifyPaid(data, check, source) {
   const owner = process.env.OWNER_EMAIL || 'hello@hanga.ng';
   // Placeholder payer emails (@orders.hanga.ng, used only to satisfy Paystack) are never mailed.
   let cust = ((check.order || {}).customer || {}).email;
-  if (cust && /@orders\.hanga\.ng$/i.test(cust)) cust = '';
+  if (cust && (/@orders\.hanga\.ng$/i.test(cust) || !EMAIL_RE.test(cust))) cust = '';
   const out = {};
   try {
     out.owner = await sendResend({ to: owner, subject: mail.subject, html: mail.html, text: mail.text, replyTo: cust, idempotencyKey: 'owner-' + data.reference });
@@ -197,8 +243,27 @@ async function notifyPaid(data, check, source) {
     try { out.customer = await sendResend({ to: cust, subject: 'Your Hanga receipt ' + mail.ref, html: mail.html, text: mail.text, replyTo: owner, idempotencyKey: 'cust-' + data.reference }); }
     catch (e) { out.customerError = e.message; }
   }
-  console.log('[hanga] paid order', mail.ref, data.reference, 'via', source, check.ok ? 'OK' : check.problems.join('; '), 'email:', JSON.stringify(out));
+  console.log('[hanga] paid order', mail.ref, line(data.reference, 60), 'via', source, check.ok ? 'OK' : check.problems.join('; '), 'owner:', out.owner ? 'sent' : (out.ownerError || 'skipped'), 'customer:', out.customer ? 'sent' : (out.customerError || 'off'));
   return out;
 }
 
-module.exports = { notifyPaid, waLink, PRICES, SET_DISCOUNTS, naira, expectedTotal, verifySignature, paystackVerify, checkPayment, publicView, receiptEmail, sendResend, readMetaOrder };
+// Best-effort per-IP rate limit (per warm instance; Vercel may run several).
+const _hits = new Map();
+function rateLimited(req, limit, windowMs) {
+  const ip = String(req.headers['x-real-ip'] || (req.headers['x-forwarded-for'] || '').split(',')[0] || (req.socket && req.socket.remoteAddress) || '?').trim();
+  const now = Date.now(), w = _hits.get(ip);
+  if (_hits.size > 5000) _hits.clear();
+  if (!w || now - w.t > windowMs) { _hits.set(ip, { t: now, n: 1 }); return false; }
+  w.n++;
+  return w.n > limit;
+}
+
+// Emails are only (re)sent for payments younger than Resend's 24h
+// idempotency window, so replaying an old reference can't re-trigger mail.
+const FRESH_MS = 20 * 3600 * 1000;
+function isFresh(data) {
+  const t = Date.parse((data && (data.paid_at || data.paidAt)) || '');
+  return !t || Date.now() - t < FRESH_MS;
+}
+
+module.exports = { line, block, REF_RE, STRONG_REF_RE, PAYSTACK_REF_RE, EMAIL_RE, rateLimited, isFresh, notifyPaid, waLink, PRICES, SET_DISCOUNTS, naira, expectedTotal, verifySignature, paystackVerify, checkPayment, publicView, receiptEmail, sendResend, readMetaOrder };

@@ -640,6 +640,8 @@ function loadPdfJs() {
   _pdfjs = new Promise((res, rej) => {
     const sc = document.createElement('script');
     sc.src = PDFJS + 'pdf.min.js';
+    sc.integrity = 'sha384-/1qUCSGwTur9vjf/z9lmu/eCUYbpOTgSjmpbMQZ1/CtX2v/WcAIKqRv+U1DUCG6e'; // pinned (SRI)
+    sc.crossOrigin = 'anonymous';
     sc.onload = () => { window.pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJS + 'pdf.worker.min.js'; res(window.pdfjsLib); };
     sc.onerror = () => { _pdfjs = null; rej(new Error('pdf.js failed to load')); };
     document.head.appendChild(sc);

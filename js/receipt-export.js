@@ -126,8 +126,8 @@
     return c;
   };
 
-  function loadScript(src) {
-    return new Promise(function (res, rej) { var s = document.createElement('script'); s.src = src; s.onload = res; s.onerror = rej; document.head.appendChild(s); });
+  function loadScript(src, sri) {
+    return new Promise(function (res, rej) { var s = document.createElement('script'); s.src = src; if (sri) { s.integrity = sri; s.crossOrigin = 'anonymous'; } s.onload = res; s.onerror = rej; document.head.appendChild(s); });
   }
   function save(blob, name) {
     var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name;
@@ -139,7 +139,7 @@
     return ready.then(function () {
       var c = H.receiptCanvas(order, opts), name = 'Hanga-receipt-' + String(opts.ref || 'order').replace(/[^A-Za-z0-9-]/g, '');
       if (kind === 'png') return new Promise(function (res) { c.toBlob(function (b) { save(b, name + '.png'); res(); }, 'image/png'); });
-      var lib = window.jspdf ? Promise.resolve() : loadScript('https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js');
+      var lib = window.jspdf ? Promise.resolve() : loadScript('https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js', 'sha384-JcnsjUPPylna1s1fvi1u12X5qjY5OL56iySh75FdtrwhO/SWXgMjoVqcKyIIWOLk');
       return lib.then(function () {
         var wmm = 148, hmm = wmm * c.height / c.width;              // A5-width page, height to fit
         var pdf = new window.jspdf.jsPDF({ unit: 'mm', format: [wmm, hmm], orientation: 'portrait', compress: true });

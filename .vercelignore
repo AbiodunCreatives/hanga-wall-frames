@@ -1,2 +1,9 @@
 # Full-resolution print originals stay in the repo for fulfilment but are not published on the site.
 assets/prints/originals
+# Internal docs/data: kept in the repo, not served on the website.
+README.MD
+README.md
+SETUP-PAYSTACK.md
+data/prints-manifest.json
+data/collection-credits.json
+.gitignore

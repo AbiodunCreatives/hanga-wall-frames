@@ -1,0 +1,8 @@
+# Secrets never go in git — set them in Vercel → Settings → Environment Variables.
+.env
+.env.*
+*.env
+.vercel
+node_modules
+*.log
+.DS_Store
