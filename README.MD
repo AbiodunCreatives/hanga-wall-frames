@@ -10,7 +10,7 @@ Live: https://hanga-frames.vercel.app
 | --- | --- |
 | `index.html` | Home: hero, how it works, gallery, sizes & prices, reviews, delivery & FAQs |
 | `customize.html` | Frame builder with live room preview (`?image=<id>`, `?size=16x20`, `?tab=upload`) |
-| `checkout.html` | Name, phone, email and delivery address, then place order |
+| `checkout.html` | Name, phone and delivery address, then place order |
 | `confirmation.html` | Receipt, Pay with Paystack, Send on WhatsApp (`js/receipt.js`, `js/receipt-page.js`) |
 | `api/` | Vercel functions: `config` (public key), `verify` (payment check), `paystack-webhook` (owner email) |
 | `about.html` | Brand story and values |
@@ -32,7 +32,7 @@ Anything left empty is hidden, so the site never shows a dead link or fake payme
 
 ## Delivery
 
-Hanga is based in Ado Ekiti, Ekiti State. Delivery within Ekiti and Ondo State takes 1 to 2 business days. Delivery to other states takes 2 to 3 business days. We will confirm your delivery fee after your order.
+Nationwide delivery within 3 business days. We will confirm your delivery fee after your order.
 
 ## Images
 

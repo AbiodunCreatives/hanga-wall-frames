@@ -173,7 +173,7 @@ function receiptEmail(data, check) {
     '',
     'Subtotal: ' + naira(o.subtotal != null ? o.subtotal : exp && exp.subtotal),
     (o.discount ? (SET_LABELS[n] + ' set discount: -' + naira(o.discount)) : ''),
-    'Delivery: to be confirmed with the customer',
+    'Delivery: nationwide within 3 business days; fee to be confirmed with the customer',
     'TOTAL PAID: ' + naira(check.paid),
     '', 'CUSTOMER', ...custRows.map(r => r[0] + ': ' + r[1]),
     wa ? 'WhatsApp the customer: ' + wa : '',
@@ -202,7 +202,7 @@ ${items.map(i => `<tr><td style="${td}">${esc(i.name)}${i.piece ? `<br><span sty
 <table style="width:100%;font-size:14px;margin-top:10px">
 <tr><td>Subtotal</td><td style="text-align:right">${naira(o.subtotal != null ? o.subtotal : exp && exp.subtotal)}</td></tr>
 ${o.discount ? `<tr><td>${esc(SET_LABELS[n])} set discount</td><td style="text-align:right">−${naira(o.discount)}</td></tr>` : ''}
-<tr><td>Delivery</td><td style="text-align:right">To be confirmed</td></tr>
+<tr><td>Delivery</td><td style="text-align:right">Fee to be confirmed · Nationwide within 3 business days</td></tr>
 <tr><td style="font-weight:bold;font-size:17px;border-top:2px solid #1a1a1a;padding-top:8px">TOTAL PAID</td><td style="text-align:right;font-weight:bold;font-size:17px;border-top:2px solid #1a1a1a;padding-top:8px">${naira(check.paid)}</td></tr>
 </table>
 <h3 style="font-size:13px;letter-spacing:1px;color:#777;margin:20px 0 6px">CUSTOMER</h3>

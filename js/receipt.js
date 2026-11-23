@@ -8,7 +8,7 @@
    Only figures that exist in the order are shown — nothing is invented. */
 (function () {
   var H = window.HANGA;
-  var DELIVERY_LINE = 'We will confirm your delivery fee after your order.';
+  var DELIVERY_LINE = 'Nationwide delivery within 3 business days. We will confirm your delivery fee after your order.';
 
   function el(tag, cls, text) {
     var e = document.createElement(tag);
