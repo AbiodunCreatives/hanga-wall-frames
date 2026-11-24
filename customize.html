@@ -65,8 +65,7 @@
       <p class="preview-label" id="previewLabel" aria-live="polite"></p>
       <div class="scene-switcher" id="sceneSwitcher" hidden>
         <button class="scene-dot active" data-scene="0" aria-label="Wall scene 1: Minimal white living room" title="Minimal white"></button>
-        <button class="scene-dot" data-scene="1" aria-label="Wall scene 2: Dark moody living room" title="Moody dark"></button>
-        <button class="scene-dot" data-scene="2" aria-label="Wall scene 3: Modern open plan" title="Modern open plan"></button>
+        <button class="scene-dot" data-scene="1" aria-label="Wall scene 2: Pebble wall" title="Pebble wall"></button>
       </div>
       <p class="preview-scale-note" id="previewScaleNote"></p>
     </div>
@@ -444,26 +443,16 @@ const ROOMS = [
     shadowColor: 'rgba(40,30,20,0.30)'
   },
   {
-    label: 'Moody dark',
-    src:   'images/room/dining-room.jpg',
-    width: 1920, height: 1080,
-    // Back sofa: x=620–950, top y=400. Wall above is dark charcoal.
-    sofaLeft: 620, sofaRight: 950, sofaTop: 400,
-    sofaWidthCm: 175, hangGapCm: 15,
+    label: 'Pebble wall',
+    src:   'images/room/pebble-wall.jpg',
+    width: 1086, height: 1448,
+    sofaLeft: 80, sofaRight: 820, sofaTop: 220,
+    sofaWidthCm: 180, hangGapCm: 20,
     setGapRatio: 0.06, setGapMinCm: 2.5,
     mouldingRatio: 0.025, mouldingMinCm: 0.9,
-    shadowColor: 'rgba(0,0,0,0.55)'
-  },
-  {
-    label: 'Modern open plan',
-    src:   'images/room/bedroom.jpg',
-    width: 1920, height: 1234,
-    // Sofa back: x=50–790, top y=430. Wall above is warm beige.
-    sofaLeft: 50, sofaRight: 790, sofaTop: 430,
-    sofaWidthCm: 220, hangGapCm: 18,
-    setGapRatio: 0.06, setGapMinCm: 2.5,
-    mouldingRatio: 0.025, mouldingMinCm: 0.9,
-    shadowColor: 'rgba(40,30,20,0.25)'
+    shadowColor: 'rgba(20,20,20,0.35)'
+  }
+];
   }
 ];
 
@@ -606,14 +595,44 @@ function renderSlots() {
     b.type = 'button';
     b.className = 'bld-slot' + (i === state.activeSlot ? ' active' : '') + (slot ? ' filled' : '');
     b.setAttribute('aria-pressed', String(i === state.activeSlot));
-    b.setAttribute('aria-label', 'Frame ' + (i + 1) + ': ' + (slot ? slot.name : 'empty') + '. Select to change it.');
+    b.setAttribute('aria-label', 'Frame ' + (i + 1) + ': ' + (slot ? slot.name + '. Click to select; click again to remove.' : 'empty') + '. Select to change it.');
     const art = document.createElement('span'); art.className = 'bld-slot-art'; art.setAttribute('aria-hidden', 'true');
     if (slot) art.style.backgroundImage = `url("${slot.thumb || slot.src}")`;
     else art.textContent = '+';
     const lab = document.createElement('span'); lab.className = 'bld-slot-label'; lab.textContent = 'Frame ' + (i + 1);
     const nm = document.createElement('span'); nm.className = 'bld-slot-name'; nm.textContent = slot ? slot.name.replace(/^Don't Give Up — /, '') : 'Empty';
     b.append(art, lab, nm);
-    b.addEventListener('click', () => { state.activeSlot = i; renderSlots(); });
+    // If this slot is already active AND filled, clicking clears it. Otherwise just activate it.
+    b.addEventListener('click', () => {
+      if (i === state.activeSlot && state.slots[i]) {
+        state.slots[i] = null;
+        state.setKey = null;
+        renderCuratedSets();
+        refreshAll();
+        showToast('Frame ' + (i + 1) + ' cleared');
+      } else {
+        state.activeSlot = i;
+        renderSlots();
+      }
+    });
+    // Clear (×) button on filled slots
+    if (slot) {
+      const clr = document.createElement('button');
+      clr.type = 'button';
+      clr.className = 'bld-slot-clear';
+      clr.setAttribute('aria-label', 'Remove image from Frame ' + (i + 1));
+      clr.textContent = '×';
+      clr.addEventListener('click', e => {
+        e.stopPropagation();
+        state.slots[i] = null;
+        state.setKey = null;
+        state.activeSlot = i;
+        renderCuratedSets();
+        refreshAll();
+        showToast('Frame ' + (i + 1) + ' cleared');
+      });
+      b.appendChild(clr);
+    }
     wrap.appendChild(b);
   });
   document.getElementById('slotHint').textContent = '· now choosing Frame ' + (state.activeSlot + 1);
