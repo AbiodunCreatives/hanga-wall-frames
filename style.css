@@ -609,6 +609,21 @@ section.section {
 .scene-dot.active { background: var(--gold); transform: scale(1.15); }
 .scene-dot:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
 
+/* Swipe hint on touch devices */
+@media (hover: none) and (pointer: coarse) {
+  .frame-preview-wrap canvas { cursor: grab; }
+  .scene-switcher::before {
+    content: "swipe to change scene";
+    display: block;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #aaa;
+    text-align: center;
+    margin-bottom: 2px;
+  }
+}
+
 .config-panel h1  { font-size: clamp(24px, 4vw, 32px); margin-bottom: 8px; }
 .config-panel .tagline { color: var(--muted); margin-bottom: 32px; font-size: 15px; }
 
