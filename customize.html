@@ -61,8 +61,13 @@
         🖼️
         <p>Your frame preview<br>will appear here</p>
       </div>
-      <canvas id="frameCanvas" style="display:none" role="img" aria-label="Preview of your framed image on a living-room wall"></canvas>
+      <canvas id="frameCanvas" style="display:none" role="img" aria-label="Preview of your framed image on a wall"></canvas>
       <p class="preview-label" id="previewLabel" aria-live="polite"></p>
+      <div class="scene-switcher" id="sceneSwitcher" hidden>
+        <button class="scene-dot active" data-scene="0" aria-label="Wall scene 1: Minimal white living room" title="Minimal white"></button>
+        <button class="scene-dot" data-scene="1" aria-label="Wall scene 2: Dark moody living room" title="Moody dark"></button>
+        <button class="scene-dot" data-scene="2" aria-label="Wall scene 3: Modern open plan" title="Modern open plan"></button>
+      </div>
       <p class="preview-scale-note" id="previewScaleNote"></p>
     </div>
   </div>
@@ -413,27 +418,50 @@ function thumbItem(id) {
 function setItems(set) { return set.items ? set.items.map(i => Object.assign({ isUpload: false }, i)) : set.ids.map(thumbItem).filter(Boolean); }
 function findSet(key) { return [].concat(CURATED_SETS[2], CURATED_SETS[3]).find(s => s.key === key) || null; }
 
-// Room mockup: Pexels photo (RDNE Stock project), cropped and warmed slightly.
-// Coordinates are in the prepared image's pixels (images/room/living-room.jpg).
-const ROOM = {
-  src: 'images/room/living-room.jpg',
-  width: 1920,
-  height: 1896,
-  sofaLeft: 252,
-  sofaRight: 1734,
-  sofaTop: 1060,
-  sofaWidthCm: 200,
-  hangGapCm: 20,
-  // Set spacing: ~6% of one frame's width (min 2.5 cm) so pieces read as one set.
-  setGapRatio: 0.06,
-  setGapMinCm: 2.5,
-  // Slim moulding: ~2.5% of the frame width (min 0.9 cm), square corners.
-  mouldingRatio: 0.025,
-  mouldingMinCm: 0.9
-};
-const roomBg = new Image();
-roomBg.src = ROOM.src;
-roomBg.onload = () => { if (filledSlots().length) renderPreview(); };
+// Room mockup scenes — coordinates are in each image's native pixels.
+// sofaLeft/sofaRight mark the sofa ends; sofaTop is the top of the sofa back.
+// sofaWidthCm is the real sofa width used to derive the px-per-cm scale.
+const ROOMS = [
+  {
+    label: 'Minimal white',
+    src:   'images/room/living-room.jpg',
+    width: 1920, height: 1896,
+    sofaLeft: 252, sofaRight: 1734, sofaTop: 1060,
+    sofaWidthCm: 200, hangGapCm: 20,
+    setGapRatio: 0.06, setGapMinCm: 2.5,
+    mouldingRatio: 0.025, mouldingMinCm: 0.9
+  },
+  {
+    label: 'Moody dark',
+    src:   'images/room/dining-room.jpg',
+    width: 1920, height: 1080,
+    sofaLeft: 585, sofaRight: 1095, sofaTop: 428,
+    sofaWidthCm: 180, hangGapCm: 18,
+    setGapRatio: 0.06, setGapMinCm: 2.5,
+    mouldingRatio: 0.025, mouldingMinCm: 0.9
+  },
+  {
+    label: 'Modern open plan',
+    src:   'images/room/bedroom.jpg',
+    width: 1920, height: 1234,
+    sofaLeft: 30, sofaRight: 740, sofaTop: 488,
+    sofaWidthCm: 220, hangGapCm: 18,
+    setGapRatio: 0.06, setGapMinCm: 2.5,
+    mouldingRatio: 0.025, mouldingMinCm: 0.9
+  }
+];
+
+let _activeScene = 0;
+// Preload all room backgrounds
+const _roomBgs = ROOMS.map((r, i) => {
+  const img = new Image();
+  img.src = r.src;
+  img.onload = () => { if (i === _activeScene && filledSlots().length) renderPreview(); };
+  img.onerror = () => console.warn('Room bg failed to load:', r.src);
+  return img;
+});
+function activeRoom() { return ROOMS[_activeScene]; }
+function activeRoomBg() { return _roomBgs[_activeScene]; }
 
 function parseFrameSize(size) {
   const m = String(size || '').match(/(\d+)\s*[×x]\s*(\d+)/);
@@ -468,6 +496,17 @@ document.querySelectorAll('.bld-qty-save').forEach(el => {
 
 // WhatsApp order button only appears when a number is set in js/site.js
 document.getElementById('whatsappOrderBtn').hidden = !HANGA.whatsappNumber;
+
+// ── Scene switcher ─────────────────────────────────────────────
+document.querySelectorAll('.scene-dot').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const idx = Number(btn.dataset.scene);
+    if (idx === _activeScene) return;
+    _activeScene = idx;
+    document.querySelectorAll('.scene-dot').forEach((b, i) => b.classList.toggle('active', i === idx));
+    renderPreview();
+  });
+});
 
 // ── Frames: Single / Pair / Trio ───────────────────────────────
 function selectPieces(n, opts) {
@@ -943,17 +982,23 @@ function renderPreview() {
   const placeholder = document.getElementById('canvasPlaceholder');
   const label       = document.getElementById('previewLabel');
   const scaleNote   = document.getElementById('previewScaleNote');
+  const switcher    = document.getElementById('sceneSwitcher');
 
   if (!filledSlots().length) {
     canvas.style.display = 'none';
     placeholder.style.display = '';
     label.textContent = '';
     if (scaleNote) scaleNote.textContent = '';
+    if (switcher) switcher.hidden = true;
     return;
   }
 
   placeholder.style.display = 'none';
   canvas.style.display = 'block';
+  if (switcher) switcher.hidden = false;
+
+  const ROOM = activeRoom();
+  const roomBg = activeRoomBg();
 
   const W = 900;
   const H = Math.round(W * (ROOM.height / ROOM.width));
@@ -1040,7 +1085,7 @@ function renderPreview() {
       ? `Preview: ${what}${state.size}" · ${styleLabel(style)}`
       : `Preview: ${what}${styleLabel(style)} · 16×20" shown for scale`;
     if (scaleNote) scaleNote.textContent = 'Shown at real scale on a 200 cm sofa.';
-    canvas.setAttribute('aria-label', `Preview of ${n > 1 ? 'your ' + setLabel().toLowerCase() + ' of ' + n + ' frames' : 'your framed image'} on a living-room wall`);
+    canvas.setAttribute('aria-label', `Preview of ${n > 1 ? 'your ' + setLabel().toLowerCase() + ' of ' + n + ' frames' : 'your framed image'} on a wall — ${ROOM.label}`);
   });
 }
 
