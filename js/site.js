@@ -24,17 +24,7 @@ window.HANGA = {
   // Multi-frame sets: naira taken off the WHOLE set (per-frame price × pieces).
   // Single frames get no discount. Change the numbers here to change every
   // price on the site (builder, checkout, confirmation, order messages).
-  setDiscounts: { 2: 500, 3: 1000 },
-
-  // TODO(owner): the bank account customers should pay into.
-  // The details below were already on the site but look like a placeholder
-  // (account 2234567890). They stay hidden until you set confirmed: true.
-  bank: {
-    confirmed: false,
-    bankName: 'Zenith Bank',
-    accountName: 'Hanga Frames Ltd',
-    accountNumber: '2234567890'
-  }
+  setDiscounts: { 2: 500, 3: 1000 }
 };
 
 (function () {
