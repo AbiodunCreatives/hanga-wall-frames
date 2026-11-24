@@ -4,8 +4,8 @@
 const crypto = require('crypto');
 
 // Keep in sync with customize.html (data-price) and js/site.js (setDiscounts).
-const PRICES = { '12×16': 8000, '16×20': 9500, '16×24': 11000, '20×24': 14000, '20×30': 17500, '24×36': 20000 };
-const SET_DISCOUNTS = { 2: 200, 3: 500 };
+const PRICES = { '12×16': 9000, '16×20': 11000, '16×24': 14000, '20×24': 16000, '20×30': 19000, '24×36': 24000 };
+const SET_DISCOUNTS = { 2: 500, 3: 1000 };
 const SET_LABELS = { 1: 'Single', 2: 'Pair', 3: 'Trio' };
 
 const naira = n => '₦' + Number(n || 0).toLocaleString('en-NG');
@@ -234,7 +234,7 @@ async function sendResend({ to, subject, html, text, replyTo, idempotencyKey }) 
 async function notifyPaid(data, check, source) {
   if (!data || data.status !== 'success') return { skipped: 'not paid' };
   const mail = receiptEmail(data, check);
-  const owner = process.env.OWNER_EMAIL || 'hello@hanga.ng';
+  const owner = process.env.OWNER_EMAIL || 'hangaframes@gmail.com';
   // Placeholder payer emails (@orders.hanga.ng, used only to satisfy Paystack) are never mailed.
   let cust = ((check.order || {}).customer || {}).email;
   if (cust && (/@orders\.hanga\.ng$/i.test(cust) || !EMAIL_RE.test(cust))) cust = '';
