@@ -1803,6 +1803,8 @@ button.pay-method { font: inherit; color: inherit; background: var(--white); }
 .rc-btn-wa { background: #1f9d55; color: #fff; border: 0; }
 .rc-btn-wa:hover { background: #18834a; }
 .rc-upload { font-size: 13px; background: var(--cream); padding: 10px 12px; border-radius: 4px; margin: 0; }
+.rc-upload-ok   { background: #edf7ed; color: #1e5c1e; border-left: 3px solid #4caf50; }
+.rc-upload-warn { background: #fff8e1; color: #7a5500; border-left: 3px solid var(--gold); }
 @media (max-width: 600px) {
   .rc-page { padding-top: 92px; }
   .rc-col-x, .rc-items thead .rc-col-x { display: none; }

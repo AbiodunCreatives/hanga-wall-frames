@@ -136,6 +136,29 @@
   function wireSend() {
     if (H.whatsappNumber) { $('sendWhatsApp').href = H.whatsappLink('Hi Hanga! Here is my order:\n\n' + summaryText()); }
     $('uploadMsg').hidden = !H.orderPieces(order).some(function (p) { return p.isUpload; });
+
+    // Show Cloudinary upload status for customer uploads
+    var uploadItems = H.orderPieces(order).filter(function (p) { return p.isUpload; });
+    var uploadEl = $('uploadMsg');
+    if (uploadItems.length) {
+      var allUploaded = uploadItems.every(function (p) { return p.cloudinaryUrl; });
+      var anyFailed   = uploadItems.some(function (p) { return p.cloudinaryFailed; });
+      if (allUploaded) {
+        uploadEl.innerHTML = '<strong>✓ Your photo has been received.</strong> We have everything we need to print your frame.';
+        uploadEl.className = 'rc-upload rc-upload-ok';
+        uploadEl.hidden = false;
+      } else if (anyFailed) {
+        var waLink = H.whatsappLink ? H.whatsappLink('Hi Hanga! My order reference is ' + ref + '. Here is my photo for printing.') : '#';
+        uploadEl.innerHTML = '<strong>Please send us your photo.</strong> The automatic upload did not go through. ' +
+          (waLink !== '#' ? '<a href="' + waLink + '" target="_blank" rel="noopener">Send on WhatsApp →</a>' : 'Email it to hangaframes@gmail.com with your order reference.');
+        uploadEl.className = 'rc-upload rc-upload-warn';
+        uploadEl.hidden = false;
+      } else {
+        uploadEl.innerHTML = '<strong>Framing your own photo?</strong> Please send us the original file (PDF or full-size image) so it prints sharply.';
+        uploadEl.className = 'rc-upload';
+        uploadEl.hidden = false;
+      }
+    }
   }
   function alertBox(msg, kind, retry, recheck) {
     var a = $('payAlert'); a.textContent = ''; a.className = 'rc-alert ' + (kind || '');

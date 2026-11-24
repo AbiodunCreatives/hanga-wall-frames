@@ -772,9 +772,21 @@ function showUploaded(name, src, hintText) {
   document.getElementById('fileInput').value = '';
 }
 
+// ── Cloudinary upload config ───────────────────────────────────
+const CLOUDINARY = {
+  cloud: 'odyrtqzs',
+  preset: 'hanga-orders'
+};
+
+// Keep a reference to the original File objects for each slot (lost on page nav,
+// so we upload BEFORE proceeding to checkout).
+const _uploadFiles = {};  // slot index → File
+
 function handleFileUpload(event) {
   const file = event.target.files[0];
   if (!file) return;
+  // Store the original file for Cloudinary upload at checkout
+  _uploadFiles[state.activeSlot] = file;
   const warn = document.getElementById('uploadWarn');
   warn.hidden = true;
   const isPdf = file.type === 'application/pdf' || /\.pdf$/i.test(file.name);
@@ -1158,10 +1170,53 @@ function buildOrder() {
 function proceedToCheckout() {
   if (!checkReady()) return;
   const order = buildOrder();
+
+  // Upload any customer files to Cloudinary before navigating.
+  // This ensures the file is safe even if the customer closes the tab after payment.
+  const uploadSlots = state.slots
+    .map((s, i) => ({ slot: i, item: s, file: _uploadFiles[i] }))
+    .filter(x => x.item && x.item.isUpload && x.file);
+
+  if (!uploadSlots.length) {
+    saveAndGo(order);
+    return;
+  }
+
+  // Show upload progress
+  const btn = document.querySelector('[onclick="proceedToCheckout()"]');
+  if (btn) { btn.disabled = true; btn.textContent = 'Uploading your photo…'; }
+
+  const uploads = uploadSlots.map(({ slot, file }) => {
+    const fd = new FormData();
+    fd.append('file', file);
+    fd.append('upload_preset', CLOUDINARY.preset);
+    fd.append('folder', 'hanga-orders');
+    // Tag with a temporary key; we'll add the order ref once we have it at confirmation
+    fd.append('context', `slot=${slot}|filename=${file.name}`);
+    return fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY.cloud}/auto/upload`, { method: 'POST', body: fd })
+      .then(r => r.json())
+      .then(res => {
+        if (res.secure_url) {
+          order.items[slot].cloudinaryUrl = res.secure_url;
+          order.items[slot].cloudinaryId  = res.public_id;
+        }
+      })
+      .catch(() => {
+        // Upload failed — mark it so confirmation can prompt WhatsApp fallback
+        order.items[slot].cloudinaryFailed = true;
+      });
+  });
+
+  Promise.all(uploads).then(() => {
+    if (btn) { btn.disabled = false; btn.textContent = 'Proceed to Checkout'; }
+    saveAndGo(order);
+  });
+}
+
+function saveAndGo(order) {
   try {
     sessionStorage.setItem('hangaOrder', JSON.stringify(order));
   } catch (err) {
-    // Very large images can exceed browser storage; continue without the preview images.
     order.imageData = null;
     order.items.forEach(i => { if (i.isUpload) i.imageData = null; });
     try { sessionStorage.setItem('hangaOrder', JSON.stringify(order)); }
