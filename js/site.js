@@ -4,11 +4,11 @@
  * Anything left empty is hidden on the site instead of showing a dead link.
  */
 window.HANGA = {
-  email: 'hello@hanga.ng',
+  email: 'hangaframes@gmail.com',
 
   // TODO(owner): your WhatsApp number in international format, digits only,
   // e.g. '2348012345678'. Leave '' to hide every WhatsApp button and link.
-  whatsappNumber: '2348100048838',
+  whatsappNumber: '2348151533349',
 
   // TODO(owner): your Instagram handle without the @, e.g. 'hanga.ng'.
   instagramHandle: 'hangaframes_',
