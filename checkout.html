@@ -62,8 +62,7 @@
     </div>
     <div class="delivery-card" style="margin-top:16px; padding:16px 18px; font-size:13px; color:var(--muted); line-height:1.75">
       <strong style="color:var(--black)">📦 Delivery Info</strong><br>
-      Nationwide delivery within 3 business days.<br>
-      We will confirm your delivery fee after your order.
+      Nationwide delivery within 3 business days.
     </div>
   </div>
 
@@ -109,7 +108,7 @@
       </div>
 
       <div id="paystackPanel" class="pay-panel pay-panel--paystack">
-        <strong>🔒 Secure Payment via Paystack</strong><br>
+        <strong>Secure Payment via Paystack</strong><br>
         Click <strong>"Place Order"</strong> below. You'll be taken to Paystack's secure checkout to pay with your card, bank transfer, USSD, or mobile money.
       </div>
 
@@ -124,13 +123,14 @@
       <!-- Shown while neither Paystack nor bank details are switched on in js/site.js -->
       <div id="requestPanel" class="pay-panel hidden">
         <strong>Next: your receipt</strong><br>
-        Place your order to get your receipt and order reference. From there you can pay securely with Paystack. We will confirm your delivery fee after your order.
+        Place your order to get your receipt and order reference, then proceed to pay securely with Paystack.
       </div>
     </div>
 
     <button type="button" class="btn btn-gold place-order-btn" id="placeOrderBtn" onclick="placeOrder()">Place Order &amp; Pay →</button>
-    <p style="font-size:12px;color:var(--muted);margin-top:12px;text-align:center">
-      🔒 Card payments are handled securely by Paystack. We only use your details to deliver your order.
+    <p style="font-size:12px;color:var(--muted);margin-top:12px;text-align:center;display:flex;align-items:center;justify-content:center;gap:5px">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="flex-shrink:0;opacity:0.6"><rect x="5" y="11" width="14" height="10" rx="2" stroke="currentColor" stroke-width="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      Payments are handled securely by Paystack.
     </p>
   </div>
 
@@ -213,7 +213,7 @@ if (nPieces > 1) {
 } else {
   document.getElementById('sidebarFramePrice').textContent = HANGA.formatNaira(order.price);
 }
-document.getElementById('sidebarTotal').textContent = HANGA.formatNaira(order.price) + ' + delivery';
+document.getElementById('sidebarTotal').textContent = HANGA.formatNaira(order.price);
 document.getElementById('coPillTotal').textContent = HANGA.formatNaira(order.price);
 // Floating pill shows only while the real "Place Order" button is off-screen.
 (function () {
