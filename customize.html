@@ -141,11 +141,9 @@
         <div class="gallery-filters mini-filters" role="group" aria-label="Filter gallery by category">
           <button type="button" class="filter-chip active" data-filter="featured" onclick="filterMiniGallery('featured', this)">Featured</button>
           <button type="button" class="filter-chip" data-filter="all" onclick="filterMiniGallery('all', this)">All</button>
-          <button type="button" class="filter-chip" data-filter="classic-art" onclick="filterMiniGallery('classic-art', this)">Classic Art</button>
           <button type="button" class="filter-chip" data-filter="portraits" onclick="filterMiniGallery('portraits', this)">Portrait</button>
           <button type="button" class="filter-chip" data-filter="landscapes" onclick="filterMiniGallery('landscapes', this)">Landscape</button>
           <button type="button" class="filter-chip" data-filter="cars" onclick="filterMiniGallery('cars', this)">Cars</button>
-          <button type="button" class="filter-chip filter-chip-makers" data-filter="makers" onclick="filterMiniGallery('makers', this)">Featured Makers</button>
         </div>
         <div class="mini-gallery" id="miniGallery">
           <!-- ── New images ────────────────────────────────────── -->
@@ -258,16 +256,6 @@
           <div class="mini-thumb" data-id="kandinsky-improvisation-30" data-name="Improvisation No. 30" data-category="abstract" data-src="images/collection/kandinsky-improvisation-30.jpg" onclick="selectGalleryImage(this,'Improvisation No. 30')"><img src="images/thumbs/kandinsky-improvisation-30.jpg" alt="Improvisation No. 30" loading="lazy" decoding="async"></div>
           <div class="mini-thumb" data-id="fayum-woman-in-red" data-name="Woman in Red" data-category="portraits" data-src="images/collection/fayum-woman-in-red.jpg" onclick="selectGalleryImage(this,'Woman in Red')"><img src="images/thumbs/fayum-woman-in-red.jpg" alt="Woman in Red" loading="lazy" decoding="async"></div>
           <div class="mini-thumb" data-id="mondrian-lozenge" data-name="Lozenge Composition" data-category="abstract" data-src="images/collection/mondrian-lozenge.jpg" onclick="selectGalleryImage(this,'Lozenge Composition')"><img src="images/thumbs/mondrian-lozenge.jpg" alt="Lozenge Composition" loading="lazy" decoding="async"></div>
-        </div>
-        <div class="makers-empty" data-makers-empty hidden>
-          <span class="makers-badge">Featured Makers</span>
-          <h3>Coming soon: work from Nigerian frame makers we love</h3>
-          <p>We're inviting a few talented framers and artists to show their pieces here. You'll be able to order their work with the same easy checkout.</p>
-          <div class="makers-cta">
-            <span class="makers-ask">Are you a frame maker?</span>
-            <a class="btn btn-primary" data-makers-wa href="#" target="_blank" rel="noopener">Get featured on WhatsApp</a>
-            <a class="makers-mail" data-makers-mail href="mailto:hangaframes@gmail.com?subject=Featured%20Makers">or email hangaframes@gmail.com</a>
-          </div>
         </div>
         <button type="button" class="btn btn-outline-dark gallery-more mini-more" id="miniMore" hidden>Show all</button>
       </div>
@@ -440,9 +428,8 @@ const CURATED_SETS = {
     { key: 'consistency-mask',   name: 'Consistency & World',  ids: ['consistency', 'world-mask'] },
     { key: 'porsche-pair',       name: 'Double Porsche',       ids: ['porsche-911-snow', 'porsche-911-gt3'] },
     { key: 'tram-nights',        name: 'Tram Nights',          ids: ['tram-in-the-rain', 'night-tram'] },
-    { key: 'coast-sunset',       name: 'Coast & Sunset',       ids: ['monet-cliff-walk', 'monet-stacks-of-wheat'] },
-    { key: 'van-gogh-fields',    name: 'Van Gogh Fields',      ids: ['van-gogh-wheat-field', 'van-gogh-cypresses'] },
-    { key: 'vermeer-pair',       name: 'Vermeer Pair',         ids: ['vermeer-young-woman', 'vermeer-water-pitcher'] },
+    { key: 'still-waters',       name: 'Still Waters',         ids: ['autumn-lake', 'starlit-lake'] },
+    { key: 'midnight-city',      name: 'Midnight City',        ids: ['tram-reflection', 'midnight-tram'] },
     { key: 'lambo-pair',         name: 'Lamborghini Duo',      ids: ['lambo-diablo-street', 'lambo-diablo-rear'] }
   ],
   3: [
@@ -454,9 +441,7 @@ const CURATED_SETS = {
     { key: 'dont-give-up',   name: "Don't Give Up",    items: [
         { id: 'dont-give-up-1', name: "Don't Give Up — DON'T", src: 'images/sets/dont-give-up-1.jpg', thumb: 'images/thumbs/dont-give-up-1.jpg' },
         { id: 'dont-give-up-2', name: "Don't Give Up — GIVE",  src: 'images/sets/dont-give-up-2.jpg', thumb: 'images/thumbs/dont-give-up-2.jpg' },
-        { id: 'dont-give-up-3', name: "Don't Give Up — UP.",   src: 'images/sets/dont-give-up-3.jpg', thumb: 'images/thumbs/dont-give-up-3.jpg' } ] },
-    { key: 'abstract-trio',  name: 'Colour Trio',      ids: ['kandinsky-improvisation-30', 'mondrian-lozenge', 'seurat-grande-jatte'] },
-    { key: 'portrait-trio',  name: 'Old Masters Trio', ids: ['rembrandt-gold-chain', 'vermeer-young-woman', 'van-gogh-self-portrait'] }
+        { id: 'dont-give-up-3', name: "Don't Give Up — UP.",   src: 'images/sets/dont-give-up-3.jpg', thumb: 'images/thumbs/dont-give-up-3.jpg' } ] }
   ]
 };
 
@@ -756,7 +741,6 @@ function filterMiniGallery(category, btn, expand) {
   const lim = expand || !window.matchMedia('(max-width: 768px)').matches ? Infinity : 8;
   matches.forEach((t, i) => { t.hidden = i >= lim; });
   const more = document.getElementById('miniMore');
-  wrap.querySelector('[data-makers-empty]').hidden = category !== 'makers';
   more.hidden = matches.length <= lim;
   more.textContent = 'Show all ' + matches.length;
 }
