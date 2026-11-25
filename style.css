@@ -1388,6 +1388,18 @@ a.pv-card { display: flex; }
 .whatsapp-order-btn { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; margin-top: 10px; text-align: center; padding: 13px; font-size: 13px; }
 .whatsapp-order-btn[hidden] { display: none; }
 .summary-note { font-size: 12px; color: var(--muted); margin-top: 12px; line-height: 1.6; text-align: center; }
+
+/* Inline testimonial in builder summary */
+.bld-testimonial {
+  display: flex; align-items: flex-start; gap: 10px;
+  margin: 14px 0 16px;
+  padding: 12px 14px;
+  background: var(--cream);
+  border-radius: 10px;
+  border-left: 3px solid var(--gold);
+}
+.bld-testimonial-quote { font-size: 12.5px; line-height: 1.6; color: var(--black); font-style: italic; margin: 0; flex: 1; }
+.bld-testimonial-author { font-size: 11px; color: var(--muted); margin-top: 4px; font-style: normal; display: block; }
 .confirm-ref { color: #8a6d2e; }
 
 /* Checkout payment options */
@@ -1551,7 +1563,35 @@ button.pay-method { font: inherit; color: inherit; background: var(--white); }
 }
 .bld-step.is-done { border-color: rgba(200,169,110,0.55); }
 .bld-step-head { display: flex; align-items: center; gap: 16px; margin-bottom: 18px; }
-.bld-step-icon {
+
+/* ── Collapsible steps (mobile only) ───────────────────────────
+   On mobile, completed steps collapse to their header row.
+   The .bld-step-body wraps everything after .bld-step-head.
+   .is-collapsed hides the body; clicking the head re-opens it. */
+.bld-step-body { }
+.bld-step-chevron {
+  display: none;
+  flex: none; width: 20px; height: 20px; margin-left: auto;
+  color: var(--gold); transition: transform 0.25s;
+}
+.bld-step-chevron svg { width: 16px; height: 16px; display: block; }
+@media (max-width: 768px) {
+  .bld-step-head--collapsible { cursor: pointer; user-select: none; margin-bottom: 0; }
+  .bld-step-chevron { display: flex; align-items: center; justify-content: center; }
+  .bld-step.is-collapsed .bld-step-body {
+    max-height: 0; overflow: hidden;
+    visibility: hidden;
+    transition: max-height 0.3s ease, visibility 0s 0.3s;
+  }
+  .bld-step:not(.is-collapsed) .bld-step-body {
+    max-height: 2000px; overflow: visible;
+    visibility: visible;
+    transition: max-height 0.35s ease;
+  }
+  .bld-step:not(.is-collapsed) .bld-step-head--collapsible { margin-bottom: 18px; }
+  .bld-step.is-collapsed .bld-step-chevron { transform: rotate(-90deg); }
+  .bld-step:not(.is-collapsed) .bld-step-chevron { transform: rotate(0deg); }
+}.bld-step-icon {
   position: relative; flex: none; width: 52px; height: 52px; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
   background: radial-gradient(circle at 30% 25%, #2b2b2b, var(--black)); color: var(--gold);
