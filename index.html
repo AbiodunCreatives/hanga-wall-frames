@@ -810,7 +810,6 @@ function filterGallery(category, btn, expand) {
   const lim = galleryExpanded ? Infinity : galleryLimit();
   matches.forEach((card, i) => { card.hidden = i >= lim; });
   const more = document.getElementById('galleryMore');
-  root.querySelector('[data-makers-empty]').hidden = category !== 'makers';
   more.hidden = matches.length <= lim;
   more.textContent = 'Show all ' + matches.length + ' prints';
 }
