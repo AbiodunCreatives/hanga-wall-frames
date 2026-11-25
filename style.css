@@ -1572,7 +1572,7 @@ button.pay-method { font: inherit; color: inherit; background: var(--white); }
 .bld-step-chevron {
   display: none;
   flex: none; width: 20px; height: 20px; margin-left: auto;
-  color: var(--gold); transition: transform 0.25s;
+  color: var(--gold); transition: transform 0.18s;
 }
 .bld-step-chevron svg { width: 16px; height: 16px; display: block; }
 @media (max-width: 768px) {
@@ -1581,12 +1581,12 @@ button.pay-method { font: inherit; color: inherit; background: var(--white); }
   .bld-step.is-collapsed .bld-step-body {
     max-height: 0; overflow: hidden;
     visibility: hidden;
-    transition: max-height 0.3s ease, visibility 0s 0.3s;
+    transition: max-height 0.18s ease, visibility 0s 0.18s;
   }
   .bld-step:not(.is-collapsed) .bld-step-body {
     max-height: 2000px; overflow: visible;
     visibility: visible;
-    transition: max-height 0.35s ease;
+    transition: max-height 0.18s ease;
   }
   .bld-step:not(.is-collapsed) .bld-step-head--collapsible { margin-bottom: 18px; }
   .bld-step.is-collapsed .bld-step-chevron { transform: rotate(-90deg); }
