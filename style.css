@@ -221,7 +221,9 @@ header {
   inset: 0;
   background: url('images/hero-bg.jpg') center 35%/cover no-repeat;
   background-image: image-set(url("images/hero-bg.webp") type("image/webp"), url("images/hero-bg.jpg") type("image/jpeg"));
-  opacity: 0.55;
+  opacity: 0.45;
+  filter: blur(3px);
+  transform: scale(1.05);
   z-index: 0;
 }
 
