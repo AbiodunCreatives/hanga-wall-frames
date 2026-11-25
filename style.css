@@ -971,6 +971,7 @@ section.section {
 .about-grid img { width: 100%; border-radius: var(--radius); }
 .about-grid .text h2 { font-size: clamp(24px, 4vw, 34px); margin-bottom: 18px; }
 .about-grid .text p  { font-size: 15px; color: var(--muted); line-height: 1.8; margin-bottom: 14px; }
+.about-price-anchor { font-size: 14px; color: var(--black); font-weight: 500; margin-bottom: 20px !important; }
 
 .values-section {
   background: var(--black);

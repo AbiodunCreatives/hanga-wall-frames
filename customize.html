@@ -4,13 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
   <title>Build Your Custom Wall Frame – Hanga</title>
-  <meta name="description" content="Design your wall frame in minutes. Pick a print from our gallery or upload your own photo. Six sizes from ₦9,000, three finishes. Nationwide delivery across Nigeria.">
+  <meta name="description" content="Design your wall frame in minutes. Pick a print from our gallery or upload your own photo. Four sizes from ₦9,000, three finishes. Nationwide delivery across Nigeria.">
   <meta name="theme-color" content="#1a1a1a">
   <link rel="canonical" href="https://hanga-frames.vercel.app/customize">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Hanga">
   <meta property="og:title" content="Build Your Custom Wall Frame – Hanga">
-  <meta property="og:description" content="Design your wall frame in minutes. Pick a print from our gallery or upload your own photo. Six sizes from ₦9,000, three finishes. Nationwide delivery across Nigeria.">
+  <meta property="og:description" content="Design your wall frame in minutes. Pick a print from our gallery or upload your own photo. Four sizes from ₦9,000, three finishes. Nationwide delivery across Nigeria.">
   <meta property="og:url" content="https://hanga-frames.vercel.app/customize">
   <meta property="og:image" content="https://hanga-frames.vercel.app/images/og-image.jpg">
   <meta property="og:image:width" content="1200">
@@ -18,7 +18,7 @@
   <meta property="og:locale" content="en_NG">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Build Your Custom Wall Frame – Hanga">
-  <meta name="twitter:description" content="Design your wall frame in minutes. Pick a print from our gallery or upload your own photo. Six sizes from ₦9,000, three finishes. Nationwide delivery across Nigeria.">
+  <meta name="twitter:description" content="Design your wall frame in minutes. Pick a print from our gallery or upload your own photo. Four sizes from ₦9,000, three finishes. Nationwide delivery across Nigeria.">
   <meta name="twitter:image" content="https://hanga-frames.vercel.app/images/og-image.jpg">
   <link rel="icon" href="images/favicon.svg" type="image/svg+xml">
   <link rel="icon" href="images/favicon-32.png" type="image/png" sizes="32x32">
@@ -278,7 +278,7 @@
         <span class="bld-step-icon" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none" focusable="false"><rect x="8" y="8" width="32" height="32" rx="1.5" stroke="currentColor" stroke-width="2.4"/><rect x="14" y="14" width="20" height="20" rx="1" stroke="currentColor" stroke-width="2" stroke-dasharray="3 2"/><path d="M8 16h4M8 24h4M8 32h4M16 8v4M24 8v4M32 8v4" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg><span class="bld-step-num">03</span></span>
         <div class="bld-step-titles">
           <h3 id="sizeHeading"><span class="visually-hidden">Step 3: </span>Frame Size</h3>
-          <p class="bld-step-status" id="statusSize" aria-live="polite">Six sizes — the preview shows each one to scale</p>
+          <p class="bld-step-status" id="statusSize" aria-live="polite">Four sizes — the preview shows each one to scale</p>
         </div>
         <svg class="bld-step-check" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </div>
@@ -1004,7 +1004,7 @@ function updateProgress() {
     ? (done.image ? 'Selected: ' + orderTitle() : `${filled} of ${state.pieces} frames chosen — pick a curated set or fill each frame`)
     : (state.slots[0] ? 'Selected: ' + state.slots[0].name : 'Pick a print from our gallery or upload your own photo');
   const priceTxt = state.size ? (multi ? `${HANGA.formatNaira(orderTotal())} for the ${setLabel().toLowerCase()}` : HANGA.formatNaira(state.price)) : '';
-  document.getElementById('statusSize').textContent  = state.size ? `Selected: ${state.size}" · ${priceTxt}` : (multi ? 'One size for every frame in the set' : 'Six sizes — the preview shows each one to scale');
+  document.getElementById('statusSize').textContent  = state.size ? `Selected: ${state.size}" · ${priceTxt}` : (multi ? 'One size for every frame in the set' : 'Four sizes — the preview shows each one to scale');
   document.getElementById('statusStyle').textContent = (state.style || 'Black') + ' · Same price for every style';
   const parts = [multi ? setLabel() : null, state.size ? state.size + '"' : null, styleLabel(state.style)].filter(Boolean);
   document.getElementById('summaryLine').textContent = filled ? parts.join(' · ') : (multi ? 'Choose the images for your set' : 'Choose an image to get started');
