@@ -299,8 +299,6 @@
         <button type="button" class="chip" aria-pressed="false" data-size="16×20"  data-price="11000" onclick="selectSize(this)"><span class="chip-size">16×20"</span><span class="chip-price">₦11,000</span></button>
         <button type="button" class="chip" aria-pressed="false" data-size="16×24"  data-price="14000" onclick="selectSize(this)"><span class="chip-size">16×24"</span><span class="chip-price">₦14,000</span></button>
         <button type="button" class="chip" aria-pressed="false" data-size="20×24"  data-price="16000" onclick="selectSize(this)"><span class="chip-size">20×24"</span><span class="chip-price">₦16,000</span></button>
-        <button type="button" class="chip" aria-pressed="false" data-size="20×30"  data-price="19000" onclick="selectSize(this)"><span class="chip-size">20×30"</span><span class="chip-price">₦19,000</span></button>
-        <button type="button" class="chip" aria-pressed="false" data-size="24×36"  data-price="24000" onclick="selectSize(this)"><span class="chip-size">24×36"</span><span class="chip-price">₦24,000</span></button>
       </div>
     </div>
 
@@ -310,12 +308,17 @@
         <span class="bld-step-icon" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none" focusable="false"><rect x="7" y="7" width="34" height="34" rx="2" stroke="currentColor" stroke-width="2.4"/><rect x="14" y="14" width="20" height="20" rx="1" fill="currentColor" opacity="0.25"/><path d="M7 7l7 7M41 7l-7 7M7 41l7-7M41 41l-7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span class="bld-step-num">04</span></span>
         <div class="bld-step-titles">
           <h3 id="styleHeading"><span class="visually-hidden">Step 4: </span>Frame Style</h3>
-          <p class="bld-step-status" id="statusStyle" aria-live="polite">Black · Same price for every style</p>
+          <p class="bld-step-status" id="statusStyle" aria-live="polite">Borderless · Same price for every style</p>
         </div>
         <svg class="bld-step-check" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </div>
       <div class="style-swatches" id="styleSwatches" role="group" aria-labelledby="styleHeading">
-        <div class="swatch selected" data-style="Black" onclick="selectStyle(this,'Black')">
+        <div class="swatch selected" data-style="Borderless" onclick="selectStyle(this,'Borderless')">
+          <span class="swatch-art swatch-art--borderless" aria-hidden="true"><span></span></span>
+          <span class="swatch-label">Borderless</span>
+          <span class="swatch-sub">Just the print</span>
+        </div>
+        <div class="swatch" data-style="Black" onclick="selectStyle(this,'Black')">
           <span class="swatch-art swatch-art--black" aria-hidden="true"><span></span></span>
           <span class="swatch-label">Black</span>
           <span class="swatch-sub">Bold &amp; classic</span>
@@ -324,11 +327,6 @@
           <span class="swatch-art swatch-art--white" aria-hidden="true"><span></span></span>
           <span class="swatch-label">White</span>
           <span class="swatch-sub">Clean &amp; bright</span>
-        </div>
-        <div class="swatch" data-style="Borderless" onclick="selectStyle(this,'Borderless')">
-          <span class="swatch-art swatch-art--borderless" aria-hidden="true"><span></span></span>
-          <span class="swatch-label">Borderless</span>
-          <span class="swatch-sub">Just the print</span>
         </div>
       </div>
     </div>
@@ -345,7 +343,7 @@
       <div class="summary-row"><span id="summaryImageLabel">Image</span><span id="summaryImage">—</span></div>
       <ol class="bld-summary-pieces" id="summaryPieces" hidden></ol>
       <div class="summary-row"><span>Size</span><span id="summarySize">—</span></div>
-      <div class="summary-row"><span>Frame Style</span><span id="summaryStyle">Black</span></div>
+      <div class="summary-row"><span>Frame Style</span><span id="summaryStyle">Borderless</span></div>
       <div class="summary-row" id="summarySubRow" hidden><span id="summarySubLabel">Frames</span><span id="summarySub">—</span></div>
       <div class="summary-row bld-saving" id="summarySaveRow" hidden><span id="summarySaveLabel">Set saving</span><span id="summarySave">—</span></div>
       <div class="summary-row"><span>Delivery</span><span>Confirmed after you order</span></div>
@@ -409,10 +407,10 @@ const state = {
   activeSlot: 0,
   setKey: null,           // key of a curated set, if one is applied unchanged
   size: null, price: 0,   // price = per-frame price for the chosen size
-  style: 'Black'
+  style: 'Borderless'
 };
 
-const FRAME_STYLES  = ['Black', 'White', 'Borderless'];
+const FRAME_STYLES  = ['Borderless', 'Black', 'White'];
 const FRAME_COLOURS = { Black: '#1a1a1a', White: '#f3f3f3' };
 // 'Borderless' = the print alone, no moulding. Shared label helper:
 function styleLabel(style) { style = HANGA.normStyle(style); return style === 'Borderless' ? 'Borderless (no frame)' : style + ' Frame'; }
