@@ -1262,8 +1262,8 @@ footer.footer-with-bg .footer-bottom { position: relative; z-index: 1; }
   .chip          { font-size: 11px; padding: 6px 11px; }
 }
 
-/* frame size: 3x2 grid */
-.option-chips.size-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+/* frame size: 2x2 grid */
+.option-chips.size-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
 .size-grid .chip {
   display: flex; flex-direction: column; align-items: center; justify-content: center;
   gap: 2px; padding: 12px 6px; border-radius: 14px; text-align: center; line-height: 1.2;
