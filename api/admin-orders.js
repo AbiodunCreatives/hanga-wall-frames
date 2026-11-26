@@ -41,76 +41,82 @@ function authCheck(req, secret) {
 }
 
 // ── KV helpers ─────────────────────────────────────────────────────────────────
-// Use the Vercel KV REST API directly (no npm install needed on Vercel).
-// KV_REST_API_URL and KV_REST_API_TOKEN are injected automatically when
-// a KV store is linked in the Vercel dashboard.
-async function kvFetch(path, method, body) {
-  const url  = (process.env.KV_REST_API_URL  || '').replace(/\/$/, '');
-  const token = process.env.KV_REST_API_TOKEN || '';
+// Upstash REST API: https://upstash.com/docs/redis/features/restapi
+// Commands go as URL path segments: /COMMAND/arg1/arg2/...
+// For JSON values, POST the raw JSON as the request body to /set/key
+// All commands can also be sent via /pipeline as a 2D JSON array.
+
+function kvBase() {
+  const url   = (process.env.KV_REST_API_URL   || '').replace(/\/$/, '');
+  const token = process.env.KV_REST_API_TOKEN  || '';
   if (!url || !token) throw new Error('KV not configured');
-  const opts = {
-    method: method || 'GET',
-    headers: { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' }
-  };
-  if (body !== undefined) opts.body = JSON.stringify(body);
-  const r = await fetch(url + path, opts);
-  const j = await r.json().catch(() => ({}));
-  if (!r.ok) throw new Error('KV error ' + r.status + ': ' + (j && j.error || ''));
-  return j;
+  return { url, token };
 }
 
-// Use Vercel KV REST pipeline for atomic multi-command
+// Execute a batch of commands in one round-trip via the pipeline endpoint.
+// commands = [["SET","key","val"], ["ZADD","idx","1234","member"], ...]
 async function kvPipeline(commands) {
-  const url   = (process.env.KV_REST_API_URL  || '').replace(/\/$/, '');
-  const token = process.env.KV_REST_API_TOKEN || '';
-  if (!url || !token) throw new Error('KV not configured');
+  const { url, token } = kvBase();
   const r = await fetch(url + '/pipeline', {
     method: 'POST',
     headers: { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' },
     body: JSON.stringify(commands)
   });
-  return r.json().catch(() => []);
+  const results = await r.json().catch(() => []);
+  if (!r.ok) throw new Error('KV pipeline HTTP ' + r.status);
+  return Array.isArray(results) ? results : [];
 }
 
+// GET a JSON value. Upstash returns { result: <raw> }; we parse if it came back as a string.
 async function kvGet(key) {
-  const j = await kvFetch('/get/' + encodeURIComponent(key));
-  return j.result !== undefined ? j.result : null;
+  const { url, token } = kvBase();
+  const r = await fetch(url + '/get/' + encodeURIComponent(key), {
+    headers: { Authorization: 'Bearer ' + token }
+  });
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error('KV GET error ' + r.status);
+  const raw = j.result;
+  if (raw === null || raw === undefined) return null;
+  // If stored via pipeline SET the value may come back as a JSON string — parse it.
+  if (typeof raw === 'string') {
+    try { return JSON.parse(raw); } catch (e) { return raw; }
+  }
+  return raw;
 }
 
+// SET a JSON value. POST the JSON as the body to /set/key
 async function kvSet(key, value) {
-  const url   = (process.env.KV_REST_API_URL  || '').replace(/\/$/, '');
-  const token = process.env.KV_REST_API_TOKEN || '';
-  if (!url || !token) throw new Error('KV not configured');
+  const { url, token } = kvBase();
   const r = await fetch(url + '/set/' + encodeURIComponent(key), {
     method: 'POST',
     headers: { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' },
     body: JSON.stringify(value)
   });
-  return r.json().catch(() => ({}));
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error('KV SET error ' + r.status);
+  return j;
 }
 
-// Add order ref to sorted set with score = timestamp
+// ZADD key score member — score and member as URL path segments
 async function kvZadd(key, score, member) {
-  const url   = (process.env.KV_REST_API_URL  || '').replace(/\/$/, '');
-  const token = process.env.KV_REST_API_TOKEN || '';
-  if (!url || !token) throw new Error('KV not configured');
-  const r = await fetch(url + '/zadd/' + encodeURIComponent(key), {
-    method: 'POST',
-    headers: { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' },
-    body: JSON.stringify([{ score, member }])
-  });
-  return r.json().catch(() => ({}));
+  const { url, token } = kvBase();
+  const r = await fetch(
+    url + '/zadd/' + encodeURIComponent(key) + '/' + score + '/' + encodeURIComponent(member),
+    { headers: { Authorization: 'Bearer ' + token } }
+  );
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error('KV ZADD error ' + r.status);
+  return j;
 }
 
-// Get refs from sorted set, newest first
+// ZRANGE key max min BYSCORE REV — newest first
 async function kvZrange(key, start, stop) {
-  const url   = (process.env.KV_REST_API_URL  || '').replace(/\/$/, '');
-  const token = process.env.KV_REST_API_TOKEN || '';
-  if (!url || !token) throw new Error('KV not configured');
-  // ZRANGE key stop start BYSCORE REV — get newest first
-  const r = await fetch(url + '/zrange/' + encodeURIComponent(key) + '/' + stop + '/' + start + '/byscore/rev', {
-    headers: { Authorization: 'Bearer ' + token }
-  });
+  const { url, token } = kvBase();
+  // Upstash path: /zrange/key/max/min/byscore/rev  (max then min for reverse)
+  const r = await fetch(
+    url + '/zrange/' + encodeURIComponent(key) + '/' + start + '/' + stop + '/byscore/rev',
+    { headers: { Authorization: 'Bearer ' + token } }
+  );
   const j = await r.json().catch(() => ({ result: [] }));
   return Array.isArray(j.result) ? j.result : [];
 }

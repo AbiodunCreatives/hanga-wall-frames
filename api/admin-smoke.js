@@ -63,23 +63,25 @@ module.exports = async function handler(req, res) {
     return res.end(JSON.stringify({ ok: false, results }));
   }
 
-  // ── Step 3: KV zadd (index) ──
+  // ── Step 3: KV zadd (index) — score/member as URL path segments ──
   try {
     const score = Date.now();
-    const z = await fetch(KV_URL + '/zadd/' + encodeURIComponent('orders:index'), {
-      method: 'POST', headers, body: JSON.stringify([{ score, member: TEST_REF }])
-    });
+    const z = await fetch(
+      KV_URL + '/zadd/' + encodeURIComponent('orders:index') + '/' + score + '/' + encodeURIComponent(TEST_REF),
+      { headers }
+    );
     const zj = await z.json().catch(() => ({}));
     results.kvZadd = { status: z.status, result: zj.result };
   } catch (e) {
     results.kvZadd = { error: e.message };
   }
 
-  // ── Step 4: KV read back ──
+  // ── Step 4: KV read back — parse string result if needed ──
   try {
     const r = await fetch(KV_URL + '/get/' + encodeURIComponent('order:' + TEST_REF), { headers });
     const rj = await r.json().catch(() => ({}));
-    const readBack = rj.result;
+    let readBack = rj.result;
+    if (typeof readBack === 'string') { try { readBack = JSON.parse(readBack); } catch(e){} }
     results.kvRead = {
       status: r.status,
       found: !!readBack,
