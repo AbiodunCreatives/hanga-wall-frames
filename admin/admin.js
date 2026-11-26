@@ -181,11 +181,16 @@
   };
 
   function setTableState(state, msg) {
-    document.getElementById('tableLoading').hidden = state !== 'loading';
-    document.getElementById('tableEmpty').hidden   = state !== 'empty';
-    document.getElementById('tableError').hidden   = state !== 'error';
-    document.getElementById('ordersTable').hidden  = state !== 'table';
-    document.getElementById('pagination').hidden   = state !== 'table';
+    var loading = document.getElementById('tableLoading');
+    var empty   = document.getElementById('tableEmpty');
+    var error   = document.getElementById('tableError');
+    var table   = document.getElementById('ordersTable');
+    var paging  = document.getElementById('pagination');
+    loading.classList.toggle('visible', state === 'loading');
+    empty.classList.toggle('visible',   state === 'empty');
+    error.classList.toggle('visible',   state === 'error');
+    table.hidden   = state !== 'table';
+    paging.hidden  = state !== 'table';
     if (state === 'error' && msg) {
       document.getElementById('tableErrorMsg').textContent = msg;
     }

@@ -329,10 +329,11 @@ body.page-login .sidebar { display: none; }
   overflow: hidden;
 }
 .table-loading, .table-empty, .table-error {
-  display: flex; flex-direction: column; align-items: center;
+  display: none; flex-direction: column; align-items: center;
   justify-content: center; gap: 10px;
   padding: 64px 24px; color: var(--muted); font-size: 14px;
 }
+.table-loading.visible, .table-empty.visible, .table-error.visible { display: flex; }
 .table-empty svg, .table-error svg { width: 44px; height: 44px; opacity: 0.25; }
 .table-empty p { font-weight: 500; color: var(--muted); }
 .table-error { color: #dc2626; }
