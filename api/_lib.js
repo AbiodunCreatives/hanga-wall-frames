@@ -242,16 +242,49 @@ async function notifyPaid(data, check, source) {
   try {
     out.owner = await sendResend({ to: owner, subject: mail.subject, html: mail.html, text: mail.text, replyTo: cust, idempotencyKey: 'owner-' + data.reference });
   } catch (e) { out.ownerError = e.message; }
-  // Customer copy needs a verified sending domain (onboarding@resend.dev only
-  // delivers to the Resend account owner), so it is opt-in.
   if (cust && process.env.SEND_CUSTOMER_COPY === 'true') {
     try { out.customer = await sendResend({ to: cust, subject: 'Your Hanga receipt ' + mail.ref, html: mail.html, text: mail.text, replyTo: owner, idempotencyKey: 'cust-' + data.reference }); }
     catch (e) { out.customerError = e.message; }
   }
+  // ── Write order to KV store for the admin dashboard (best-effort, never blocks email) ──
+  try {
+    const { writeOrder } = require('./admin-orders');
+    const o = check.order || {};
+    const c = o.customer || {};
+    await writeOrder({
+      ref:         mail.ref,
+      paystackRef: data.reference,
+      placedAt:    o.placedAt || data.paid_at || new Date().toISOString(),
+      paidAt:      data.paid_at || new Date().toISOString(),
+      channel:     data.channel || null,
+      price:       check.paid,
+      expectedTotal: check.expected ? check.expected.total : null,
+      unitPrice:   o.unitPrice,
+      subtotal:    o.subtotal,
+      discount:    o.discount,
+      size:        o.size,
+      style:       o.style,
+      pieces:      o.pieces,
+      set:         o.set,
+      setName:     o.setName || null,
+      items:       Array.isArray(o.items) ? o.items : [],
+      imageName:   Array.isArray(o.items) && o.items[0] ? o.items[0].name : (o.imageName || ''),
+      name:        c.name    || '',
+      phone:       c.phone   || '',
+      email:       c.email   || '',
+      address:     c.address || '',
+      city:        c.city    || '',
+      state:       c.state   || '',
+      notes:       c.notes   || '',
+      amountStatus: check.ok ? 'exact' : 'mismatch',
+      problems:    check.ok ? [] : (check.problems || [])
+    });
+  } catch (e) {
+    console.warn('[hanga] KV write skipped:', e && e.message);
+  }
   console.log('[hanga] paid order', mail.ref, line(data.reference, 60), 'via', source, check.ok ? 'OK' : check.problems.join('; '), 'owner:', out.owner ? 'sent' : (out.ownerError || 'skipped'), 'customer:', out.customer ? 'sent' : (out.customerError || 'off'));
   return out;
 }
-
 // Best-effort per-IP rate limit (per warm instance; Vercel may run several).
 const _hits = new Map();
 function rateLimited(req, limit, windowMs) {

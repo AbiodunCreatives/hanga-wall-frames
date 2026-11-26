@@ -2,6 +2,20 @@
   "cleanUrls": true,
   "headers": [
     {
+      "source": "/admin(.*)",
+      "headers": [
+        { "key": "X-Robots-Tag", "value": "noindex, nofollow" },
+        { "key": "Cache-Control", "value": "no-store" }
+      ]
+    },
+    {
+      "source": "/api/admin-(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-store" },
+        { "key": "X-Robots-Tag", "value": "noindex" }
+      ]
+    },
+    {
       "source": "/(.*)",
       "headers": [
         { "key": "Content-Security-Policy", "value": "default-src 'self'; script-src 'self' 'unsafe-inline' https://js.paystack.co https://*.paystack.co https://*.paystack.com https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/ https://cdn.jsdelivr.net/npm/jspdf@2.5.1/; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://*.paystack.co https://*.paystack.com; font-src 'self' data: https://fonts.gstatic.com https://*.paystack.co https://*.paystack.com; img-src 'self' data: blob: https://*.paystack.co https://*.paystack.com https://res.cloudinary.com; connect-src 'self' https://*.paystack.co https://*.paystack.com https://cdn.jsdelivr.net https://api.cloudinary.com; frame-src https://*.paystack.co https://*.paystack.com; worker-src 'self' blob: https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/; media-src 'self' blob: data:; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self' https://*.paystack.co https://*.paystack.com; frame-ancestors 'none'; upgrade-insecure-requests" },
