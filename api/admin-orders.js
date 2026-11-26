@@ -53,7 +53,7 @@ async function kvFetch(path, method, body) {
     headers: { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' }
   };
   if (body !== undefined) opts.body = JSON.stringify(body);
-  const r = await fetch(url + path);
+  const r = await fetch(url + path, opts);
   const j = await r.json().catch(() => ({}));
   if (!r.ok) throw new Error('KV error ' + r.status + ': ' + (j && j.error || ''));
   return j;
@@ -133,9 +133,6 @@ async function writeOrder(orderData) {
   const score = orderData.placedAt ? Date.parse(orderData.placedAt) : Date.now();
   await kvZadd('orders:index', score, ref);
 }
-
-// Export for use in _lib.js
-module.exports.writeOrder = writeOrder;
 
 // ── Helpers ────────────────────────────────────────────────────────────────────
 function send(res, code, obj) {
@@ -253,3 +250,6 @@ module.exports = async function handler(req, res) {
   res.setHeader('Allow', 'GET, PATCH');
   return send(res, 405, { ok: false, error: 'method_not_allowed' });
 };
+
+// Keep writeOrder accessible after module.exports is set to the handler function.
+module.exports.writeOrder = writeOrder;
