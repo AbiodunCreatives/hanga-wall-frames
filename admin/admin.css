@@ -77,6 +77,9 @@ body {
   position: fixed; top: 0; left: 0; height: 100vh; z-index: 100;
   transition: transform 0.25s;
 }
+
+/* Hide sidebar on the login screen */
+body.page-login .sidebar { display: none; }
 .sidebar-logo {
   font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700;
   letter-spacing: 3px; padding: 24px 20px 20px; border-bottom: 1px solid rgba(255,255,255,0.08);
@@ -163,11 +166,14 @@ body {
   flex: 1; margin: 0 24px 24px; background: var(--white);
   border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden;
 }
-.table-loading, .table-empty {
+.table-loading, .table-empty, .table-error {
   display: flex; flex-direction: column; align-items: center; justify-content: center;
   gap: 12px; padding: 60px 20px; color: var(--muted); font-size: 14px;
 }
-.table-empty svg { width: 48px; height: 48px; opacity: 0.3; }
+.table-empty svg, .table-error svg { width: 48px; height: 48px; opacity: 0.3; }
+.table-error { color: #c0392b; }
+.table-error svg { opacity: 0.4; }
+.table-error-msg { font-size: 12px; font-family: monospace; background: #fdf0f0; padding: 6px 10px; border-radius: 6px; color: #8a1f11; }
 .spinner {
   width: 28px; height: 28px; border: 3px solid var(--border);
   border-top-color: var(--gold); border-radius: 50%;

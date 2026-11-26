@@ -118,18 +118,22 @@
       return r.json();
     })
     .then(function (d) {
-      if (!d.ok) { setTableState('empty'); return; }
+      if (!d.ok) { setTableState('error', d.error || 'Unknown error'); return; }
       if (d.stats) updateStats(d.stats);
       renderTable(d.orders || [], d.total, d.page, d.pages);
     })
-    .catch(function (e) { if (e.message !== 'auth') setTableState('empty'); });
+    .catch(function (e) { if (e.message !== 'auth') setTableState('error', e.message || 'Network error'); });
   };
 
-  function setTableState(state) {
+  function setTableState(state, msg) {
     document.getElementById('tableLoading').hidden = state !== 'loading';
     document.getElementById('tableEmpty').hidden   = state !== 'empty';
+    document.getElementById('tableError').hidden   = state !== 'error';
     document.getElementById('ordersTable').hidden  = state !== 'table';
     document.getElementById('pagination').hidden   = state !== 'table';
+    if (state === 'error' && msg) {
+      document.getElementById('tableErrorMsg').textContent = msg;
+    }
   }
 
   // ── Stats ──────────────────────────────────────────────────────
