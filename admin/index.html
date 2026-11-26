@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&family=Roboto+Mono:wght@400;600&display=swap">
-  <link rel="stylesheet" href="/admin/admin.css?v=4">
+  <link rel="stylesheet" href="/admin/admin.css?v=5">
 </head>
 <body class="page-login">
 
@@ -76,7 +76,7 @@
         <span class="revenue-label">Total Revenue</span>
         <span class="revenue-val" id="revenueVal">₦0</span>
       </div>
-      <button class="signout-btn" id="signoutBtn">
+      <button class="signout-btn" id="signoutBtn" onclick="signOut()">
         <svg viewBox="0 0 24 24" fill="none"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
         Sign out
       </button>
@@ -91,7 +91,7 @@
 
     <!-- Top bar -->
     <div class="topbar">
-      <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle menu">
+      <button class="sidebar-toggle" id="sidebarToggle" onclick="toggleSidebar()" aria-label="Toggle menu">
         <svg viewBox="0 0 24 24" fill="none"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
       </button>
       <span class="topbar-title">Orders</span>
@@ -179,6 +179,6 @@
   <div class="drawer-body" id="drawerBody"></div>
 </aside>
 
-<script src="/admin/admin.js?v=4"></script>
+<script src="/admin/admin.js?v=5"></script>
 </body>
 </html>
