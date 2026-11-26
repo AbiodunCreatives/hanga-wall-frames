@@ -172,7 +172,8 @@ module.exports = async function handler(req, res) {
     // List orders (newest first)
     try {
       const allRefs = await kvZrange('orders:index', '+inf', '-inf');
-      if (!allRefs.length) return send(res, 200, { ok: true, orders: [], total: 0, page, pages: 0 });
+      const emptyStats = { total:0, paid:0, processing:0, shipped:0, delivered:0, cancelled:0, revenue:0 };
+      if (!allRefs.length) return send(res, 200, { ok: true, orders: [], total: 0, page, pages: 0, stats: emptyStats });
 
       // Fetch all in parallel (KV reads are fast)
       const records = await Promise.all(allRefs.map(r => kvGet('order:' + r).catch(() => null)));
