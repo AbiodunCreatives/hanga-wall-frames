@@ -70,26 +70,34 @@
 
   window.signOut = function () {
     clearToken();
+    closeSidebar();
     showLogin();
   };
 
   // ── Sidebar toggle (mobile) ────────────────────────────────────
   window.toggleSidebar = function () {
-    document.getElementById('sidebar').classList.toggle('open');
+    var sb  = document.getElementById('sidebar');
+    var ov  = document.getElementById('sidebarOverlay');
+    var open = sb.classList.toggle('open');
+    if (ov) { ov.classList.toggle('open', open); }
+    document.body.style.overflow = open ? 'hidden' : '';
   };
-  document.getElementById('drawerOverlay') && document.getElementById('sidebar') &&
-    document.addEventListener('click', function (e) {
-      var sb = document.getElementById('sidebar');
-      var tog = document.getElementById('sidebarToggle');
-      if (sb.classList.contains('open') && !sb.contains(e.target) && !tog.contains(e.target)) {
-        sb.classList.remove('open');
-      }
-    });
+
+  window.closeSidebar = function () {
+    var sb = document.getElementById('sidebar');
+    var ov = document.getElementById('sidebarOverlay');
+    sb.classList.remove('open');
+    if (ov) ov.classList.remove('open');
+    document.body.style.overflow = '';
+  };
+
+  function isMobile() { return window.innerWidth <= 860; }
 
   // ── Filter / search / pagination ──────────────────────────────
   window.setFilter = function (status, btn) {
     currentFilter = status; currentPage = 1;
     document.querySelectorAll('.snav-item').forEach(function (b) { b.classList.toggle('active', b === btn); });
+    if (isMobile()) closeSidebar();
     loadOrders();
   };
 

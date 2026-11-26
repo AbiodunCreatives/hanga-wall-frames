@@ -8,8 +8,8 @@
   <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Lato:wght@400;700&display=swap">
-  <link rel="stylesheet" href="/admin/admin.css?v=1">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&family=Roboto+Mono:wght@400;600&display=swap">
+  <link rel="stylesheet" href="/admin/admin.css?v=2">
 </head>
 <body class="page-login">
 
@@ -33,8 +33,12 @@
 
   <!-- Sidebar -->
   <aside class="sidebar" id="sidebar">
-    <div class="sidebar-logo">HANGA<span>.</span></div>
+    <div class="sidebar-logo">
+      <span class="sidebar-logo-text">HANGA<span>.</span></span>
+      <span class="sidebar-logo-tag">Admin</span>
+    </div>
     <nav class="sidebar-nav">
+      <div class="sidebar-section-label">Orders</div>
       <button class="snav-item active" data-filter="" onclick="setFilter('',this)">
         <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.8"/><rect x="14" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.8"/><rect x="3" y="14" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.8"/><rect x="14" y="14" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.8"/></svg>
         All Orders
@@ -60,6 +64,7 @@
         Delivered
         <span class="snav-count" id="cntDelivered">0</span>
       </button>
+      <div class="sidebar-divider"></div>
       <button class="snav-item" data-filter="cancelled" onclick="setFilter('cancelled',this)">
         <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/><path d="M15 9l-6 6M9 9l6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
         Cancelled
@@ -71,9 +76,15 @@
         <span class="revenue-label">Total Revenue</span>
         <span class="revenue-val" id="revenueVal">₦0</span>
       </div>
-      <button class="signout-btn" onclick="signOut()">Sign out</button>
+      <button class="signout-btn" onclick="signOut()">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Sign out
+      </button>
     </div>
   </aside>
+
+  <!-- Sidebar overlay (mobile) -->
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
 
   <!-- Main -->
   <main class="main">
@@ -83,13 +94,17 @@
       <button class="sidebar-toggle" id="sidebarToggle" onclick="toggleSidebar()" aria-label="Toggle menu">
         <svg viewBox="0 0 24 24" fill="none"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
       </button>
+      <span class="topbar-title">Orders</span>
       <div class="search-wrap">
         <svg class="search-icon" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.8"/><path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
         <input type="search" id="searchInput" class="search-input" placeholder="Search by name, ref, phone…" oninput="onSearch()">
       </div>
-      <button class="refresh-btn" onclick="loadOrders()" title="Refresh">
-        <svg viewBox="0 0 24 24" fill="none"><path d="M23 4v6h-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </button>
+      <div class="topbar-actions">
+        <button class="refresh-btn" onclick="loadOrders()" title="Refresh">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M23 4v6h-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span class="refresh-label">Refresh</span>
+        </button>
+      </div>
     </div>
 
     <!-- Stats strip -->
@@ -102,11 +117,11 @@
         <span class="stat-val" id="statRevenue">₦0</span>
         <span class="stat-label">Total Revenue</span>
       </div>
-      <div class="stat-card">
+      <div class="stat-card stat-card--blue">
         <span class="stat-val" id="statPending">0</span>
         <span class="stat-label">Need Action</span>
       </div>
-      <div class="stat-card">
+      <div class="stat-card stat-card--green">
         <span class="stat-val" id="statDelivered">0</span>
         <span class="stat-label">Delivered</span>
       </div>
@@ -164,6 +179,6 @@
   <div class="drawer-body" id="drawerBody"></div>
 </aside>
 
-<script src="/admin/admin.js?v=1"></script>
+<script src="/admin/admin.js?v=2"></script>
 </body>
 </html>
