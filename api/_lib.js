@@ -4,7 +4,7 @@
 const crypto = require('crypto');
 
 // Keep in sync with customize.html (data-price) and js/site.js (setDiscounts).
-const PRICES = { '12×16': 9000, '16×20': 11000, '16×24': 14000, '20×24': 16000, '20×30': 19000, '24×36': 24000 };
+const PRICES = { '12×16': 7000, '16×20': 9000, '16×24': 11000, '20×24': 13000, '20×30': 16000, '24×36': 20000 };
 const SET_DISCOUNTS = { 2: 500, 3: 1000 };
 const SET_LABELS = { 1: 'Single', 2: 'Pair', 3: 'Trio' };
 
