@@ -67,9 +67,13 @@
     if (pp) pp.addEventListener('click', function () { goPage(-1); });
     if (pn) pn.addEventListener('click', function () { goPage(1); });
 
-    // Search
+    // Search — handle input, search (clear ✕), and change for mobile
     var si = document.getElementById('searchInput');
-    if (si) si.addEventListener('input', function () { onSearch(); });
+    if (si) {
+      si.addEventListener('input',  function () { onSearch(); });
+      si.addEventListener('search', function () { onSearch(); });
+      si.addEventListener('change', function () { onSearch(); });
+    }
   }
 
   wireStaticButtons();
@@ -247,9 +251,22 @@
               (o.deliveryFee != null ? '<div class="delivery-fee">+' + fmt(o.deliveryFee) + ' delivery</div>' : '') + '</td>' +
         '<td>' + fmtDate(o.paidAt || o.placedAt) + '</td>' +
         '<td>' + statusBadge(o) + '</td>' +
-        '<td><button class="action-btn" onclick="event.stopPropagation()">View</button></td>';
+        '<td><button class="action-btn" type="button">View</button></td>';
       tr.addEventListener('click', function () { openDrawer(o); });
-      tr.querySelector('.action-btn').addEventListener('click', function () { openDrawer(o); });
+      tr.addEventListener('touchend', function (e) {
+        // Prevent the 300ms delay on iOS — only fire if it wasn't a scroll
+        if (e.cancelable) e.preventDefault();
+        openDrawer(o);
+      });
+      tr.querySelector('.action-btn').addEventListener('click', function (e) {
+        e.stopPropagation();
+        openDrawer(o);
+      });
+      tr.querySelector('.action-btn').addEventListener('touchend', function (e) {
+        e.stopPropagation();
+        if (e.cancelable) e.preventDefault();
+        openDrawer(o);
+      });
       tbody.appendChild(tr);
     });
 

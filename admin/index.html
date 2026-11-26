@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&family=Roboto+Mono:wght@400;600&display=swap">
-  <link rel="stylesheet" href="/admin/admin.css?v=7">
+  <link rel="stylesheet" href="/admin/admin.css?v=8">
 </head>
 <body class="page-login">
 
@@ -21,7 +21,7 @@
     <form id="loginForm" autocomplete="off">
       <label for="pinInput" class="login-label">Admin PIN</label>
       <input type="password" id="pinInput" class="login-input" inputmode="numeric"
-             placeholder="••••••" autocomplete="current-password" maxlength="12" required>
+             placeholder="••••••" autocomplete="one-time-code" maxlength="12" required>
       <p class="login-error" id="loginError" hidden></p>
       <button type="submit" class="login-btn" id="loginBtn">Sign in</button>
     </form>
@@ -179,6 +179,6 @@
   <div class="drawer-body" id="drawerBody"></div>
 </aside>
 
-<script src="/admin/admin.js?v=6"></script>
+<script src="/admin/admin.js?v=7"></script>
 </body>
 </html>
