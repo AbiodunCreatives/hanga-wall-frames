@@ -18,6 +18,51 @@
 
   // ── Init ───────────────────────────────────────────────────────
   token = loadToken();
+
+  // Wire all static buttons via addEventListener (no onclick attributes)
+  function wireStaticButtons() {
+    // Hamburger
+    var tog = document.getElementById('sidebarToggle');
+    if (tog) tog.addEventListener('click', function () { toggleSidebar(); });
+
+    // Sidebar overlay
+    var sov = document.getElementById('sidebarOverlay');
+    if (sov) sov.addEventListener('click', function () { closeSidebar(); });
+
+    // Sidebar nav items
+    document.querySelectorAll('.snav-item').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        setFilter(btn.getAttribute('data-filter') || '', btn);
+      });
+    });
+
+    // Sign out
+    var so = document.getElementById('signoutBtn');
+    if (so) so.addEventListener('click', function () { signOut(); });
+
+    // Refresh
+    var rb = document.getElementById('refreshBtn');
+    if (rb) rb.addEventListener('click', function () { loadOrders(); });
+
+    // Drawer overlay + close button
+    var dov = document.getElementById('drawerOverlay');
+    if (dov) dov.addEventListener('click', function () { closeDrawer(); });
+    var dc = document.getElementById('drawerClose');
+    if (dc) dc.addEventListener('click', function () { closeDrawer(); });
+
+    // Pagination
+    var pp = document.getElementById('pagePrev');
+    var pn = document.getElementById('pageNext');
+    if (pp) pp.addEventListener('click', function () { goPage(-1); });
+    if (pn) pn.addEventListener('click', function () { goPage(1); });
+
+    // Search
+    var si = document.getElementById('searchInput');
+    if (si) si.addEventListener('input', function () { onSearch(); });
+  }
+
+  wireStaticButtons();
+
   if (token) {
     showDashboard();
     loadOrders();
@@ -96,7 +141,9 @@
   // ── Filter / search / pagination ──────────────────────────────
   window.setFilter = function (status, btn) {
     currentFilter = status; currentPage = 1;
-    document.querySelectorAll('.snav-item').forEach(function (b) { b.classList.toggle('active', b === btn); });
+    document.querySelectorAll('.snav-item').forEach(function (b) {
+      b.classList.toggle('active', btn ? b === btn : b.getAttribute('data-filter') === status);
+    });
     if (isMobile()) closeSidebar();
     loadOrders();
   };
