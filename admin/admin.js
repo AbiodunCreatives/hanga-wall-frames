@@ -19,6 +19,17 @@
   // ── Init ───────────────────────────────────────────────────────
   token = loadToken();
 
+  // If token exists but is already expired, clear it immediately
+  // so we show login rather than a broken empty dashboard.
+  if (token) {
+    var dot = token.indexOf('.');
+    var expiry = dot > 0 ? parseInt(token.slice(0, dot), 10) : 0;
+    if (!expiry || expiry < Date.now()) {
+      clearToken();
+      token = '';
+    }
+  }
+
   // Wire all static buttons via addEventListener (no onclick attributes)
   function wireStaticButtons() {
     // Hamburger
@@ -111,6 +122,10 @@
     document.body.classList.add('page-login');
     document.getElementById('loginScreen').hidden = false;
     document.getElementById('dashboard').hidden = true;
+    // Reset table state so spinner doesn't persist after sign-out
+    var loading = document.getElementById('tableLoading');
+    if (loading) loading.classList.remove('visible');
+    document.body.style.overflow = '';
   }
 
   window.signOut = function () {
