@@ -167,6 +167,6 @@
     cust.appendChild(cdl);
     root.appendChild(cust);
 
-    root.appendChild(el('p', 'rc-foot', 'Thank you for choosing Hanga ✦ hanga-frames.vercel.app'));
+    root.appendChild(el('p', 'rc-foot', 'Thank you for choosing Hanga ✦ hangaframes.art'));
   };
 })();

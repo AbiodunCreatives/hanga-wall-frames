@@ -35,7 +35,7 @@ Then **redeploy** (Deployments → ⋯ → Redeploy) so the functions pick up th
 Paystack → Settings → API Keys & Webhooks → **Live Webhook URL**:
 
 ```
-https://hanga-frames.vercel.app/api/paystack-webhook
+https://hangaframes.art/api/paystack-webhook
 ```
 
 Save.
@@ -78,7 +78,7 @@ change them there too, or paid orders will be flagged ⚠ CHECK AMOUNT.
 
 ## Quick checks after setup
 
-- `https://hanga-frames.vercel.app/api/config` → shows your `pk_…` key.
-- `https://hanga-frames.vercel.app/api/verify?reference=test123` → JSON
+- `https://hangaframes.art/api/config` → shows your `pk_…` key.
+- `https://hangaframes.art/api/verify?reference=test123` → JSON
   (not a 404).
 - Place a small real order and confirm the email arrives.

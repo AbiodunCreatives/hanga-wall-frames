@@ -106,7 +106,7 @@
     // Footer
     y += 10; rule(y, true); y += 34;
     font('italic 400 18px ' + SERIF); text('Thank you for choosing Hanga.', W / 2, y, 'center');
-    y += 22; font('400 12px ' + SANS); text('hanga-frames.vercel.app · Keep this receipt for your records.', W / 2, y, 'center', MUTED);
+    y += 22; font('400 12px ' + SANS); text('hangaframes.art · Keep this receipt for your records.', W / 2, y, 'center', MUTED);
     return y + PAD;
   }
 
