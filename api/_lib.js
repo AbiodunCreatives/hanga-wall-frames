@@ -93,6 +93,24 @@ async function paystackVerify(reference, secret) {
   return j.data;
 }
 
+// First-touch campaign (UTM) from browser metadata: attribution only, never
+// used for pricing. Whitelisted keys, one plain line each, length-capped.
+const UTM_KEYS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'];
+const utmText = (v, max) => line(typeof v === 'string' || typeof v === 'number' ? v : '', max).replace(/[<>"'`\\]/g, '').trim();
+function readUtm(u) {
+  if (typeof u === 'string') { try { u = JSON.parse(u); } catch (e) { u = null; } }
+  if (!u || typeof u !== 'object' || Array.isArray(u)) return null;
+  const out = {};
+  for (const k of UTM_KEYS) { const v = utmText(u[k], 200); if (v) out[k] = v; }
+  if (!Object.keys(out).length) return null;
+  for (const k of ['gclid', 'fbclid']) { const v = utmText(u[k], 200); if (v) out[k] = v; }
+  const lp = utmText(u.landing_path, 300); if (lp) out.landing_path = lp;
+  const at = utmText(u.capturedAt, 40); if (at) out.capturedAt = at;
+  return out;
+}
+// "instagram / social / detty_december_2026 / bio"
+const utmSummary = u => (u ? UTM_KEYS.map(k => u[k]).filter(Boolean).join(' / ').slice(0, 200) : '');
+
 // Metadata is browser-supplied: whitelist fields, coerce types, cap lengths.
 function readMetaOrder(data) {
   let meta = data && data.metadata;
@@ -138,7 +156,7 @@ function readMetaOrder(data) {
       size: lines[0] ? lines[0].size : '', style: lines[0] ? lines[0].style : '',
       pieces: lines.reduce((a, l) => a + l.items.length * (l.qty || 1), 0),
       items: flat, itemCount: flat.length,
-      customer
+      customer, utm: readUtm(o.utm)
     };
   }
   return {
@@ -155,7 +173,7 @@ function readMetaOrder(data) {
       fileName: i.fileName ? line(i.fileName, 80) : null,
       unit: num(i.unit), lineTotal: num(i.lineTotal)
     } : { name: 'Frame' })),
-    customer
+    customer, utm: readUtm(o.utm)
   };
 }
 
@@ -225,7 +243,8 @@ function publicView(data, check) {
       deliveryFee: o.v === 2 && check.expected ? check.expected.delivery : undefined,
       name: cu.name, phone: cu.phone, address: cu.address,
       city: cu.city, state: cu.state, notes: cu.notes,
-      placedAt: o.placedAt
+      placedAt: o.placedAt,
+      utm: o.utm || undefined
     }
   };
 }
@@ -271,6 +290,7 @@ function receiptEmail(data, check) {
   const when = data.paid_at ? new Date(data.paid_at).toLocaleString('en-NG', { timeZone: 'Africa/Lagos', dateStyle: 'medium', timeStyle: 'short' }) + ' (WAT)' : '';
   const custRows = [['Name', c.name], ['Email', c.email], ['Phone', c.phone], ['Delivery address', c.address], ['City / State', [c.city, c.state].filter(Boolean).join(', ')], ['Notes', c.notes]].filter(r => r[1]);
   const uploads = (o.items || []).some(i => i.isUpload);
+  const utmRows = o.utm ? [['Campaign', utmSummary(o.utm)], ...UTM_KEYS.concat(['gclid', 'fbclid', 'landing_path', 'capturedAt']).filter(k => o.utm[k]).map(k => [k, o.utm[k]])] : [];
   const wa = waLink(c.phone, 'Hi ' + (c.name || '').split(' ')[0] + ', this is Hanga. Thank you for your order ' + ref + '! ');
 
   const text = [
@@ -286,6 +306,7 @@ function receiptEmail(data, check) {
     'Delivery: ' + deliveryText + ' — nationwide within 3 business days',
     'TOTAL PAID: ' + naira(check.paid),
     '', 'CUSTOMER', ...custRows.map(r => r[0] + ': ' + r[1]),
+    ...utmRows.length ? ['', 'CAMPAIGN (first touch)', ...utmRows.map(r => r[0] + ': ' + r[1])] : [],
     wa ? 'WhatsApp the customer: ' + wa : '',
     files.length ? '\nCUSTOMER FILES\n' + files.map(f => '- ' + f.name + ': ' + f.url).join('\n') : '',
     uploads && !files.length ? '\nThis order includes the customer\'s own file(s). Ask them to send the original file(s) on WhatsApp or email.' : '',
@@ -318,6 +339,8 @@ ${discountShown ? `<tr><td>${esc(discountLabel)}</td><td style="text-align:right
 </table>
 <h3 style="font-size:13px;letter-spacing:1px;color:#777;margin:20px 0 6px">CUSTOMER</h3>
 <table style="width:100%;font-size:13px">${custRows.map(r => `<tr><td style="color:#777;width:140px;vertical-align:top">${esc(r[0])}</td><td>${esc(r[1]).replace(/\n/g, '<br>')}</td></tr>`).join('')}</table>
+${utmRows.length ? `<h3 style="font-size:13px;letter-spacing:1px;color:#777;margin:20px 0 6px">CAMPAIGN (FIRST TOUCH)</h3>
+<table style="width:100%;font-size:13px">${utmRows.map(r => `<tr><td style="color:#777;width:140px;vertical-align:top">${esc(r[0])}</td><td style="word-break:break-all">${esc(r[1])}</td></tr>`).join('')}</table>` : ''}
 ${wa ? `<p style="margin:14px 0"><a href="${esc(wa)}" style="display:inline-block;background:#25D366;color:#fff;text-decoration:none;font-weight:bold;padding:10px 18px;border-radius:999px;font-size:14px">Message ${esc(c.name || 'customer')} on WhatsApp</a></p>` : ''}
 ${files.length ? `<p style="font-size:13px;background:#eef6ff;padding:10px;border-radius:4px"><strong>Customer files:</strong><br>${files.map(f => `<a href="${esc(f.url)}">${esc(f.name)}</a>`).join('<br>')}</p>` : ''}
 ${uploads && !files.length ? '<p style="font-size:13px;background:#fff6e0;padding:10px;border-radius:4px">This order includes the customer\'s own file(s). Ask them to send the original file(s) on WhatsApp or email.</p>' : ''}
@@ -394,7 +417,9 @@ async function notifyPaid(data, check, source) {
       state:       c.state   || '',
       notes:       c.notes   || '',
       amountStatus: check.ok ? 'exact' : 'mismatch',
-      problems:    check.ok ? [] : (check.problems || [])
+      problems:    check.ok ? [] : (check.problems || []),
+      utm:         o.utm || null,
+      campaign:    utmSummary(o.utm) || null
     });
   } catch (e) {
     console.warn('[hanga] KV write skipped:', e && e.message);
@@ -421,4 +446,4 @@ function isFresh(data) {
   return !t || Date.now() - t < FRESH_MS;
 }
 
-module.exports = { fetchT, DELIVERY_REGIONS, deliveryFor, line, block, REF_RE, STRONG_REF_RE, PAYSTACK_REF_RE, EMAIL_RE, rateLimited, isFresh, notifyPaid, waLink, PRICES, SET_DISCOUNTS, naira, expectedTotal, verifySignature, paystackVerify, checkPayment, publicView, receiptEmail, sendResend, readMetaOrder };
+module.exports = { readUtm, utmSummary, UTM_KEYS, fetchT, DELIVERY_REGIONS, deliveryFor, line, block, REF_RE, STRONG_REF_RE, PAYSTACK_REF_RE, EMAIL_RE, rateLimited, isFresh, notifyPaid, waLink, PRICES, SET_DISCOUNTS, naira, expectedTotal, verifySignature, paystackVerify, checkPayment, publicView, receiptEmail, sendResend, readMetaOrder };

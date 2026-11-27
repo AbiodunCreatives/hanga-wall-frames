@@ -189,8 +189,8 @@
   </div>
 </footer>
 
-<script src="js/site.js?v=5"></script>
-<script src="js/receipt.js?v=5"></script>
+<script src="js/site.js?v=6"></script>
+<script src="js/receipt.js?v=6"></script>
 <script>
 const $ = id => document.getElementById(id);
 
@@ -367,7 +367,8 @@ function buildOrderData(method) {
         cloudinaryUrl: i.cloudinaryUrl || null, cloudinaryFailed: !!i.cloudinaryFailed })) })),
     gross: T.gross, discount: T.discount, subtotal: T.subtotal,
     deliveryFee: T.deliveryFee, deliveryRegion: T.delivery ? T.delivery.label : null,
-    price: T.total
+    price: T.total,
+    utm: HANGA.getUtm() || undefined // first-touch campaign (attribution only)
   }, c);
 }
 function saveOrder(data) {

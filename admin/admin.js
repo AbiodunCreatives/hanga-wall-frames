@@ -309,6 +309,7 @@
     html += drow('Placed', fmtDateFull(o.placedAt));
     html += drow('Paid at', fmtDateFull(o.paidAt));
     html += drow('Channel', esc(o.channel || '—'));
+    if (o.campaign || o.utm) html += drow('Campaign', esc(o.campaign || '') + (o.utm && o.utm.landing_path ? '<br><span style="color:var(--muted)">' + esc(o.utm.landing_path) + '</span>' : ''));
     html += '</div>';
 
     // Items

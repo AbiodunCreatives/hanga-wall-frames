@@ -83,7 +83,12 @@
     return 'customer-' + (d || 'guest') + '@orders.hanga.ng';
   };
 
+  // First-touch campaign for this order: the copy saved on the order at
+  // checkout, else this tab's sessionStorage record (attribution only).
+  H.orderUtm = function (o) { return (H.normUtm && (H.normUtm(o && o.utm) || (H.getUtm && H.getUtm()))) || null; };
+
   H.paystackOrder = function (o, ref) {
+    var utm = H.orderUtm(o);
     var cust = { name: o.name || '', email: (H.validEmail && H.validEmail(o.email)) ? String(o.email).trim() : '', phone: o.phone || '', address: o.address || '', city: o.city || '', state: o.state || '', notes: o.notes || '' };
     if (Array.isArray(o.lines) && o.lines.length) {
       var C = cartRows(o);
@@ -98,7 +103,7 @@
             }) };
         }),
         subtotal: C.subtotal, discount: C.discount, deliveryFee: C.delivery, total: C.total,
-        customer: cust
+        customer: cust, utm: utm || undefined
       };
     }
     var R = H.receiptRows(o), pieces = H.orderPieces(o);
@@ -115,7 +120,7 @@
       }),
       subtotal: R.subtotal, discount: R.discount, total: R.total,
       delivery: 'To be confirmed after order',
-      customer: cust
+      customer: cust, utm: utm || undefined
     };
   };
 
@@ -130,6 +135,8 @@
       { display_name: 'Items', variable_name: 'items', value: items.slice(0, 480) }
     ];
     if (meta.lines) f.push({ display_name: 'Delivery', variable_name: 'delivery', value: H.formatNaira(meta.deliveryFee) + ' · ' + (o.state || '') });
+    var camp = H.utmSummary ? H.utmSummary(meta.utm) : '';
+    if (camp) f.push({ display_name: 'Campaign', variable_name: 'campaign', value: camp });
     return f;
   };
 

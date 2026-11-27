@@ -101,6 +101,8 @@ module.exports = async function handler(req, res) {
         notes:         c.notes   || '',
         amountStatus:  check.ok ? 'exact' : 'mismatch',
         problems:      check.ok ? [] : (check.problems || []),
+        utm:           o.utm || null,
+        campaign:      L.utmSummary(o.utm) || null,
         // Fulfilment status — default to 'paid' for successful transactions,
         // 'cancelled' for failed/abandoned ones
         fulfilmentStatus: tx.status === 'success' ? 'paid' : 'cancelled',

@@ -30,6 +30,51 @@ window.HANGA = {
 (function () {
   var H = window.HANGA;
 
+  // ── First-touch campaign (UTM) capture — first-party only ────
+  // Saved once per tab session in sessionStorage.hangaUtm the first time a
+  // page is opened with at least one utm_* parameter; never overwritten after
+  // that. Attribution only: it is copied into the order / Paystack metadata
+  // and never affects the price. No third-party tags, no cookies.
+  var UTM_KEY = 'hangaUtm', UTM_FIELDS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'], CLICK_IDS = ['gclid', 'fbclid'];
+  H.UTM_FIELDS = UTM_FIELDS;
+  // One line of plain text: no control chars, no HTML-ish characters, capped.
+  H.cleanUtm = function (v, max) {
+    return String(typeof v === 'string' || typeof v === 'number' ? v : '').replace(/[\u0000-\u001f\u007f-\u009f\u2028\u2029]+/g, ' ').replace(/[<>"'`\\]/g, '').replace(/\s+/g, ' ').trim().slice(0, max || 200);
+  };
+  H.normUtm = function (u) {
+    if (!u || typeof u !== 'object') return null;
+    var out = {}, any = false;
+    UTM_FIELDS.forEach(function (k) { var v = H.cleanUtm(u[k]); if (v) { out[k] = v; any = true; } });
+    if (!any) return null;
+    CLICK_IDS.forEach(function (k) { var v = H.cleanUtm(u[k]); if (v) out[k] = v; });
+    var lp = H.cleanUtm(u.landing_path, 300); if (lp) out.landing_path = lp;
+    var at = H.cleanUtm(u.capturedAt, 40); if (at) out.capturedAt = at;
+    return out;
+  };
+  H.captureUtm = function (search, path) {
+    try {
+      if (sessionStorage.getItem(UTM_KEY)) return false; // first touch wins
+      var q = new URLSearchParams(search == null ? location.search : search), raw = {};
+      UTM_FIELDS.concat(CLICK_IDS).forEach(function (k) { raw[k] = q.get(k); });
+      raw.landing_path = (path == null ? location.pathname : path) + (search == null ? location.search : search);
+      raw.capturedAt = new Date().toISOString();
+      var rec = H.normUtm(raw);
+      if (!rec) return false; // no utm_* on this view: write nothing
+      sessionStorage.setItem(UTM_KEY, JSON.stringify(rec));
+      return true;
+    } catch (e) { return false; }
+  };
+  H.getUtm = function () {
+    try { return H.normUtm(JSON.parse(sessionStorage.getItem(UTM_KEY) || 'null')); } catch (e) { return null; }
+  };
+  // "instagram / social / detty_december_2026 / bio" (empty parts skipped)
+  H.utmSummary = function (u) {
+    u = H.normUtm(u);
+    if (!u) return '';
+    return ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'].map(function (k) { return u[k]; }).filter(Boolean).join(' / ').slice(0, 200);
+  };
+  H.captureUtm();
+
   H.formatNaira = function (n) { return '₦' + Number(n || 0).toLocaleString('en-NG'); };
 
   // ── Sets: Single (1) / Pair (2) ─────────────────────────────
