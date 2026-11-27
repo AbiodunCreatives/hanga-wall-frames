@@ -56,7 +56,7 @@
 
   <!-- ── Preview Panel (shown first on mobile) ──────────────── -->
   <div class="preview-panel" id="previewPanel">
-    <button type="button" class="preview-toggle" id="previewToggle" aria-expanded="true" aria-controls="previewPanel">Hide preview</button>
+    <button type="button" class="preview-toggle" id="previewToggle" aria-expanded="true" aria-controls="previewPanel" aria-label="Hide preview">Hide</button>
     <div class="frame-preview-wrap">
       <div id="canvasPlaceholder" class="canvas-placeholder">
         🖼️
@@ -524,7 +524,8 @@ document.getElementById('whatsappOrderBtn').hidden = !HANGA.whatsappNumber;
   const panel = document.getElementById('previewPanel'), btn = document.getElementById('previewToggle');
   btn.addEventListener('click', () => {
     const mini = panel.classList.toggle('is-hidden');
-    btn.textContent = mini ? 'Show preview' : 'Hide preview';
+    btn.textContent = mini ? 'Show preview' : 'Hide';
+    btn.setAttribute('aria-label', mini ? 'Show preview' : 'Hide preview');
     btn.setAttribute('aria-expanded', String(!mini));
   });
 })();
@@ -1125,6 +1126,30 @@ function loadImg(src) {
 }
 
 let _renderToken = 0;
+// Phones: compact sticky preview gets a zoomed, wide crop of the room.
+const _compactMQ = window.matchMedia('(max-width: 900px)');
+function isCompactPreview() { return _compactMQ.matches; }
+if (_compactMQ.addEventListener) _compactMQ.addEventListener('change', () => renderPreview());
+// One fixed crop per room (sized for the largest set: a 20×24" pair), so
+// switching sizes still shows the true difference in scale.
+function previewCrop(ROOM, W, H) {
+  const s = W / ROOM.width;
+  const pxPerCm = ((ROOM.sofaRight - ROOM.sofaLeft) * s) / ROOM.sofaWidthCm;
+  const sofaMidX = ((ROOM.sofaLeft + ROOM.sofaRight) / 2) * s;
+  const sofaTop = ROOM.sofaTop * s;
+  const fw = 20 * 2.54 * pxPerCm, fh = 24 * 2.54 * pxPerCm;
+  const gap = Math.max(ROOM.setGapMinCm, 20 * 2.54 * ROOM.setGapRatio) * pxPerCm;
+  const rowW = 2 * fw + gap;
+  const top = sofaTop - ROOM.hangGapCm * pxPerCm - fh;
+  const y0 = top - 0.035 * H, y1 = sofaTop + 0.06 * H;   // a little wall above, top of the sofa below
+  let h = y1 - y0, w = h * 1.6;                         // 16:10
+  if (w < rowW * 1.35) { w = rowW * 1.35; h = w / 1.6; }
+  if (w > W) { w = W; h = w / 1.6; }
+  const x = Math.min(Math.max(0, sofaMidX - w / 2), W - w);
+  const y = Math.min(Math.max(0, (y0 + y1) / 2 - h / 2), H - h);
+  return { x, y, w, h };
+}
+
 function renderPreview() {
   const canvas      = document.getElementById('frameCanvas');
   const placeholder = document.getElementById('canvasPlaceholder');
@@ -1145,15 +1170,24 @@ function renderPreview() {
   const ROOM = activeRoom();
   const roomBg = activeRoomBg();
 
+  // Full room scene in "scene px" (FW × FH). On phones the canvas shows a
+  // wide 16:10 window zoomed onto the wall + top of the sofa, so the frames
+  // read larger; the scene (and real-world scale) is drawn exactly the same.
   const W = 900;
   const H = Math.round(W * (ROOM.height / ROOM.width));
-  const dpr = Math.min(window.devicePixelRatio || 1, 2);
-  canvas.width  = W * dpr;
-  canvas.height = H * dpr;
+  const crop = isCompactPreview() ? previewCrop(ROOM, W, H) : null;
+  const CW = W, CH = crop ? Math.round(W * crop.h / crop.w) : H;
+  const dpr = Math.min(window.devicePixelRatio || 1, 2) * (crop ? Math.min(1.5, W / crop.w) : 1);
+  canvas.width  = Math.round(CW * dpr);
+  canvas.height = Math.round(CH * dpr);
   canvas.style.width  = '100%';
   canvas.style.height = 'auto';
+  canvas.classList.toggle('is-cropped', !!crop);
   const ctx = canvas.getContext('2d');
-  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  if (crop) {
+    const z = (CW / crop.w) * dpr;
+    ctx.setTransform(z, 0, 0, z, -crop.x * z, -crop.y * z);
+  } else ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   ctx.imageSmoothingQuality = 'high';
 
   const sizeChosen = !!state.size;
