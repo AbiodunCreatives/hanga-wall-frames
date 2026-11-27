@@ -224,7 +224,7 @@ header {
   position: absolute;
   inset: 0;
   background: url('images/hero-bg.jpg') center 35%/cover no-repeat;
-  background-image: image-set(url("images/hero-bg.webp") type("image/webp"), url("images/hero-bg.jpg") type("image/jpeg"));
+  background-image: image-set(url("images/hero-bg-v2.webp") type("image/webp"), url("images/hero-bg.jpg") type("image/jpeg"));
   opacity: 0.45;
   filter: blur(3px);
   transform: scale(1.05);
@@ -916,7 +916,8 @@ section.section {
 }
 .about-hero .eyebrow,
 .about-hero h1,
-.about-hero p { position: relative; z-index: 1; }
+.about-hero p,
+.about-hero .confirm-actions { position: relative; z-index: 1; }
 .about-hero .eyebrow {
   font-size: 11px;
   letter-spacing: 0.2em;
@@ -1054,7 +1055,8 @@ footer.footer-with-bg::before {
   content: "";
   position: absolute;
   inset: 0;
-  background: url('images/room/dining-room.jpg') center 30% / cover no-repeat;
+  background: url('images/footer-bg.jpg') center 30% / cover no-repeat;
+  background-image: image-set(url("images/footer-bg.webp") type("image/webp"), url("images/footer-bg.jpg") type("image/jpeg"));
   opacity: 0.22;
   filter: blur(2px);
   transform: scale(1.04);

@@ -9,3 +9,7 @@ data/collection-credits.json
 .gitignore
 tools
 SETUP-ADMIN.md
+# Unreferenced by any page (kept in the repo, not deployed)
+images/sets
+images/one-percent.jpg
+images/room/pebble-wall.jpg

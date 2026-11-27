@@ -76,10 +76,18 @@ function verifySignature(rawBody, signature, secret) {
   return a.length === b.length && crypto.timingSafeEqual(a, b);
 }
 
+// fetch with a hard timeout so a slow upstream (Paystack, Resend, KV) can't
+// hang the function until the platform kills it.
+function fetchT(url, opts, ms) {
+  const o = Object.assign({}, opts || {});
+  if (typeof AbortSignal !== 'undefined' && AbortSignal.timeout) o.signal = AbortSignal.timeout(ms || 8000);
+  return fetch(url, o);
+}
+
 async function paystackVerify(reference, secret) {
-  const r = await fetch('https://api.paystack.co/transaction/verify/' + encodeURIComponent(reference), {
+  const r = await fetchT('https://api.paystack.co/transaction/verify/' + encodeURIComponent(reference), {
     headers: { Authorization: 'Bearer ' + secret }
-  });
+  }, 8000);
   const j = await r.json().catch(() => ({}));
   if (!r.ok || !j.status) throw new Error((j && j.message) || ('Paystack verify HTTP ' + r.status));
   return j.data;
@@ -323,10 +331,10 @@ async function sendResend({ to, subject, html, text, replyTo, idempotencyKey }) 
   if (!key) return { skipped: 'RESEND_API_KEY not set' };
   const headers = { Authorization: 'Bearer ' + key, 'Content-Type': 'application/json' };
   if (idempotencyKey) headers['Idempotency-Key'] = idempotencyKey; // Resend drops duplicates for 24h
-  const r = await fetch('https://api.resend.com/emails', {
+  const r = await fetchT('https://api.resend.com/emails', {
     method: 'POST', headers,
     body: JSON.stringify({ from: process.env.RESEND_FROM || 'Hanga Orders <onboarding@resend.dev>', to: [to], subject: line(subject, 150), html, text, reply_to: (replyTo && EMAIL_RE.test(replyTo)) ? replyTo : undefined })
-  });
+  }, 8000);
   const j = await r.json().catch(() => ({}));
   if (!r.ok) throw new Error('Resend HTTP ' + r.status + (j && j.name ? ' ' + line(j.name, 60) : ''));
   return j;
@@ -413,4 +421,4 @@ function isFresh(data) {
   return !t || Date.now() - t < FRESH_MS;
 }
 
-module.exports = { DELIVERY_REGIONS, deliveryFor, line, block, REF_RE, STRONG_REF_RE, PAYSTACK_REF_RE, EMAIL_RE, rateLimited, isFresh, notifyPaid, waLink, PRICES, SET_DISCOUNTS, naira, expectedTotal, verifySignature, paystackVerify, checkPayment, publicView, receiptEmail, sendResend, readMetaOrder };
+module.exports = { fetchT, DELIVERY_REGIONS, deliveryFor, line, block, REF_RE, STRONG_REF_RE, PAYSTACK_REF_RE, EMAIL_RE, rateLimited, isFresh, notifyPaid, waLink, PRICES, SET_DISCOUNTS, naira, expectedTotal, verifySignature, paystackVerify, checkPayment, publicView, receiptEmail, sendResend, readMetaOrder };

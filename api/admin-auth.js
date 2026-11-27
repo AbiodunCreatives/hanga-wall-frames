@@ -42,6 +42,32 @@ function verifyToken(token, secret) {
 // Export verifyToken so other API routes can use it.
 module.exports.verifyToken = verifyToken;
 
+// Shared (cross-instance) brute-force guard for the PIN: at most 10 wrong PINs
+// per IP per 15 minutes, counted in KV. If KV isn't configured or is down, the
+// per-instance in-memory limiter below still applies.
+const FAIL_MAX = 10, FAIL_WINDOW_S = 15 * 60;
+function clientIp(req) {
+  return String(req.headers['x-real-ip'] || (req.headers['x-forwarded-for'] || '').split(',')[0] || '?').trim().slice(0, 64);
+}
+async function kvCmd(commands) {
+  const url = (process.env.KV_REST_API_URL || '').replace(/\/$/, ''), token = process.env.KV_REST_API_TOKEN || '';
+  if (!url || !token) return null;
+  try {
+    const r = await L.fetchT(url + '/pipeline', { method: 'POST', headers: { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' }, body: JSON.stringify(commands) }, 3000);
+    if (!r.ok) return null;
+    const j = await r.json().catch(() => null);
+    return Array.isArray(j) ? j : null;
+  } catch (e) { return null; }
+}
+const failKey = req => 'rl:admin-auth:' + crypto.createHash('sha256').update(clientIp(req)).digest('hex').slice(0, 32);
+async function tooManyFailures(req) {
+  const r = await kvCmd([['GET', failKey(req)]]);
+  return !!(r && r[0] && Number(r[0].result) >= FAIL_MAX);
+}
+async function recordFailure(req) {
+  await kvCmd([['INCR', failKey(req)], ['EXPIRE', failKey(req), String(FAIL_WINDOW_S), 'NX']]);
+}
+
 module.exports.handler = async function handler(req, res) {
   if (req.method !== 'POST') { res.setHeader('Allow', 'POST'); return send(res, 405, { ok: false, error: 'method_not_allowed' }); }
   if (L.rateLimited(req, 10, 60 * 1000)) { res.setHeader('Retry-After', '60'); return send(res, 429, { ok: false, error: 'too_many_requests' }); }
@@ -56,8 +82,9 @@ module.exports.handler = async function handler(req, res) {
     body = JSON.parse(raw);
   } catch (e) { return send(res, 400, { ok: false, error: 'bad_request' }); }
 
-  const submitted = String(body.pin || '').trim();
+  const submitted = String(body.pin || '').trim().slice(0, 128);
   if (!submitted) return send(res, 400, { ok: false, error: 'pin_required' });
+  if (await tooManyFailures(req)) { res.setHeader('Retry-After', String(FAIL_WINDOW_S)); return send(res, 429, { ok: false, error: 'too_many_requests' }); }
 
   // Constant-time PIN compare
   const expectedHash = crypto.createHmac('sha256', secret).update(pin).digest('hex');
@@ -65,7 +92,7 @@ module.exports.handler = async function handler(req, res) {
   const a = Buffer.from(expectedHash), b = Buffer.from(submittedHash);
   const match = a.length === b.length && crypto.timingSafeEqual(a, b);
 
-  if (!match) return send(res, 401, { ok: false, error: 'wrong_pin' });
+  if (!match) { await recordFailure(req); return send(res, 401, { ok: false, error: 'wrong_pin' }); }
 
   return send(res, 200, { ok: true, token: makeToken(secret), ttl: TOKEN_TTL });
 };

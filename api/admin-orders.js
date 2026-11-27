@@ -57,11 +57,11 @@ function kvBase() {
 // commands = [["SET","key","val"], ["ZADD","idx","1234","member"], ...]
 async function kvPipeline(commands) {
   const { url, token } = kvBase();
-  const r = await fetch(url + '/pipeline', {
+  const r = await L.fetchT(url + '/pipeline', {
     method: 'POST',
     headers: { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' },
     body: JSON.stringify(commands)
-  });
+  }, 6000);
   const results = await r.json().catch(() => []);
   if (!r.ok) throw new Error('KV pipeline HTTP ' + r.status);
   return Array.isArray(results) ? results : [];
@@ -70,9 +70,9 @@ async function kvPipeline(commands) {
 // GET a JSON value. Upstash returns { result: <raw> }; we parse if it came back as a string.
 async function kvGet(key) {
   const { url, token } = kvBase();
-  const r = await fetch(url + '/get/' + encodeURIComponent(key), {
+  const r = await L.fetchT(url + '/get/' + encodeURIComponent(key), {
     headers: { Authorization: 'Bearer ' + token }
-  });
+  }, 6000);
   const j = await r.json().catch(() => ({}));
   if (!r.ok) throw new Error('KV GET error ' + r.status);
   const raw = j.result;
@@ -84,14 +84,32 @@ async function kvGet(key) {
   return raw;
 }
 
+// Read many JSON values with MGET (batched), falling back to parallel GETs.
+const parseVal = raw => { if (raw === null || raw === undefined) return null; if (typeof raw === 'string') { try { return JSON.parse(raw); } catch (e) { return raw; } } return raw; };
+async function kvGetMany(keys) {
+  const out = [];
+  try {
+    for (let i = 0; i < keys.length; i += 200) {
+      const chunk = keys.slice(i, i + 200);
+      const res = await kvPipeline([['MGET', ...chunk]]);
+      const r0 = res[0] || {};
+      if (r0.error || !Array.isArray(r0.result) || r0.result.length !== chunk.length) throw new Error('MGET failed');
+      out.push(...r0.result.map(parseVal));
+    }
+    return out;
+  } catch (e) {
+    return Promise.all(keys.map(k => kvGet(k).catch(() => null)));
+  }
+}
+
 // SET a JSON value. POST the JSON as the body to /set/key
 async function kvSet(key, value) {
   const { url, token } = kvBase();
-  const r = await fetch(url + '/set/' + encodeURIComponent(key), {
+  const r = await L.fetchT(url + '/set/' + encodeURIComponent(key), {
     method: 'POST',
     headers: { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' },
     body: JSON.stringify(value)
-  });
+  }, 6000);
   const j = await r.json().catch(() => ({}));
   if (!r.ok) throw new Error('KV SET error ' + r.status);
   return j;
@@ -100,9 +118,9 @@ async function kvSet(key, value) {
 // ZADD key score member — score and member as URL path segments
 async function kvZadd(key, score, member) {
   const { url, token } = kvBase();
-  const r = await fetch(
+  const r = await L.fetchT(
     url + '/zadd/' + encodeURIComponent(key) + '/' + score + '/' + encodeURIComponent(member),
-    { headers: { Authorization: 'Bearer ' + token } }
+    { headers: { Authorization: 'Bearer ' + token } }, 6000
   );
   const j = await r.json().catch(() => ({}));
   if (!r.ok) throw new Error('KV ZADD error ' + r.status);
@@ -113,9 +131,9 @@ async function kvZadd(key, score, member) {
 async function kvZrange(key, start, stop) {
   const { url, token } = kvBase();
   // Upstash path: /zrange/key/max/min/byscore/rev  (max then min for reverse)
-  const r = await fetch(
+  const r = await L.fetchT(
     url + '/zrange/' + encodeURIComponent(key) + '/' + start + '/' + stop + '/byscore/rev',
-    { headers: { Authorization: 'Bearer ' + token } }
+    { headers: { Authorization: 'Bearer ' + token } }, 6000
   );
   const j = await r.json().catch(() => ({ result: [] }));
   return Array.isArray(j.result) ? j.result : [];
@@ -136,7 +154,16 @@ async function writeOrder(orderData) {
     adminNotes: '',
     deleted: false
   });
-  await kvSet('order:' + ref, record);
+  // Atomic create-if-absent: the webhook and /api/verify can run at the same
+  // moment; SET NX means only the first writer wins and nothing is overwritten.
+  let created = null;
+  try {
+    const out = await kvPipeline([['SET', 'order:' + ref, JSON.stringify(record), 'NX']]);
+    const r0 = out[0] || {};
+    if (!r0.error) created = r0.result === 'OK';
+  } catch (e) { created = null; }
+  if (created === false) return;                 // someone else saved it first
+  if (created === null) await kvSet('order:' + ref, record); // pipeline unavailable → old path
   const score = orderData.placedAt ? Date.parse(orderData.placedAt) : Date.now();
   await kvZadd('orders:index', score, ref);
 }
@@ -183,7 +210,7 @@ module.exports = async function handler(req, res) {
       if (!allRefs.length) return send(res, 200, { ok: true, orders: [], total: 0, page, pages: 0, stats: emptyStats });
 
       // Fetch all in parallel (KV reads are fast)
-      const records = await Promise.all(allRefs.map(r => kvGet('order:' + r).catch(() => null)));
+      const records = await kvGetMany(allRefs.map(r => 'order:' + r));
       let orders = records
         .filter(o => o && !o.deleted)
         .filter(o => !status || o.fulfilmentStatus === status)
