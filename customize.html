@@ -63,10 +63,6 @@
       </div>
       <canvas id="frameCanvas" style="display:none" role="img" aria-label="Preview of your framed image on a wall"></canvas>
       <p class="preview-label" id="previewLabel" aria-live="polite"></p>
-      <div class="scene-switcher" id="sceneSwitcher" hidden>
-        <button class="scene-dot active" data-scene="0" aria-label="Wall scene 1: Minimal white living room" title="Minimal white"></button>
-        <button class="scene-dot" data-scene="1" aria-label="Wall scene 2: Pebble wall" title="Pebble wall"></button>
-      </div>
       <p class="preview-scale-note" id="previewScaleNote"></p>
     </div>
   </div>
@@ -469,21 +465,11 @@ const ROOMS = [
     setGapRatio: 0.06, setGapMinCm: 2.5,
     mouldingRatio: 0.025, mouldingMinCm: 0.9,
     shadowColor: 'rgba(40,30,20,0.30)'
-  },
-  {
-    label: 'Pebble wall',
-    src:   'images/room/pebble-wall.jpg',
-    width: 1086, height: 1448,
-    sofaLeft: 60, sofaRight: 760, sofaTop: 900,
-    sofaWidthCm: 155, hangGapCm: 0,
-    setGapRatio: 0.06, setGapMinCm: 2.5,
-    mouldingRatio: 0.025, mouldingMinCm: 0.9,
-    shadowColor: 'rgba(20,20,20,0.35)'
   }
 ];
 
 let _activeScene = 0;
-// Preload all room backgrounds
+// Preload the room background (one wall scene)
 const _roomBgs = ROOMS.map((r, i) => {
   const img = new Image();
   img.src = r.src;
@@ -527,37 +513,6 @@ document.querySelectorAll('.bld-qty-save').forEach(el => {
 
 // WhatsApp order button only appears when a number is set in js/site.js
 document.getElementById('whatsappOrderBtn').hidden = !HANGA.whatsappNumber;
-
-// ── Scene switcher ─────────────────────────────────────────────
-document.querySelectorAll('.scene-dot').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const idx = Number(btn.dataset.scene);
-    if (idx === _activeScene) return;
-    _activeScene = idx;
-    document.querySelectorAll('.scene-dot').forEach((b, i) => b.classList.toggle('active', i === idx));
-    renderPreview();
-  });
-});
-
-// Swipe left/right on the canvas to cycle scenes
-(function () {
-  const canvas = document.getElementById('frameCanvas');
-  let _tx = 0, _ty = 0;
-  canvas.addEventListener('touchstart', e => {
-    _tx = e.changedTouches[0].clientX;
-    _ty = e.changedTouches[0].clientY;
-  }, { passive: true });
-  canvas.addEventListener('touchend', e => {
-    const dx = e.changedTouches[0].clientX - _tx;
-    const dy = e.changedTouches[0].clientY - _ty;
-    // Only act on mostly-horizontal swipes of at least 40px
-    if (Math.abs(dx) < 40 || Math.abs(dy) > Math.abs(dx)) return;
-    const next = ((_activeScene + (dx < 0 ? 1 : -1)) + ROOMS.length) % ROOMS.length;
-    _activeScene = next;
-    document.querySelectorAll('.scene-dot').forEach((b, i) => b.classList.toggle('active', i === next));
-    renderPreview();
-  }, { passive: true });
-})();
 
 // ── Frames: Single / Pair ───────────────────────────────
 function selectPieces(n, opts) {
@@ -1145,20 +1100,17 @@ function renderPreview() {
   const placeholder = document.getElementById('canvasPlaceholder');
   const label       = document.getElementById('previewLabel');
   const scaleNote   = document.getElementById('previewScaleNote');
-  const switcher    = document.getElementById('sceneSwitcher');
 
   if (!filledSlots().length) {
     canvas.style.display = 'none';
     placeholder.style.display = '';
     label.textContent = '';
     if (scaleNote) scaleNote.textContent = '';
-    if (switcher) switcher.hidden = true;
     return;
   }
 
   placeholder.style.display = 'none';
   canvas.style.display = 'block';
-  if (switcher) switcher.hidden = false;
 
   const ROOM = activeRoom();
   const roomBg = activeRoomBg();
