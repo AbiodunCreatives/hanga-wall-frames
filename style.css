@@ -2858,3 +2858,11 @@ html.kb-open .toast.show { transform: none !important; }
   .hiw2-text, .hiw2-connector { display: none; }
 }
 @media (max-width: 900px) { .preview-panel.is-hidden .preview-toggle { position: relative; } }
+
+/* ─── Dec 1: supporting hero line + 11-answer FAQ ─────────────── */
+.hero p.hero-sub { font-size: clamp(14px, 2.2vw, 17px); font-weight: 400; color: rgba(255,255,255,0.92); margin: -8px auto 14px; line-height: 1.4; }
+@media (max-width: 600px) { .hero p.hero-sub { margin: -6px auto 10px; font-size: 14px; } }
+.faq-intro { color: var(--muted); max-width: 760px; margin-top: 10px; font-size: 15px; line-height: 1.6; }
+.faq-list .faq-a ul { padding: 0 22px 16px 42px; margin: -6px 0 0; color: var(--muted); line-height: 1.7; font-size: 15px; }
+.faq-list .faq-a li { margin: 2px 0; }
+.faq-list .faq-a strong { color: var(--black); }
