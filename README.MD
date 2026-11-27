@@ -23,7 +23,7 @@ All contact and payment details live in one place, `window.HANGA` at the top of 
 - `whatsappNumber` – international format, digits only (e.g. `2348012345678`). Turns on the WhatsApp footer link, "Order on WhatsApp" in the builder and "Send on WhatsApp" on the confirmation page.
 - `instagramHandle` – turns on the Instagram footer link.
 - `paystackPublicKey` – optional Paystack **public** key (`pk_live_…`). Better: set `PAYSTACK_PUBLIC_KEY` in Vercel. See **SETUP-PAYSTACK.md** for payments and the automatic owner email. Never put the secret key in this repo.
-- `setDiscounts` – naira off a whole multi-frame set: `{ 2: 200, 3: 500 }` means a Pair is 2 × the per-frame price − ₦200 and a Trio is 3 × − ₦500. Single frames have no discount. Every price on the site is calculated from this.
+- `setDiscounts` – naira off a whole Pair: `{ 2: 500 }` means a Pair is 2 × the per-frame price − ₦500 (keep `SET_DISCOUNTS` in `api/_lib.js` the same). Single frames have no discount. Every price on the site is calculated from this.
 - `bank` – account details for manual transfer; shown only when `confirmed: true`.
 
 Anything left empty is hidden, so the site never shows a dead link or fake payment.
@@ -44,11 +44,11 @@ Nationwide delivery within 3 business days. We will confirm your delivery fee af
 - `images/hero-bg.jpg` – homepage background. Photo by **Mateusz Pielech** on Pexels, "Stylish Living Room with Red Sofa and Art Prints" (https://www.pexels.com/photo/stylish-living-room-with-red-sofa-and-art-prints-29252569/), used under the Pexels License (free for commercial use, no attribution required — credited here as thanks). Resized to 1920×1280.
 
 - `images/room/living-room.jpg` – the builder's wall preview. Photo by **RDNE Stock project** on Pexels, "White Sofa Beside White Wall" (https://www.pexels.com/photo/white-sofa-beside-white-wall-8581013/), used under the Pexels License (free for commercial use, no attribution required — credited here as thanks). Cropped, slightly warmed and resized to 1920×1896. If you swap it, update the sofa coordinates in `ROOM` in `customize.html`.
-- `images/sets/dont-give-up-*.jpg` – the three typographic panels of the "Don't Give Up" trio, made for Hanga.
+- `images/sets/dont-give-up-*.jpg` – typographic panels made for Hanga (not currently offered in the builder).
 
 ## Multi-frame sets
 
-Customers choose **Single (1)**, **Pair (2)** or **Trio (3)** first. A set is one product: one size and one frame style for every piece, one cart line, and every piece listed at checkout and in the order message. Curated sets live in `CURATED_SETS` in `customize.html` (they point at gallery prints by id); customers can also fill each frame with any print or their own photo.
+Customers choose **Single (1)** or **Pair (2)** first. A pair is one product: one size and one frame style for both frames, one cart line, and every piece listed at checkout and in the order message. Curated pairs live in `CURATED_SETS[2]` in `customize.html` (shown as a swipeable rail) (they point at gallery prints by id); customers can also fill each frame with any print or their own photo.
 
 ## Run locally
 

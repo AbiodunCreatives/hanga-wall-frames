@@ -436,7 +436,7 @@
       .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
   }
   function shortRef(r) { return r ? r.replace(/^HNG-/, '') : '—'; }
-  function setLabel(n) { return ({ 1:'Single', 2:'Pair', 3:'Trio' })[n] || 'Single'; }
+  function setLabel(n) { return ({ 1:'Single', 2:'Pair' })[n] || (n > 1 ? n + ' frames' : 'Single'); }
   function statusName(s) { return ({ paid:'Paid – New', processing:'Processing', shipped:'Shipped', delivered:'Delivered', cancelled:'Cancelled' })[s] || s; }
   function statusBadge(o) {
     var s = o.fulfilmentStatus || 'paid';

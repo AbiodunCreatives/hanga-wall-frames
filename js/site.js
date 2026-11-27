@@ -21,10 +21,10 @@ window.HANGA = {
   // See SETUP-PAYSTACK.md.
   paystackPublicKey: '',
 
-  // Multi-frame sets: naira taken off the WHOLE set (per-frame price × pieces).
+  // Pairs: naira taken off the WHOLE pair (per-frame price × pieces).
   // Single frames get no discount. Change the numbers here to change every
   // price on the site (builder, checkout, confirmation, order messages).
-  setDiscounts: { 2: 500, 3: 1000 }
+  setDiscounts: { 2: 500 }
 };
 
 (function () {
@@ -32,8 +32,8 @@ window.HANGA = {
 
   H.formatNaira = function (n) { return '₦' + Number(n || 0).toLocaleString('en-NG'); };
 
-  // ── Sets: Single (1) / Pair (2) / Trio (3) ───────────────────
-  H.setLabel = function (n) { return ({ 1: 'Single', 2: 'Pair', 3: 'Trio' })[n] || 'Single'; };
+  // ── Sets: Single (1) / Pair (2) ─────────────────────────────
+  H.setLabel = function (n) { return ({ 1: 'Single', 2: 'Pair' })[n] || (n > 1 ? n + ' frames' : 'Single'); };
   H.setDiscount = function (n) { return n > 1 ? Number((H.setDiscounts || {})[n] || 0) : 0; };
   H.setTotal = function (perFrame, n) { n = n || 1; return Math.max(0, Number(perFrame || 0) * n - H.setDiscount(n)); };
 

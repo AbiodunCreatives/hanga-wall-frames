@@ -1,4 +1,4 @@
-"""Composite three Hanga prints into the framed trio of the homepage hero photo.
+"""Composite three Hanga prints into the three frames on the wall of the homepage hero photo.
 Source: git show e66d8ac:images/hero-bg.jpg (original stock wall photo)."""
 import sys, subprocess, io
 import numpy as np

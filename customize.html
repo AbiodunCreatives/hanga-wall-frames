@@ -108,14 +108,8 @@
           <span class="bld-qty-sub">2 frames</span>
           <span class="bld-qty-save" data-save="2"></span>
         </button>
-        <button type="button" class="bld-qty-opt" aria-pressed="false" data-pieces="3" onclick="selectPieces(3)">
-          <span class="bld-qty-art" aria-hidden="true"><i></i><i></i><i></i></span>
-          <span class="bld-qty-name">Trio</span>
-          <span class="bld-qty-sub">3 frames</span>
-          <span class="bld-qty-save" data-save="3"></span>
-        </button>
       </div>
-      <p class="bld-qty-note">Sets hang together as one piece. Size and frame style apply to every frame in the set.</p>
+      <p class="bld-qty-note">A pair hangs together as one piece. Size and frame style apply to both frames.</p>
       </div><!-- /.bld-step-body -->
     </div>
 
@@ -132,10 +126,18 @@
       </div>
       <div class="bld-step-body">
       <div class="bld-setpanel" id="setPanel" hidden>
-        <p class="bld-setpanel-label">Curated sets</p>
-        <div class="bld-sets" id="curatedSets" role="group" aria-label="Curated sets"></div>
+        <div class="bld-setpanel-row">
+          <p class="bld-setpanel-label">Curated pairs</p>
+          <span class="bld-rail-hint" id="setsHint" aria-hidden="true">Swipe →</span>
+          <span class="bld-rail-nav" aria-hidden="false">
+            <button type="button" class="bld-rail-btn" id="setsPrev" aria-label="Previous curated pairs">‹</button>
+            <button type="button" class="bld-rail-btn" id="setsNext" aria-label="More curated pairs">›</button>
+          </span>
+        </div>
+        <div class="bld-sets" id="curatedSets" role="group" aria-label="Curated pairs" tabindex="0"></div>
         <p class="bld-setpanel-label">Your frames <span class="bld-setpanel-hint" id="slotHint"></span></p>
-        <div class="bld-slots" id="setSlots" role="group" aria-label="Frames in your set"></div>
+        <div class="bld-slots" id="setSlots" role="group" aria-label="Frames in your pair"></div>
+        <p class="bld-setpanel-or">Or choose each frame yourself: tap a frame above, then pick a print or upload a photo.</p>
       </div>
       <div class="source-tabs">
         <button type="button" class="source-tab active" aria-pressed="true" onclick="switchTab('gallery', this)">Our Gallery</button>
@@ -353,7 +355,7 @@
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="flex-shrink:0"><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.656 1.438 5.168L2 22l4.979-1.418A9.956 9.956 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2Z" fill="#25D366"/><path d="M9.14 7.5c-.21 0-.44.005-.635.44-.21.47-.8 1.957-.8 2.389 0 .433.223.853.447 1.136.224.283 1.343 2.059 3.272 2.808 1.613.628 1.93.504 2.278.473.348-.031 1.123-.459 1.282-.902.158-.443.158-.822.11-.902-.047-.08-.175-.127-.365-.222-.19-.095-1.123-.554-1.297-.617-.174-.063-.3-.095-.427.095-.126.19-.49.617-.601.743-.11.127-.222.143-.412.048-.19-.096-.803-.296-1.53-.944-.565-.504-.946-1.126-1.058-1.316-.11-.19-.012-.293.084-.388.085-.085.19-.222.285-.333.095-.11.127-.19.19-.317.063-.127.032-.238-.016-.333-.047-.095-.427-1.03-.585-1.41-.158-.381-.317-.317-.427-.317Z" fill="#fff"/></svg>
         Order on WhatsApp
       </a>
-      <p class="summary-note">Pairs and trios get a set discount. Nationwide delivery within 3 business days.</p>
+      <p class="summary-note">Pairs get a set discount. Nationwide delivery within 3 business days.</p>
     </div>
   </div>
 
@@ -402,7 +404,7 @@
 <script src="js/site.js"></script>
 <script>
 // ── State ──────────────────────────────────────────────────────
-// A order is 1, 2 or 3 frames ("Single", "Pair", "Trio"). Each slot holds one
+// An order is 1 or 2 frames ("Single" or "Pair"). Each slot holds one
 // image; size and frame style apply to the whole set.
 const state = {
   pieces: 1,
@@ -446,17 +448,6 @@ const CURATED_SETS = {
     { key: 'still-waters',       name: 'Still Waters',         ids: ['autumn-lake', 'starlit-lake'] },
     { key: 'midnight-city',      name: 'Midnight City',        ids: ['tram-reflection', 'midnight-tram'] },
     { key: 'lambo-pair',         name: 'Lamborghini Duo',      ids: ['lambo-diablo-street', 'lambo-diablo-rear'] }
-  ],
-  3: [
-    { key: 'cr7-trio',       name: 'CR7 Trilogy',      ids: ['cr7-portrait', 'cristiano-7', 'cr7-nike'] },
-    { key: 'grind-trio',     name: 'Grind Trio',       ids: ['stay-hard', 'focus', 'consistency'] },
-    { key: 'surreal-trio',   name: 'Surreal Trio',     ids: ['blind', 'red-hands', 'world-mask'] },
-    { key: 'african-trio',   name: 'African Art Trio', ids: ['african-roots', 'morning-brew', 'stacked-gele'] },
-    { key: 'highlands-trio', name: 'Highlands Trio',   ids: ['canyon-falls', 'ridge-road', 'valley-hideaway'] },
-    { key: 'dont-give-up',   name: "Don't Give Up",    items: [
-        { id: 'dont-give-up-1', name: "Don't Give Up — DON'T", src: 'images/sets/dont-give-up-1.jpg', thumb: 'images/thumbs/dont-give-up-1.jpg' },
-        { id: 'dont-give-up-2', name: "Don't Give Up — GIVE",  src: 'images/sets/dont-give-up-2.jpg', thumb: 'images/thumbs/dont-give-up-2.jpg' },
-        { id: 'dont-give-up-3', name: "Don't Give Up — UP.",   src: 'images/sets/dont-give-up-3.jpg', thumb: 'images/thumbs/dont-give-up-3.jpg' } ] }
   ]
 };
 
@@ -466,7 +457,7 @@ function thumbItem(id) {
   return { id, name: t.dataset.name || id, src: t.dataset.src, thumb: t.querySelector('img').getAttribute('src'), isUpload: false };
 }
 function setItems(set) { return set.items ? set.items.map(i => Object.assign({ isUpload: false }, i)) : set.ids.map(thumbItem).filter(Boolean); }
-function findSet(key) { return [].concat(CURATED_SETS[2], CURATED_SETS[3]).find(s => s.key === key) || null; }
+function findSet(key) { return (CURATED_SETS[2] || []).find(s => s.key === key) || null; }
 
 // Room mockup scenes — coordinates are in each image's native pixels.
 // sofaLeft/sofaRight mark the sofa ends; sofaTop is the top of the sofa back.
@@ -530,7 +521,7 @@ document.querySelectorAll('.swatch').forEach(sw => {
 });
 HANGA.makePressable(document.getElementById('uploadZone'), 'Upload your image');
 
-// Savings badges on the Pair / Trio options
+// Savings badge on the Pair option
 document.querySelectorAll('.bld-qty-save').forEach(el => {
   const d = HANGA.setDiscount(Number(el.dataset.save));
   el.textContent = d ? 'Save ' + HANGA.formatNaira(d) : '';
@@ -571,9 +562,9 @@ document.querySelectorAll('.scene-dot').forEach(btn => {
   }, { passive: true });
 })();
 
-// ── Frames: Single / Pair / Trio ───────────────────────────────
+// ── Frames: Single / Pair ───────────────────────────────
 function selectPieces(n, opts) {
-  n = [1, 2, 3].indexOf(Number(n)) === -1 ? 1 : Number(n);
+  n = Number(n) >= 2 ? 2 : 1; // Single or Pair (old ?frames=3 links open a Pair)
   state.pieces = n;
   const old = state.slots;
   state.slots = Array.from({ length: n }, (_, i) => old[i] || null);
@@ -588,7 +579,7 @@ function selectPieces(n, opts) {
   document.getElementById('imageHeadingText').textContent = n === 1 ? 'Choose Your Image' : 'Choose Your ' + setLabel();
   renderCuratedSets();
   refreshAll();
-  if (!(opts && opts.silent) && n > 1) showToast(setLabel() + ' selected — pick a curated set or choose an image for each frame.');
+  if (!(opts && opts.silent) && n > 1) showToast(setLabel() + ' selected — pick a curated pair or choose an image for each frame.');
 }
 
 function renderCuratedSets() {
@@ -609,7 +600,27 @@ function renderCuratedSets() {
     b.addEventListener('click', () => applyCuratedSet(set.key));
     wrap.appendChild(b);
   });
+  const sel = wrap.querySelector('.bld-set.selected');
+  if (sel) wrap.scrollLeft = Math.max(0, sel.offsetLeft - wrap.offsetLeft - 8);
+  if (window._syncSetsRail) requestAnimationFrame(window._syncSetsRail);
 }
+
+// Curated pairs rail: arrow buttons (desktop) and the swipe hint (hidden once scrolled)
+(function initSetsRail() {
+  const rail = document.getElementById('curatedSets');
+  const step = () => Math.max(160, rail.clientWidth * 0.8);
+  document.getElementById('setsPrev').addEventListener('click', () => rail.scrollBy({ left: -step(), behavior: 'smooth' }));
+  document.getElementById('setsNext').addEventListener('click', () => rail.scrollBy({ left: step(), behavior: 'smooth' }));
+  const sync = () => {
+    const max = rail.scrollWidth - rail.clientWidth - 2;
+    document.getElementById('setsPrev').disabled = rail.scrollLeft <= 2;
+    document.getElementById('setsNext').disabled = rail.scrollLeft >= max;
+    document.getElementById('setsHint').classList.toggle('is-gone', rail.scrollLeft > 24);
+  };
+  rail.addEventListener('scroll', sync, { passive: true });
+  window.addEventListener('resize', sync);
+  window._syncSetsRail = sync;
+})();
 
 function applyCuratedSet(key) {
   const set = findSet(key);
@@ -786,20 +797,28 @@ function selectGalleryImage(el, name, opts) {
 // ── Mini-gallery filter ────────────────────────────────────────
 // Opens on Featured. On phones long categories show 8 at a time with "Show all".
 let miniCategory = 'featured';
+// On mobile the gallery never scrolls inside the card (inner scrollers can
+// paint outside rounded/clipped cards on iOS Safari). It shows a page of
+// prints and grows in steps with "Show more" instead.
+const MINI_PAGE = 9;
+let miniLimit = MINI_PAGE;
 function filterMiniGallery(category, btn, expand) {
   const wrap = document.getElementById('tab-gallery');
   wrap.querySelectorAll('.filter-chip').forEach(c => c.classList.toggle('active', c.dataset.filter === category));
+  if (category !== miniCategory || !expand) miniLimit = MINI_PAGE;
+  else miniLimit += 12;
   miniCategory = category;
   const matches = [];
   wrap.querySelectorAll('.mini-thumb').forEach(thumb => {
     const cats = (thumb.dataset.category || '').split(/\s+/);
     if (category === 'all' || cats.includes(category)) matches.push(thumb); else thumb.hidden = true;
   });
-  const lim = expand || !window.matchMedia('(max-width: 768px)').matches ? Infinity : 8;
+  const lim = window.matchMedia('(max-width: 768px)').matches ? miniLimit : Infinity;
   matches.forEach((t, i) => { t.hidden = i >= lim; });
   const more = document.getElementById('miniMore');
-  more.hidden = matches.length <= lim;
-  more.textContent = 'Show all ' + matches.length;
+  const left = matches.length - Math.min(lim, matches.length);
+  more.hidden = left <= 0;
+  more.textContent = 'Show more (' + left + ' left)';
 }
 document.getElementById('miniMore').addEventListener('click', () => filterMiniGallery(miniCategory, null, true));
 filterMiniGallery('featured');
@@ -959,7 +978,7 @@ function selectSize(el) {
   updateSummary(); renderPreview();
 }
 
-// Size chips show the set price (and saving) for Pairs and Trios.
+// Size chips show the pair price (and saving) for Pairs.
 function updateSizeChips() {
   document.querySelectorAll('#sizeChips .chip').forEach(c => {
     const per = parseInt(c.dataset.price, 10);
@@ -1056,13 +1075,13 @@ function updateProgress() {
   document.getElementById('statusPieces').textContent = multi ? `${setLabel()} · ${state.pieces} frames${disc ? ' · save ' + HANGA.formatNaira(disc) : ''}` : 'Single frame';
   const filled = filledSlots().length;
   document.getElementById('statusImage').textContent = multi
-    ? (done.image ? 'Selected: ' + orderTitle() : `${filled} of ${state.pieces} frames chosen — pick a curated set or fill each frame`)
+    ? (done.image ? 'Selected: ' + orderTitle() : `${filled} of ${state.pieces} frames chosen`)
     : (state.slots[0] ? 'Selected: ' + state.slots[0].name : 'Pick a print from our gallery or upload your own photo');
   const priceTxt = state.size ? (multi ? `${HANGA.formatNaira(orderTotal())} for the ${setLabel().toLowerCase()}` : HANGA.formatNaira(state.price)) : '';
-  document.getElementById('statusSize').textContent  = state.size ? `Selected: ${state.size}" · ${priceTxt}` : (multi ? 'One size for every frame in the set' : 'Four sizes — the preview shows each one to scale');
+  document.getElementById('statusSize').textContent  = state.size ? `Selected: ${state.size}" · ${priceTxt}` : (multi ? 'One size for both frames' : 'Four sizes — the preview shows each one to scale');
   document.getElementById('statusStyle').textContent = (state.style || 'Black') + ' · Same price for every style';
   const parts = [multi ? setLabel() : null, state.size ? state.size + '"' : null, styleLabel(state.style)].filter(Boolean);
-  document.getElementById('summaryLine').textContent = filled ? parts.join(' · ') : (multi ? 'Choose the images for your set' : 'Choose an image to get started');
+  document.getElementById('summaryLine').textContent = filled ? parts.join(' · ') : (multi ? 'Choose the images for your pair' : 'Choose an image to get started');
   document.getElementById('orderSummary').classList.toggle('is-ready', done.order);
   document.getElementById('mobileBar').classList.toggle('is-ready', done.order);
 }

@@ -5,8 +5,11 @@ const crypto = require('crypto');
 
 // Keep in sync with customize.html (data-price) and js/site.js (setDiscounts).
 const PRICES = { '12×16': 7000, '16×20': 9000, '16×24': 11000, '20×24': 13000, '20×30': 16000, '24×36': 20000 };
-const SET_DISCOUNTS = { 2: 500, 3: 1000 };
-const SET_LABELS = { 1: 'Single', 2: 'Pair', 3: 'Trio' };
+// Hanga sells Singles and Pairs only. A Pair is ₦500 off the per-frame total.
+const SET_DISCOUNTS = { 2: 500 };
+const MAX_PIECES = 2;
+const SET_LABELS = { 1: 'Single', 2: 'Pair' };
+const setLabelOf = n => SET_LABELS[n] || (n > 1 ? n + ' frames' : 'Single');
 
 const naira = n => '₦' + Number(n || 0).toLocaleString('en-NG');
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
@@ -27,9 +30,10 @@ function expectedTotal(order) {
   const size = String((order && order.size) || '').replace(/["x]/g, m => (m === 'x' ? '×' : ''));
   const unit = PRICES[size];
   // The number of frames actually listed wins over a "pieces" claim, so a
-  // 3-frame order can't be priced as one.
-  const itemsN = ((order && order.items) || []).length;
-  const n = Math.min(3, Math.max(1, itemsN || parseInt(order && order.pieces, 10) || 1));
+  // multi-frame order can't be priced as one. More than MAX_PIECES is never
+  // discounted and checkPayment flags it for review.
+  const itemsN = (order && order.itemCount) || ((order && order.items) || []).length;
+  const n = Math.min(10, Math.max(1, itemsN || parseInt(order && order.pieces, 10) || 1));
   if (!unit) return null;
   return { unit, n, subtotal: unit * n, discount: n > 1 ? (SET_DISCOUNTS[n] || 0) : 0, total: unit * n - (n > 1 ? (SET_DISCOUNTS[n] || 0) : 0) };
 }
@@ -69,7 +73,7 @@ function readMetaOrder(data) {
     set: line(o.set, 20), setName: o.setName ? line(o.setName, 60) : null,
     unitPrice: num(o.unitPrice), subtotal: num(o.subtotal), discount: num(o.discount), total: num(o.total),
     itemCount: items.length,
-    items: items.slice(0, 3).map(i => (i && typeof i === 'object' ? {
+    items: items.slice(0, MAX_PIECES).map(i => (i && typeof i === 'object' ? {
       name: line(i.name || i.imageName, 80), imageId: line(i.imageId, 60) || null,
       isUpload: !!i.isUpload, fileKind: i.fileKind === 'pdf' ? 'pdf' : (i.isUpload ? 'image' : null),
       fileName: i.fileName ? line(i.fileName, 80) : null,
@@ -94,7 +98,7 @@ function checkPayment(data) {
   if (!exp) problems.push('Could not price this order (unknown size "' + (order.size || '') + '")');
   else if (paid !== exp.total) problems.push('Paid ' + naira(paid) + ' but price list says ' + naira(exp.total));
   if (order.total != null && Number(order.total) !== paid) problems.push('Paid ' + naira(paid) + ' but receipt total was ' + naira(order.total));
-  if (order.itemCount > 3) problems.push('Order lists ' + order.itemCount + ' frames (max 3)');
+  if (order.itemCount > MAX_PIECES) problems.push('Order lists ' + order.itemCount + ' frames (max ' + MAX_PIECES + ')');
   if (order.pieces && order.itemCount && order.pieces !== order.itemCount) problems.push('Pieces (' + order.pieces + ') does not match frames listed (' + order.itemCount + ')');
   // The Paystack reference must belong to this order (ref, or ref-R<n> for a retry).
   const pref = String(data.reference || '');
@@ -152,7 +156,7 @@ function receiptEmail(data, check) {
   const items = (o.items || []).map((it, i) => ({
     name: (it.name || it.imageName || 'Frame') + (it.isUpload ? (it.fileKind === 'pdf' ? ' (customer PDF' + (it.fileName ? ': ' + it.fileName : '') + ')' : ' (customer photo' + (it.fileName ? ': ' + it.fileName : '') + ')') : ''),
     piece: n > 1 ? 'Frame ' + (i + 1) + ' of ' + n : '',
-    size: o.size, style: o.style, set: (SET_LABELS[n] || 'Single') + (o.setName && n > 1 ? ' · ' + o.setName : ''),
+    size: o.size, style: o.style, set: setLabelOf(n) + (o.setName && n > 1 ? ' · ' + o.setName : ''),
     qty: 1, unit: it.unit || o.unitPrice, total: it.lineTotal || it.unit || o.unitPrice
   }));
   const ref = line(o.ref || data.reference, 40);
@@ -172,7 +176,7 @@ function receiptEmail(data, check) {
     ...items.map(i => '- ' + i.name + (i.piece ? ' [' + i.piece + ']' : '') + ' | ' + i.size + '" | ' + i.style + ' | ' + i.set + ' | qty ' + i.qty + ' | ' + naira(i.unit) + ' | ' + naira(i.total)),
     '',
     'Subtotal: ' + naira(o.subtotal != null ? o.subtotal : exp && exp.subtotal),
-    (o.discount ? (SET_LABELS[n] + ' set discount: -' + naira(o.discount)) : ''),
+    (o.discount ? (setLabelOf(n) + ' set discount: -' + naira(o.discount)) : ''),
     'Delivery: nationwide within 3 business days; fee to be confirmed with the customer',
     'TOTAL PAID: ' + naira(check.paid),
     '', 'CUSTOMER', ...custRows.map(r => r[0] + ': ' + r[1]),
@@ -201,7 +205,7 @@ ${items.map(i => `<tr><td style="${td}">${esc(i.name)}${i.piece ? `<br><span sty
 </table>
 <table style="width:100%;font-size:14px;margin-top:10px">
 <tr><td>Subtotal</td><td style="text-align:right">${naira(o.subtotal != null ? o.subtotal : exp && exp.subtotal)}</td></tr>
-${o.discount ? `<tr><td>${esc(SET_LABELS[n])} set discount</td><td style="text-align:right">−${naira(o.discount)}</td></tr>` : ''}
+${o.discount ? `<tr><td>${esc(setLabelOf(n))} set discount</td><td style="text-align:right">−${naira(o.discount)}</td></tr>` : ''}
 <tr><td>Delivery</td><td style="text-align:right">Fee to be confirmed · Nationwide within 3 business days</td></tr>
 <tr><td style="font-weight:bold;font-size:17px;border-top:2px solid #1a1a1a;padding-top:8px">TOTAL PAID</td><td style="text-align:right;font-weight:bold;font-size:17px;border-top:2px solid #1a1a1a;padding-top:8px">${naira(check.paid)}</td></tr>
 </table>
