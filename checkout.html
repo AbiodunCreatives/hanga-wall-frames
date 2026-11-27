@@ -15,7 +15,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preload" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Lato:wght@300;400;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Lato:wght@300;400;700&display=swap"></noscript>
-  <link rel="stylesheet" href="style.css?v=8">
+  <link rel="stylesheet" href="style.css?v=9">
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -42,8 +42,12 @@
   <!-- ── Order Sidebar (shown first on mobile) ──────────────── -->
   <div class="order-sidebar">
     <div class="order-sidebar-box">
+      <button type="button" class="co-sum-toggle" id="coSumToggle" aria-expanded="false" aria-controls="coSumBody">
+        <span>Order summary <span id="coSumCount"></span></span>
+        <span class="co-sum-right"><strong id="coSumTotal">₦0</strong><span class="co-sum-chev" aria-hidden="true">▾</span></span>
+      </button>
       <div class="sidebar-header">Your Cart <span id="cartCount" class="sidebar-count"></span></div>
-      <div class="sidebar-body">
+      <div class="sidebar-body" id="coSumBody">
         <ul class="cart-lines" id="cartLines" aria-label="Items in your cart"></ul>
         <a href="customize.html" class="add-another" id="addAnother">+ Add another frame</a>
         <div class="sidebar-totals">
@@ -69,35 +73,38 @@
     <h2>Your cart is empty</h2>
     <p class="text-muted">Pick a print from our gallery or frame your own photo.</p>
     <div class="co-empty-actions">
-      <a href="customize.html" class="btn btn-gold">Build a frame →</a>
+      <a href="customize.html" class="btn btn-gold">Create your frame →</a>
       <a href="index.html#gallery" class="btn btn-outline-dark">Browse prints</a>
     </div>
   </div>
 
   <!-- ── Form ───────────────────────────────────────────────── -->
   <div class="checkout-form-col" id="checkoutForm">
-    <h2>Checkout</h2>
+    <h1 class="co-title">Checkout</h1>
 
     <div class="form-section">
       <h3>Your Details</h3>
       <div class="form-row full">
         <div class="form-group">
           <label for="name">Full name</label>
-          <input type="text" id="name" autocomplete="name" maxlength="80" placeholder="Adaeze Okafor" required>
+          <input type="text" id="name" autocomplete="name" maxlength="80" placeholder="Adaeze Okafor" required aria-describedby="nameErr">
+          <p class="field-error" id="nameErr" hidden></p>
         </div>
       </div>
       <div class="form-row full">
         <div class="form-group">
           <label for="phone">Phone number</label>
-          <input type="tel" id="phone" autocomplete="tel" maxlength="20" inputmode="tel" placeholder="0801 234 5678" required aria-describedby="phoneHint">
+          <input type="tel" id="phone" autocomplete="tel" maxlength="20" inputmode="tel" placeholder="0801 234 5678" required aria-describedby="phoneHint phoneErr">
           <p class="field-hint" id="phoneHint">Nigerian mobile number. We'll call or WhatsApp you to arrange delivery.</p>
+          <p class="field-error" id="phoneErr" hidden></p>
         </div>
       </div>
       <div class="form-row full">
         <div class="form-group">
           <label for="email">Email (for your order receipt) <span class="opt">optional</span></label>
-          <input type="email" id="email" autocomplete="email" maxlength="120" inputmode="email" placeholder="adaeze@example.com" aria-describedby="emailHint">
+          <input type="email" id="email" autocomplete="email" maxlength="120" inputmode="email" placeholder="adaeze@example.com" aria-describedby="emailHint emailErr">
           <p class="field-hint" id="emailHint">Used for your Paystack payment receipt. You can also download your Hanga receipt right after paying.</p>
+          <p class="field-error" id="emailErr" hidden></p>
         </div>
       </div>
     </div>
@@ -107,19 +114,23 @@
       <div class="form-row">
         <div class="form-group">
           <label for="state">State</label>
-          <select id="state" autocomplete="address-level1" required>
+          <select id="state" autocomplete="address-level1" required aria-describedby="stateHint stateErr">
             <option value="">Select your state</option>
           </select>
+          <p class="field-hint" id="stateHint">Delivery: South-West ₦2,500 · East &amp; South ₦4,500 · North &amp; FCT ₦6,000</p>
+          <p class="field-error" id="stateErr" hidden></p>
         </div>
         <div class="form-group">
           <label for="city">City / Area</label>
-          <input type="text" id="city" autocomplete="address-level2" maxlength="60" placeholder="e.g. Ikeja" required>
+          <input type="text" id="city" autocomplete="address-level2" maxlength="60" placeholder="e.g. Ikeja" required aria-describedby="cityErr">
+          <p class="field-error" id="cityErr" hidden></p>
         </div>
       </div>
       <div class="form-row full">
         <div class="form-group">
           <label for="address">Street address &amp; landmark</label>
-          <textarea id="address" autocomplete="street-address" maxlength="300" rows="2" placeholder="House number, street, nearest landmark" required></textarea>
+          <textarea id="address" autocomplete="street-address" maxlength="300" rows="2" placeholder="House number, street, nearest landmark" required aria-describedby="addressErr"></textarea>
+          <p class="field-error" id="addressErr" hidden></p>
         </div>
       </div>
       <p class="delivery-quote" id="deliveryQuote" aria-live="polite">Pick your state to see the delivery fee.</p>
@@ -158,7 +169,7 @@
       <h4>Navigate</h4>
       <ul>
         <li><a href="index.html">Home</a></li>
-        <li><a href="customize.html">Customise</a></li>
+        <li><a href="customize.html">Customize</a></li>
         <li><a href="about.html">About Us</a></li>
         <li><a href="index.html#faq">Delivery &amp; FAQs</a></li>
       </ul>
@@ -276,12 +287,19 @@ function render() {
     $('deliveryQuote').classList.remove('is-set');
   }
   $('sidebarTotal').textContent = HANGA.formatNaira(T.total) + (T.delivery ? '' : ' + delivery');
-  $('coPillTotal').textContent = HANGA.formatNaira(T.total);
+  $('coPillTotal').textContent = HANGA.formatNaira(T.total) + (T.delivery ? '' : ' + delivery');
+  $('coSumCount').textContent = '(' + T.count + ')';
+  $('coSumTotal').textContent = HANGA.formatNaira(T.total) + (T.delivery ? '' : ' + delivery');
   const label = T.delivery ? 'Pay ' + HANGA.formatNaira(T.total) + ' →' : 'Pay now →';
   $('placeOrderBtn').textContent = busy ? 'Opening Paystack…' : label;
   $('coPillBtn').textContent = T.delivery ? 'Pay ' + HANGA.formatNaira(T.total) : 'Pay →';
 }
 let busy = false;
+// Mobile: cart collapses into an "Order summary" row so the form starts near the top.
+$('coSumToggle').addEventListener('click', () => {
+  const box = document.querySelector('.order-sidebar'), open = !box.classList.contains('is-open');
+  box.classList.toggle('is-open', open); $('coSumToggle').setAttribute('aria-expanded', String(open));
+});
 window.addEventListener('hanga:cart', render);
 window.addEventListener('pageshow', render);
 render();
@@ -298,24 +316,29 @@ render();
   }).observe(btn);
 })();
 
-// ── Validation ─────────────────────────────────────────────────
-function fieldError(id, msg) {
-  const el = $(id);
-  el.classList.add('is-invalid'); el.setAttribute('aria-invalid', 'true');
-  el.focus(); showToast(msg);
-  el.addEventListener(el.tagName === 'SELECT' ? 'change' : 'input', () => { el.classList.remove('is-invalid'); el.removeAttribute('aria-invalid'); }, { once: true });
-  return false;
+// ── Validation: all fields at once, inline errors, focus the first ─
+function setFieldError(id, msg) {
+  const el = $(id), box = $(id + 'Err');
+  if (msg) { el.classList.add('is-invalid'); el.setAttribute('aria-invalid', 'true'); box.textContent = msg; box.hidden = false; }
+  else { el.classList.remove('is-invalid'); el.removeAttribute('aria-invalid'); box.textContent = ''; box.hidden = true; }
 }
+FIELDS.forEach(k => $(k).addEventListener(k === 'state' ? 'change' : 'input', () => { if ($(k).getAttribute('aria-invalid')) setFieldError(k, ''); }));
 function validate() {
-  if (!$('name').value.trim()) return fieldError('name', 'Please enter your full name.');
-  if (!$('phone').value.trim()) return fieldError('phone', 'Please enter your phone number.');
-  if (!HANGA.validPhone($('phone').value)) return fieldError('phone', 'Please enter a valid Nigerian phone number, e.g. 0801 234 5678.');
-  const em = $('email').value.trim();
-  if (em && !HANGA.validEmail(em)) return fieldError('email', 'That email doesn\'t look right — fix it or leave it empty.');
-  if (!HANGA.deliveryFor($('state').value)) return fieldError('state', 'Please select your state for delivery.');
-  if (!$('city').value.trim()) return fieldError('city', 'Please enter your city or area.');
-  if (!$('address').value.trim()) return fieldError('address', 'Please enter your street address and a landmark.');
-  return true;
+  const v = id => $(id).value.trim(), em = v('email'), errs = {
+    name: v('name') ? '' : 'Please enter your full name.',
+    phone: !v('phone') ? 'Please enter your phone number.' : (HANGA.validPhone(v('phone')) ? '' : 'Please enter a valid Nigerian phone number, e.g. 0801 234 5678.'),
+    email: em && !HANGA.validEmail(em) ? 'That email doesn\'t look right — fix it or leave it empty.' : '',
+    state: HANGA.deliveryFor(v('state')) ? '' : 'Please select your state for delivery.',
+    city: v('city') ? '' : 'Please enter your city or area.',
+    address: v('address') ? '' : 'Please enter your street address and a landmark.'
+  };
+  FIELDS.forEach(k => setFieldError(k, errs[k]));
+  const first = FIELDS.find(k => errs[k]);
+  if (!first) return true;
+  const el = $(first);
+  el.focus({ preventScroll: true });
+  el.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'center' });
+  return false;
 }
 
 // Unguessable order reference: time + 10 chars from crypto.getRandomValues (~50 bits).

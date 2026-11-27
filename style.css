@@ -2749,3 +2749,112 @@ html.kb-open .toast.show { transform: none !important; }
 @media (max-width: 600px) {
   .btn-cta-primary { max-width: 100%; padding-left: 28px; padding-right: 28px; }
 }
+
+/* ═══ UX polish (v9): contrast, touch targets, checkout, toast, layout stability ═══ */
+:root { --gold-text: #8a6a2f; } /* gold for TEXT on light backgrounds (≈5:1 on cream); --gold stays for fills/accents */
+
+/* Gold buttons keep the gold fill but use dark text (white on gold was 2.2:1) */
+.btn-gold, .btn-cta-primary, .hero .btn-primary, .btn-show-all:hover, .btn-primary:hover { color: #1a1a1a; }
+.btn-gold:hover, .hero .btn-primary:hover, .btn-cta-primary:hover { color: #1a1a1a; }
+
+/* Gold text on light backgrounds → darker gold */
+.section-label, .price-card .price, .pv-price, .stars, .confirm-ref, .text-gold,
+.chip-save, .add-another, .faq-list summary::after { color: var(--gold-text); }
+/* …but dark sections keep the bright gold */
+.gallery-section .section-label, .cta-banner .section-label, .values-section .section-label,
+.about-hero .section-label, .chip.selected .chip-save { color: var(--gold); }
+.preview-scale-note { color: #6b6b6b; }
+
+/* Small text up to a readable size */
+.chip-save { font-size: 12px; }
+.bld-slot-label { font-size: 12px; }
+.bld-mobilebar-total span, .co-pill-total span { font-size: 12px; }
+.bld-mobilebar-total em { font-size: 12px; }
+@media (max-width: 900px) { .preview-panel .preview-label { font-size: 12px; } }
+
+/* Touch targets ≥ 44px */
+.filter-chip, .gallery-section .filter-chip, .mini-filters .filter-chip { min-height: 44px; }
+.filter-chip, .gallery-section .filter-chip, .mini-filters .filter-chip { font-size: 12px; }
+.mini-filters .filter-chip { padding: 6px 12px; }
+.cl-qty button { width: 44px; height: 44px; }
+.cl-remove { min-height: 44px; padding: 0 6px; }
+@media (max-width: 900px) {
+  .preview-toggle { font-size: 12px; }
+  .preview-toggle::before { content: ""; position: absolute; inset: -9px -6px; } /* invisible 44px hit area */
+}
+
+/* Builder progress: dots are buttons that jump to their step */
+.bld-progress-btn {
+  display: flex; align-items: center; gap: 8px; flex: none;
+  min-height: 44px; min-width: 44px; padding: 0; margin: 0;
+  background: none; border: 0; font: inherit; color: inherit; letter-spacing: inherit; text-transform: inherit; cursor: pointer;
+}
+.bld-progress-btn:focus-visible { outline: 2px solid var(--black); outline-offset: 2px; border-radius: 999px; }
+.bld-progress-btn:hover .bld-progress-dot { border-color: var(--gold); }
+.bld-progress-dot { width: 32px; height: 32px; }
+.bld-step, #orderSummary { scroll-margin-top: calc(var(--nav-space) + 16px); }
+@media (max-width: 900px) { .bld-step, #orderSummary { scroll-margin-top: calc(var(--nav-space) + 30svh + 16px); } }
+
+/* Wide screens: floating total bar hides while the summary card is on screen */
+@media (min-width: 901px) {
+  .bld-mobilebar.is-ready.summary-in-view { transform: translate(-50%, calc(100% + 40px)); opacity: 0; pointer-events: none; }
+}
+
+/* Mobile toasts sit above the floating bottom bar (never over the sticky preview) */
+@media (max-width: 900px) {
+  .toast { top: auto; bottom: calc(24px + env(safe-area-inset-bottom)); transform: translateY(10px); }
+  body:has(.bld-mobilebar.is-ready) .toast, body:has(.co-pill.is-ready) .toast { top: auto; bottom: calc(92px + env(safe-area-inset-bottom)); transform: translateY(10px); }
+  .toast.show, body:has(.bld-mobilebar.is-ready) .toast.show, body:has(.co-pill.is-ready) .toast.show { transform: none; }
+  html.kb-open .toast, html.kb-open body .toast { top: calc(var(--nav-space) + 10px); bottom: auto; }
+}
+
+/* Checkout: real H1, inline field errors */
+.checkout-form-col h1.co-title { font-size: clamp(22px, 4vw, 26px); margin-bottom: 24px; }
+.field-error { font-size: 13px; font-weight: 700; color: #b42318; margin: 6px 0 0; line-height: 1.4; }
+.field-error::before { content: "⚠ "; }
+
+/* Checkout: collapsible order summary on mobile */
+.co-sum-toggle { display: none; }
+@media (max-width: 900px) {
+  .co-sum-toggle {
+    display: flex; width: 100%; align-items: center; justify-content: space-between; gap: 12px;
+    min-height: 52px; padding: 14px 18px; border: 0; cursor: pointer; text-align: left;
+    background: #1a1a1a; color: #fff; font: 700 15px/1.3 Lato, sans-serif;
+  }
+  .co-sum-right { display: inline-flex; align-items: center; gap: 10px; }
+  .co-sum-right strong { color: var(--gold); white-space: nowrap; }
+  .co-sum-chev { display: inline-block; transition: transform 0.2s; }
+  .order-sidebar.is-open .co-sum-chev { transform: rotate(180deg); }
+  .order-sidebar-box .sidebar-header { display: none; }
+  .order-sidebar:not(.is-open) .sidebar-body { display: none; }
+  .co-delivery-card { display: none; }
+}
+
+/* Layout stability: content swapped in by JS no longer drags the footer into view */
+.checkout-layout, .rc-page { min-height: calc(100svh - 40px); }
+
+/* Confirmation: "No order to show" */
+.empty-screen { text-align: center; }
+.empty-screen h1 { font-size: clamp(26px, 5vw, 34px); margin-bottom: 10px; }
+.empty-actions { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-top: 22px; }
+.empty-actions .btn { min-height: 48px; display: inline-flex; align-items: center; }
+
+/* Gallery thumbs carry width/height for layout; CSS keeps the 3:4 crop */
+.gallery-card-img { height: auto; }
+
+/* Home (phones): "How it works" becomes a compact 3-step strip so prints show sooner */
+@media (max-width: 600px) {
+  section.hiw2-section { padding-top: 36px; padding-bottom: 32px; }
+  .hiw2-section .section-title { font-size: 24px; margin-bottom: 18px; }
+  .hiw2-sub { display: none; }
+  .hiw2-steps { grid-template-columns: repeat(3, 1fr); gap: 8px; max-width: none; }
+  .hiw2-card { padding: 16px 6px 14px; min-height: 0; text-align: center; }
+  .hiw2-card::before { display: none; }
+  .hiw2-badge { position: relative; left: auto; top: auto; width: 52px; height: 52px; margin: 0 auto 10px; }
+  .hiw2-icon { width: 52px; height: 52px; box-shadow: 0 0 0 3px var(--white), 0 0 0 4px rgba(200,169,110,0.45), 0 6px 12px rgba(26,26,26,0.14); }
+  .hiw2-icon svg { width: 24px; height: 24px; }
+  .hiw2-num { min-width: 22px; height: 22px; font-size: 11px; right: -8px; top: -4px; border-width: 2px; padding: 0 4px; }
+  .hiw2-title { font-size: 14px; line-height: 1.25; margin: 0; }
+  .hiw2-text, .hiw2-connector { display: none; }
+}
+@media (max-width: 900px) { .preview-panel.is-hidden .preview-toggle { position: relative; } }

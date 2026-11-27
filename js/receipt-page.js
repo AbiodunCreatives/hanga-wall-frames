@@ -9,6 +9,14 @@
   var psRef = params.get('reference') || params.get('trxref');
   var ref = params.get('ref') || (psRef ? psRef.replace(/-R\d+$/, '') : '') || order.ref || '—';
   if (order.ref && order.ref !== ref) order = {}; // stored order belongs to another reference
+  if (ref === '—') {
+    // Nothing to show: a friendly empty state instead of a blank "PAYMENT PENDING" receipt.
+    $('emptyScreen').hidden = false;
+    ['confirmTitle', 'receiptWrap', 'transferNote'].forEach(function (id) { var el = $(id); if (el) el.remove(); });
+    var acts = document.querySelector('.rc-actions'); if (acts) acts.remove();
+    document.title = 'No order to show – Hanga';
+    return;
+  }
   var method = params.get('method') || order.method || 'request';
   document.querySelectorAll('[data-bank]').forEach(function (el) { el.textContent = (H.bank || {})[el.dataset.bank] || ''; });
 
