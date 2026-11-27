@@ -28,7 +28,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preload" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Lato:wght@300;400;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Lato:wght@300;400;700&display=swap"></noscript>
-  <link rel="stylesheet" href="style.css?v=4">
+  <link rel="stylesheet" href="style.css?v=5">
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -55,7 +55,8 @@
 <div class="customize-layout" id="main" tabindex="-1">
 
   <!-- ── Preview Panel (shown first on mobile) ──────────────── -->
-  <div class="preview-panel">
+  <div class="preview-panel" id="previewPanel">
+    <button type="button" class="preview-toggle" id="previewToggle" aria-expanded="true" aria-controls="previewPanel">Hide preview</button>
     <div class="frame-preview-wrap">
       <div id="canvasPlaceholder" class="canvas-placeholder">
         🖼️
@@ -191,9 +192,9 @@
           <div class="mini-thumb" data-id="falling-leaves" data-name="Falling Leaves" data-category="featured landscapes" data-src="images/prints/falling-leaves.jpg" onclick="selectGalleryImage(this,'Falling Leaves')"><picture><source type="image/webp" srcset="images/thumbs/falling-leaves.webp"><img src="images/thumbs/falling-leaves.jpg" alt="Falling Leaves" loading="lazy" decoding="async"></picture></div>
           <div class="mini-thumb" data-id="forest-elk" data-name="Forest Walk" data-category="featured portraits" data-src="images/prints/forest-elk.jpg" onclick="selectGalleryImage(this,'Forest Walk')"><picture><source type="image/webp" srcset="images/thumbs/forest-elk.webp"><img src="images/thumbs/forest-elk.jpg" alt="Forest Walk" loading="lazy" decoding="async"></picture></div>
           <div class="mini-thumb" data-id="watchful-owl" data-name="Watchful Owl" data-category="featured portraits" data-src="images/prints/watchful-owl.jpg" onclick="selectGalleryImage(this,'Watchful Owl')"><picture><source type="image/webp" srcset="images/thumbs/watchful-owl.webp"><img src="images/thumbs/watchful-owl.jpg" alt="Watchful Owl" loading="lazy" decoding="async"></picture></div>
-          <div class="mini-thumb" data-id="nissan-300zx-sunset" data-name="Nissan 300ZX Sunset" data-category="cars" data-src="images/prints/nissan-300zx-sunset.jpg" onclick="selectGalleryImage(this,'Nissan 300ZX Sunset')"><picture><source type="image/webp" srcset="images/thumbs/nissan-300zx-sunset.webp"><img src="images/thumbs/nissan-300zx-sunset.jpg" alt="Nissan 300ZX Sunset" loading="lazy" decoding="async"></picture></div>
+          <div class="mini-thumb" data-id="nissan-300zx-sunset" data-name="Porsche 911 Snow Forest" data-category="cars" data-src="images/prints/nissan-300zx-sunset.jpg" onclick="selectGalleryImage(this,'Porsche 911 Snow Forest')"><picture><source type="image/webp" srcset="images/thumbs/nissan-300zx-sunset.webp"><img src="images/thumbs/nissan-300zx-sunset.jpg" alt="Porsche 911 Snow Forest" loading="lazy" decoding="async"></picture></div>
           <div class="mini-thumb" data-id="mustang-fastback" data-name="Ford Mustang Fastback" data-category="cars" data-src="images/prints/mustang-fastback.jpg" onclick="selectGalleryImage(this,'Ford Mustang Fastback')"><picture><source type="image/webp" srcset="images/thumbs/mustang-fastback.webp"><img src="images/thumbs/mustang-fastback.jpg" alt="Ford Mustang Fastback" loading="lazy" decoding="async"></picture></div>
-          <div class="mini-thumb" data-id="porsche-911-snow" data-name="Porsche 911 Snow Forest" data-category="featured cars" data-src="images/prints/porsche-911-snow.jpg" onclick="selectGalleryImage(this,'Porsche 911 Snow Forest')"><picture><source type="image/webp" srcset="images/thumbs/porsche-911-snow.webp"><img src="images/thumbs/porsche-911-snow.jpg" alt="Porsche 911 Snow Forest" loading="lazy" decoding="async"></picture></div>
+          <div class="mini-thumb" data-id="porsche-911-snow" data-name="Lamborghini Diablo Street" data-category="featured cars" data-src="images/prints/porsche-911-snow.jpg" onclick="selectGalleryImage(this,'Lamborghini Diablo Street')"><picture><source type="image/webp" srcset="images/thumbs/porsche-911-snow.webp"><img src="images/thumbs/porsche-911-snow.jpg" alt="Lamborghini Diablo Street" loading="lazy" decoding="async"></picture></div>
           <div class="mini-thumb" data-id="porsche-911-gt3" data-name="Porsche 911 GT3" data-category="featured cars" data-src="images/prints/porsche-911-gt3.jpg" onclick="selectGalleryImage(this,'Porsche 911 GT3')"><picture><source type="image/webp" srcset="images/thumbs/porsche-911-gt3.webp"><img src="images/thumbs/porsche-911-gt3.jpg" alt="Porsche 911 GT3" loading="lazy" decoding="async"></picture></div>
           <div class="mini-thumb" data-id="tram-in-the-rain" data-name="Tram in the Rain" data-category="featured cars" data-src="images/prints/tram-in-the-rain.jpg" onclick="selectGalleryImage(this,'Tram in the Rain')"><picture><source type="image/webp" srcset="images/thumbs/tram-in-the-rain.webp"><img src="images/thumbs/tram-in-the-rain.jpg" alt="Tram in the Rain" loading="lazy" decoding="async"></picture></div>
           <div class="mini-thumb" data-id="night-tram" data-name="Night Tram" data-category="featured cars" data-src="images/prints/night-tram.jpg" onclick="selectGalleryImage(this,'Night Tram')"><picture><source type="image/webp" srcset="images/thumbs/night-tram.webp"><img src="images/thumbs/night-tram.jpg" alt="Night Tram" loading="lazy" decoding="async"></picture></div>
@@ -225,18 +226,18 @@
           <div class="mini-thumb" data-id="classic-roadster" data-name="Classic Roadster" data-category="urban" data-src="images/classic-roadster.jpg" onclick="selectGalleryImage(this,'Classic Roadster')"><img src="images/thumbs/classic-roadster.jpg"    alt="Classic Roadster" loading="lazy" decoding="async"></div>
           <div class="mini-thumb" data-id="raleigh-bike" data-name="Raleigh Classic" data-category="urban" data-src="images/raleigh-bike.jpg" onclick="selectGalleryImage(this,'Raleigh Classic')"><img src="images/thumbs/raleigh-bike.jpg"        alt="Raleigh Classic" loading="lazy" decoding="async"></div>
           <!-- ── Cars (new) ───────────────────────────────── -->
-          <div class="mini-thumb" data-id="lambo-diablo-street" data-name="Lamborghini Diablo Street" data-category="cars" data-src="images/prints/lambo-diablo-street.jpg" onclick="selectGalleryImage(this,'Lamborghini Diablo Street')"><picture><source type="image/webp" srcset="images/thumbs/lambo-diablo-street.webp"><img src="images/thumbs/lambo-diablo-street.jpg" alt="Lamborghini Diablo Street" loading="lazy" decoding="async"></picture></div>
+          <div class="mini-thumb" data-id="lambo-diablo-street" data-name="Chevelle Badge" data-category="cars" data-src="images/prints/lambo-diablo-street.jpg" onclick="selectGalleryImage(this,'Chevelle Badge')"><picture><source type="image/webp" srcset="images/thumbs/lambo-diablo-street.webp"><img src="images/thumbs/lambo-diablo-street.jpg" alt="Chevelle Badge" loading="lazy" decoding="async"></picture></div>
           <div class="mini-thumb" data-id="lambo-diablo-rear" data-name="Lamborghini Diablo Rear" data-category="cars" data-src="images/prints/lambo-diablo-rear.jpg" onclick="selectGalleryImage(this,'Lamborghini Diablo Rear')"><picture><source type="image/webp" srcset="images/thumbs/lambo-diablo-rear.webp"><img src="images/thumbs/lambo-diablo-rear.jpg" alt="Lamborghini Diablo Rear" loading="lazy" decoding="async"></picture></div>
-          <div class="mini-thumb" data-id="lambo-badge" data-name="Lamborghini Badge" data-category="cars" data-src="images/prints/lambo-badge.jpg" onclick="selectGalleryImage(this,'Lamborghini Badge')"><picture><source type="image/webp" srcset="images/thumbs/lambo-badge.webp"><img src="images/thumbs/lambo-badge.jpg" alt="Lamborghini Badge" loading="lazy" decoding="async"></picture></div>
-          <div class="mini-thumb" data-id="lambo-front-corner" data-name="Lamborghini Front Corner" data-category="cars" data-src="images/prints/lambo-front-corner.jpg" onclick="selectGalleryImage(this,'Lamborghini Front Corner')"><picture><source type="image/webp" srcset="images/thumbs/lambo-front-corner.webp"><img src="images/thumbs/lambo-front-corner.jpg" alt="Lamborghini Front Corner" loading="lazy" decoding="async"></picture></div>
-          <div class="mini-thumb" data-id="mercedes-280se" data-name="Mercedes-Benz 280SE" data-category="cars" data-src="images/prints/mercedes-280se.jpg" onclick="selectGalleryImage(this,'Mercedes-Benz 280SE')"><picture><source type="image/webp" srcset="images/thumbs/mercedes-280se.webp"><img src="images/thumbs/mercedes-280se.jpg" alt="Mercedes-Benz 280SE" loading="lazy" decoding="async"></picture></div>
-          <div class="mini-thumb" data-id="chevelle-badge" data-name="Chevelle Badge" data-category="cars" data-src="images/prints/chevelle-badge.jpg" onclick="selectGalleryImage(this,'Chevelle Badge')"><picture><source type="image/webp" srcset="images/thumbs/chevelle-badge.webp"><img src="images/thumbs/chevelle-badge.jpg" alt="Chevelle Badge" loading="lazy" decoding="async"></picture></div>
-          <div class="mini-thumb" data-id="chevy-impala-show" data-name="Chevrolet Impala Show" data-category="cars" data-src="images/prints/chevy-impala-show.jpg" onclick="selectGalleryImage(this,'Chevrolet Impala Show')"><picture><source type="image/webp" srcset="images/thumbs/chevy-impala-show.webp"><img src="images/thumbs/chevy-impala-show.jpg" alt="Chevrolet Impala Show" loading="lazy" decoding="async"></picture></div>
-          <div class="mini-thumb" data-id="classic-interior" data-name="Classic Car Interior" data-category="cars" data-src="images/prints/classic-interior.jpg" onclick="selectGalleryImage(this,'Classic Car Interior')"><picture><source type="image/webp" srcset="images/thumbs/classic-interior.webp"><img src="images/thumbs/classic-interior.jpg" alt="Classic Car Interior" loading="lazy" decoding="async"></picture></div>
-          <div class="mini-thumb" data-id="pink-lincoln" data-name="Pink Lincoln Custom" data-category="cars" data-src="images/prints/pink-lincoln.jpg" onclick="selectGalleryImage(this,'Pink Lincoln Custom')"><picture><source type="image/webp" srcset="images/thumbs/pink-lincoln.webp"><img src="images/thumbs/pink-lincoln.jpg" alt="Pink Lincoln Custom" loading="lazy" decoding="async"></picture></div>
+          <div class="mini-thumb" data-id="lambo-badge" data-name="Classic Car Interior" data-category="cars" data-src="images/prints/lambo-badge.jpg" onclick="selectGalleryImage(this,'Classic Car Interior')"><picture><source type="image/webp" srcset="images/thumbs/lambo-badge.webp"><img src="images/thumbs/lambo-badge.jpg" alt="Classic Car Interior" loading="lazy" decoding="async"></picture></div>
+          <div class="mini-thumb" data-id="lambo-front-corner" data-name="Lamborghini Badge" data-category="cars" data-src="images/prints/lambo-front-corner.jpg" onclick="selectGalleryImage(this,'Lamborghini Badge')"><picture><source type="image/webp" srcset="images/thumbs/lambo-front-corner.webp"><img src="images/thumbs/lambo-front-corner.jpg" alt="Lamborghini Badge" loading="lazy" decoding="async"></picture></div>
+          <div class="mini-thumb" data-id="mercedes-280se" data-name="Great Sand Dunes" data-category="landscapes" data-src="images/prints/mercedes-280se.jpg" onclick="selectGalleryImage(this,'Great Sand Dunes')"><picture><source type="image/webp" srcset="images/thumbs/mercedes-280se.webp"><img src="images/thumbs/mercedes-280se.jpg" alt="Great Sand Dunes" loading="lazy" decoding="async"></picture></div>
+          <div class="mini-thumb" data-id="chevelle-badge" data-name="Mercedes-Benz 280SE" data-category="cars" data-src="images/prints/chevelle-badge.jpg" onclick="selectGalleryImage(this,'Mercedes-Benz 280SE')"><picture><source type="image/webp" srcset="images/thumbs/chevelle-badge.webp"><img src="images/thumbs/chevelle-badge.jpg" alt="Mercedes-Benz 280SE" loading="lazy" decoding="async"></picture></div>
+          <div class="mini-thumb" data-id="chevy-impala-show" data-name="Pink Lincoln Custom" data-category="cars" data-src="images/prints/chevy-impala-show.jpg" onclick="selectGalleryImage(this,'Pink Lincoln Custom')"><picture><source type="image/webp" srcset="images/thumbs/chevy-impala-show.webp"><img src="images/thumbs/chevy-impala-show.jpg" alt="Pink Lincoln Custom" loading="lazy" decoding="async"></picture></div>
+          <div class="mini-thumb" data-id="classic-interior" data-name="Frontier Wagon Night" data-category="landscapes" data-src="images/prints/classic-interior.jpg" onclick="selectGalleryImage(this,'Frontier Wagon Night')"><picture><source type="image/webp" srcset="images/thumbs/classic-interior.webp"><img src="images/thumbs/classic-interior.jpg" alt="Frontier Wagon Night" loading="lazy" decoding="async"></picture></div>
+          <div class="mini-thumb" data-id="pink-lincoln" data-name="Lamborghini Diablo Detail" data-category="cars" data-src="images/prints/pink-lincoln.jpg" onclick="selectGalleryImage(this,'Lamborghini Diablo Detail')"><picture><source type="image/webp" srcset="images/thumbs/pink-lincoln.webp"><img src="images/thumbs/pink-lincoln.jpg" alt="Lamborghini Diablo Detail" loading="lazy" decoding="async"></picture></div>
           <!-- ── New Landscapes ────────────────────────────── -->
-          <div class="mini-thumb" data-id="sand-dunes" data-name="Great Sand Dunes" data-category="landscapes" data-src="images/prints/sand-dunes.jpg" onclick="selectGalleryImage(this,'Great Sand Dunes')"><picture><source type="image/webp" srcset="images/thumbs/sand-dunes.webp"><img src="images/thumbs/sand-dunes.jpg" alt="Great Sand Dunes" loading="lazy" decoding="async"></picture></div>
-          <div class="mini-thumb" data-id="frontier-wagon" data-name="Frontier Wagon Night" data-category="landscapes" data-src="images/prints/frontier-wagon.jpg" onclick="selectGalleryImage(this,'Frontier Wagon Night')"><picture><source type="image/webp" srcset="images/thumbs/frontier-wagon.webp"><img src="images/thumbs/frontier-wagon.jpg" alt="Frontier Wagon Night" loading="lazy" decoding="async"></picture></div>
+          <div class="mini-thumb" data-id="sand-dunes" data-name="Nissan 300ZX Sunset" data-category="cars" data-src="images/prints/sand-dunes.jpg" onclick="selectGalleryImage(this,'Nissan 300ZX Sunset')"><picture><source type="image/webp" srcset="images/thumbs/sand-dunes.webp"><img src="images/thumbs/sand-dunes.jpg" alt="Nissan 300ZX Sunset" loading="lazy" decoding="async"></picture></div>
+          <div class="mini-thumb" data-id="frontier-wagon" data-name="Chevrolet Impala Show" data-category="cars" data-src="images/prints/frontier-wagon.jpg" onclick="selectGalleryImage(this,'Chevrolet Impala Show')"><picture><source type="image/webp" srcset="images/thumbs/frontier-wagon.webp"><img src="images/thumbs/frontier-wagon.jpg" alt="Chevrolet Impala Show" loading="lazy" decoding="async"></picture></div>
           <div class="mini-thumb" data-id="van-gogh-self-portrait" data-name="Self-Portrait" data-category="portraits classic-art" data-src="images/collection/van-gogh-self-portrait.jpg" onclick="selectGalleryImage(this,'Self-Portrait')"><img src="images/thumbs/van-gogh-self-portrait.jpg" alt="Self-Portrait" loading="lazy" decoding="async"></div>
           <div class="mini-thumb" data-id="van-gogh-straw-hat" data-name="Self-Portrait with a Straw Hat" data-category="portraits classic-art" data-src="images/collection/van-gogh-straw-hat.jpg" onclick="selectGalleryImage(this,'Self-Portrait with a Straw Hat')"><img src="images/thumbs/van-gogh-straw-hat.jpg" alt="Self-Portrait with a Straw Hat" loading="lazy" decoding="async"></div>
           <div class="mini-thumb" data-id="renoir-two-sisters" data-name="Two Sisters" data-category="portraits classic-art" data-src="images/collection/renoir-two-sisters.jpg" onclick="selectGalleryImage(this,'Two Sisters')"><img src="images/thumbs/renoir-two-sisters.jpg" alt="Two Sisters" loading="lazy" decoding="async"></div>
@@ -341,14 +342,12 @@
       <div class="summary-row"><span>Frame Style</span><span id="summaryStyle">Borderless</span></div>
       <div class="summary-row" id="summarySubRow" hidden><span id="summarySubLabel">Frames</span><span id="summarySub">—</span></div>
       <div class="summary-row bld-saving" id="summarySaveRow" hidden><span id="summarySaveLabel">Set saving</span><span id="summarySave">—</span></div>
-      <div class="summary-row"><span>Delivery</span><span>Within 3 business days</span></div>
+      <div class="summary-row"><span>Delivery</span><span>From ₦2,500 · by state</span></div>
       <div class="summary-row total"><span>Total</span><span id="summaryTotal">₦0</span></div>
-      <button type="button" class="btn btn-gold proceed-btn" onclick="proceedToCheckout()">Proceed to Checkout →</button>
-      <a href="#" class="btn btn-outline-dark whatsapp-order-btn" id="whatsappOrderBtn" hidden onclick="return orderOnWhatsApp()">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="flex-shrink:0"><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.656 1.438 5.168L2 22l4.979-1.418A9.956 9.956 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2Z" fill="#25D366"/><path d="M9.14 7.5c-.21 0-.44.005-.635.44-.21.47-.8 1.957-.8 2.389 0 .433.223.853.447 1.136.224.283 1.343 2.059 3.272 2.808 1.613.628 1.93.504 2.278.473.348-.031 1.123-.459 1.282-.902.158-.443.158-.822.11-.902-.047-.08-.175-.127-.365-.222-.19-.095-1.123-.554-1.297-.617-.174-.063-.3-.095-.427.095-.126.19-.49.617-.601.743-.11.127-.222.143-.412.048-.19-.096-.803-.296-1.53-.944-.565-.504-.946-1.126-1.058-1.316-.11-.19-.012-.293.084-.388.085-.085.19-.222.285-.333.095-.11.127-.19.19-.317.063-.127.032-.238-.016-.333-.047-.095-.427-1.03-.585-1.41-.158-.381-.317-.317-.427-.317Z" fill="#fff"/></svg>
-        Order on WhatsApp
-      </a>
-      <p class="summary-note">Pairs get a set discount. Nationwide delivery within 3 business days.</p>
+      <button type="button" class="btn btn-gold proceed-btn" id="addToCartBtn" onclick="addToCart()">Add to Cart</button>
+      <button type="button" class="btn btn-outline-dark checkout-btn" id="checkoutBtn" onclick="proceedToCheckout()">Proceed to Checkout →</button>
+      <p class="summary-wa" id="whatsappOrderBtn" hidden>Questions? <a href="#" onclick="return orderOnWhatsApp()">Chat with us on WhatsApp</a></p>
+      <p class="summary-note">Pairs save ₦500. Delivery: ₦2,500 South-West · ₦4,500 East &amp; South · ₦6,000 North — within 3 business days.</p>
     </div>
   </div>
 
@@ -357,7 +356,8 @@
 <!-- Mobile: sticky total + checkout -->
 <div class="bld-mobilebar" id="mobileBar">
   <div class="bld-mobilebar-total"><span>Total</span><strong id="mobileTotal">₦0</strong><em id="mobileSave"></em></div>
-  <button type="button" class="btn btn-gold" onclick="proceedToCheckout()">Checkout →</button>
+  <button type="button" class="btn btn-gold bld-mb-add" onclick="addToCart()">Add to Cart</button>
+  <button type="button" class="btn bld-mb-go" id="mobileCheckout" onclick="proceedToCheckout()" aria-label="Proceed to checkout">Checkout →</button>
 </div>
 
 <!-- ─── Toast ────────────────────────────────────────────────── -->
@@ -394,7 +394,7 @@
   </div>
 </footer>
 
-<script src="js/site.js"></script>
+<script src="js/site.js?v=5"></script>
 <script>
 // ── State ──────────────────────────────────────────────────────
 // An order is 1 or 2 frames ("Single" or "Pair"). Each slot holds one
@@ -407,6 +407,11 @@ const state = {
   size: null, price: 0,   // price = per-frame price for the chosen size
   style: 'Borderless'
 };
+// Steps the customer has actually acted on. Defaults (16×20", Borderless,
+// a featured print) fill the order but don't collapse the steps on mobile.
+const confirmedSteps = new Set();
+let _userAct = false;
+function confirmStep(k) { confirmedSteps.add(k); _userAct = true; }
 
 const FRAME_STYLES  = ['Borderless', 'Black', 'White'];
 const FRAME_COLOURS = { Black: '#1a1a1a', White: '#f3f3f3' };
@@ -436,11 +441,11 @@ const CURATED_SETS = {
     { key: 'autumn-pair',        name: 'Autumn Pair',          ids: ['autumn-canopy', 'falling-leaves'] },
     { key: 'wildlife-pair',      name: 'Wildlife Pair',        ids: ['forest-elk', 'watchful-owl'] },
     { key: 'consistency-mask',   name: 'Consistency & World',  ids: ['consistency', 'world-mask'] },
-    { key: 'porsche-pair',       name: 'Double Porsche',       ids: ['porsche-911-snow', 'porsche-911-gt3'] },
+    { key: 'porsche-pair',       name: 'Double Porsche',       ids: ['nissan-300zx-sunset', 'porsche-911-gt3'] },
     { key: 'tram-nights',        name: 'Tram Nights',          ids: ['tram-in-the-rain', 'night-tram'] },
     { key: 'still-waters',       name: 'Still Waters',         ids: ['autumn-lake', 'starlit-lake'] },
     { key: 'midnight-city',      name: 'Midnight City',        ids: ['tram-reflection', 'midnight-tram'] },
-    { key: 'lambo-pair',         name: 'Lamborghini Duo',      ids: ['lambo-diablo-street', 'lambo-diablo-rear'] }
+    { key: 'lambo-pair',         name: 'Lamborghini Duo',      ids: ['porsche-911-snow', 'lambo-diablo-rear'] }
   ]
 };
 
@@ -514,6 +519,16 @@ document.querySelectorAll('.bld-qty-save').forEach(el => {
 // WhatsApp order button only appears when a number is set in js/site.js
 document.getElementById('whatsappOrderBtn').hidden = !HANGA.whatsappNumber;
 
+// Mobile: compact sticky preview that can be hidden
+(function () {
+  const panel = document.getElementById('previewPanel'), btn = document.getElementById('previewToggle');
+  btn.addEventListener('click', () => {
+    const mini = panel.classList.toggle('is-hidden');
+    btn.textContent = mini ? 'Show preview' : 'Hide preview';
+    btn.setAttribute('aria-expanded', String(!mini));
+  });
+})();
+
 // ── Frames: Single / Pair ───────────────────────────────
 function selectPieces(n, opts) {
   n = Number(n) >= 2 ? 2 : 1; // Single or Pair (old ?frames=3 links open a Pair)
@@ -529,6 +544,7 @@ function selectPieces(n, opts) {
   });
   document.getElementById('setPanel').hidden = n === 1;
   document.getElementById('imageHeadingText').textContent = n === 1 ? 'Choose Your Image' : 'Choose Your ' + setLabel();
+  if (!(opts && opts.silent)) confirmStep('pieces');
   renderCuratedSets();
   refreshAll();
   if (!(opts && opts.silent) && n > 1) showToast(setLabel() + ' selected — pick a curated pair or choose an image for each frame.');
@@ -582,6 +598,7 @@ function applyCuratedSet(key) {
   state.slots = items;
   state.setKey = key;
   state.activeSlot = 0;
+  confirmStep('pieces'); confirmStep('image');
   renderCuratedSets();
   refreshAll();
   showToast(set.name + ' set selected');
@@ -674,11 +691,11 @@ function refreshAll() { syncThumbs(); renderSlots(); updateSummary(); renderPrev
   });
 
   // Called after updateProgress — collapse done steps, open the active one, scroll it into view
-  window._collapseStepsOnMobile = function(firstOpen) {
+  window._collapseStepsOnMobile = function(firstOpen, confirmed, scroll) {
     if (!isMobile()) return;
     document.querySelectorAll('.bld-step').forEach(step => {
       const key = step.dataset.step;
-      const isDone = step.classList.contains('is-done');
+      const isDone = step.classList.contains('is-done') && (!confirmed || confirmed.has(key));
       const isActive = key === firstOpen;
       if (isDone && !isActive) {
         step.classList.add('is-collapsed');
@@ -686,7 +703,7 @@ function refreshAll() { syncThumbs(); renderSlots(); updateSummary(); renderPrev
       } else {
         step.classList.remove('is-collapsed');
         step.querySelector('.bld-step-head--collapsible')?.setAttribute('aria-expanded', 'true');
-        if (isActive) {
+        if (isActive && scroll) {
           setTimeout(() => step.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 60);
         }
       }
@@ -716,13 +733,20 @@ function initFromParams() {
     switchTab('upload', document.querySelectorAll('.source-tab')[1]);
   }
   const img = params.get('image');
+  let picked = false;
   if (img) {
     const thumb = document.querySelector(`.mini-thumb[data-id="${CSS.escape(img)}"]`);
     if (thumb) {
       if (thumb.hidden) filterMiniGallery('all', null, true);
       selectGalleryImage(thumb, thumb.dataset.name, { silent: true });
-      thumb.scrollIntoView({ block: 'nearest' });
+      picked = true;
     }
+  }
+  // Defaults so the preview and total are never empty: 16×20" and a featured print.
+  if (!state.size) selectSize(document.querySelector('#sizeChips .chip[data-size="16×20"]'), true);
+  if (!picked && !params.get('set') && params.get('tab') !== 'upload' && !state.slots[0]) {
+    const first = document.querySelector('.mini-thumb[data-category~="featured"]');
+    if (first) selectGalleryImage(first, first.dataset.name, { silent: true });
   }
   updateSummary();
 }
@@ -742,6 +766,7 @@ function selectGalleryImage(el, name, opts) {
   if (!item) return;
   if (name) item.name = name;
   const slotNo = state.activeSlot + 1;
+  if (!(opts && opts.silent)) confirmStep('image');
   fillActiveSlot(item);
   if (!(opts && opts.silent)) showToast(state.pieces > 1 ? `Frame ${slotNo}: ${item.name}` : 'Image selected: ' + item.name);
 }
@@ -874,6 +899,7 @@ function handleFileUpload(event) {
   if (file.size > (isPdf ? 20 : 10) * 1024 * 1024) { showToast(isPdf ? 'PDF too large (max 20 MB)' : 'File too large (max 10 MB)'); return; }
   const slotNo = state.activeSlot + 1;
   const done = (item, label) => {
+    confirmStep('image');
     fillActiveSlot(item);
     showToast(state.pieces > 1 ? `Frame ${slotNo}: uploaded ${label}` : 'Uploaded: ' + label);
     showUploaded(label, item.src);
@@ -921,7 +947,8 @@ function handleFileUpload(event) {
 })();
 
 // ── Size ───────────────────────────────────────────────────────
-function selectSize(el) {
+function selectSize(el, auto) {
+  if (!auto) confirmStep('size');
   document.querySelectorAll('#sizeChips .chip').forEach(c => { c.classList.remove('selected'); c.setAttribute('aria-pressed', 'false'); });
   el.classList.add('selected');
   el.setAttribute('aria-pressed', 'true');
@@ -956,6 +983,7 @@ function selectStyle(el, style) {
   el.classList.add('selected');
   el.setAttribute('aria-pressed', 'true');
   state.style = HANGA.normStyle(style);
+  confirmStep('style');
   updateSummary();
   renderPreview();
 }
@@ -1022,7 +1050,9 @@ function updateProgress() {
     if (k === firstOpen) li.setAttribute('aria-current', 'step'); else li.removeAttribute('aria-current');
   });
   document.querySelectorAll('.bld-step').forEach(sec => sec.classList.toggle('is-done', !!done[sec.dataset.step]));
-  if (window._collapseStepsOnMobile) window._collapseStepsOnMobile(firstOpen);
+  const openKey = ['pieces', 'image', 'size', 'style', 'order'].find(k => !(done[k] && confirmedSteps.has(k))) || 'order';
+  if (window._collapseStepsOnMobile) window._collapseStepsOnMobile(openKey, confirmedSteps, _userAct);
+  _userAct = false;
   const disc = HANGA.setDiscount(state.pieces);
   document.getElementById('statusPieces').textContent = multi ? `${setLabel()} · ${state.pieces} frames${disc ? ' · save ' + HANGA.formatNaira(disc) : ''}` : 'Single frame';
   const filled = filledSlots().length;
@@ -1245,68 +1275,82 @@ function buildOrder() {
   };
 }
 
-function proceedToCheckout() {
-  if (!checkReady()) return;
-  const order = buildOrder();
-
-  // Upload any customer files to Cloudinary before navigating.
-  // This ensures the file is safe even if the customer closes the tab after payment.
-  const uploadSlots = state.slots
-    .map((s, i) => ({ slot: i, item: s, file: _uploadFiles[i] }))
-    .filter(x => x.item && x.item.isUpload && x.file);
-
-  if (!uploadSlots.length) {
-    saveAndGo(order);
-    return;
-  }
-
-  // Show upload progress
-  const btn = document.querySelector('[onclick="proceedToCheckout()"]');
-  if (btn) { btn.disabled = true; btn.textContent = 'Uploading your photo…'; }
-
-  const uploads = uploadSlots.map(({ slot, file }) => {
-    const fd = new FormData();
-    fd.append('file', file);
-    fd.append('upload_preset', CLOUDINARY.preset);
-    fd.append('folder', 'hanga-orders');
-    // Tag with a temporary key; we'll add the order ref once we have it at confirmation
-    fd.append('context', `slot=${slot}|filename=${file.name}`);
-    return fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY.cloud}/auto/upload`, { method: 'POST', body: fd })
-      .then(r => r.json())
-      .then(res => {
-        if (res.secure_url) {
-          order.items[slot].cloudinaryUrl = res.secure_url;
-          order.items[slot].cloudinaryId  = res.public_id;
-        }
-      })
-      .catch(() => {
-        // Upload failed — mark it so confirmation can prompt WhatsApp fallback
-        order.items[slot].cloudinaryFailed = true;
-      });
-  });
-
-  Promise.all(uploads).then(() => {
-    if (btn) { btn.disabled = false; btn.textContent = 'Proceed to Checkout'; }
-    saveAndGo(order);
+// ── Cart ───────────────────────────────────────────────────────
+let _addedSig = null;
+function designSig() { return JSON.stringify([state.pieces, state.size, state.style, state.slots.map(s => s ? (s.id || s.fileName || s.name) : null)]); }
+function smallThumb(src) {
+  return new Promise(res => {
+    if (!src) return res(null);
+    if (!/^data:/.test(src)) return res(src);
+    downscaleImage(src, 240, small => res(small || null));
   });
 }
+function uploadToCloudinary(file, slot) {
+  const fd = new FormData();
+  fd.append('file', file);
+  fd.append('upload_preset', CLOUDINARY.preset);
+  fd.append('folder', 'hanga-orders');
+  fd.append('context', `slot=${slot}|filename=${file.name}`);
+  return fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY.cloud}/auto/upload`, { method: 'POST', body: fd })
+    .then(r => r.json()).then(r => (r && r.secure_url ? { url: r.secure_url, id: r.public_id } : null)).catch(() => null);
+}
+function setCartButtons(busy, text) {
+  ['addToCartBtn'].forEach(id => { const b = document.getElementById(id); if (b) { b.disabled = busy; if (text) b.textContent = text; } });
+  document.querySelectorAll('.bld-mb-add').forEach(b => { b.disabled = busy; if (text) b.textContent = busy ? 'Uploading…' : 'Add to Cart'; });
+}
+// Adds the current design to the cart. Resolves true when added.
+function addToCart(opts) {
+  opts = opts || {};
+  if (!checkReady()) return Promise.resolve(false);
+  if (_addedSig === designSig() && opts.skipIfAdded) return Promise.resolve(true);
+  const set = state.setKey && findSet(state.setKey);
+  setCartButtons(true, state.slots.some(s => s && s.isUpload) ? 'Uploading your photo…' : 'Adding…');
+  const jobs = state.slots.map((s, i) => {
+    const file = s.isUpload ? _uploadFiles[i] : null;
+    return Promise.all([
+      s.isUpload ? smallThumb(s.src) : Promise.resolve(s.thumb || null),
+      file ? uploadToCloudinary(file, i) : Promise.resolve(null)
+    ]).then(([thumb, up]) => ({
+      imageId: s.isUpload ? null : s.id, imageName: s.name, isUpload: !!s.isUpload,
+      fileKind: s.fileKind || null, fileName: s.fileName || null, thumb,
+      cloudinaryUrl: up ? up.url : null, cloudinaryId: up ? up.id : null, cloudinaryFailed: !!(s.isUpload && !up)
+    }));
+  });
+  return Promise.all(jobs).then(items => {
+    const ok = HANGA.cart.add({
+      pieces: state.pieces, size: state.size, style: HANGA.normStyle(state.style), unit: state.price,
+      setName: state.pieces > 1 ? (set ? set.name : 'Custom set') : null, qty: 1, items
+    });
+    setCartButtons(false, 'Add to Cart');
+    if (!ok) { showToast('Your cart is full (10 items). Check out first, then add more.'); return false; }
+    _addedSig = designSig();
+    const n = HANGA.cart.count();
+    if (!opts.quiet) showToast(`Added to cart ✓ (${n} item${n === 1 ? '' : 's'}) — pick another or check out`);
+    updateCartCta();
+    return true;
+  });
+}
+function updateCartCta() {
+  const n = HANGA.cart.count();
+  const go = document.getElementById('checkoutBtn');
+  if (go) go.textContent = n ? `Proceed to Checkout (${n}) →` : 'Proceed to Checkout →';
+  const mb = document.getElementById('mobileCheckout');
+  if (mb) mb.textContent = n ? `Checkout (${n}) →` : 'Checkout →';
+}
+window.addEventListener('hanga:cart', updateCartCta);
+updateCartCta();
 
-function saveAndGo(order) {
-  try {
-    sessionStorage.setItem('hangaOrder', JSON.stringify(order));
-  } catch (err) {
-    order.imageData = null;
-    order.items.forEach(i => { if (i.isUpload) i.imageData = null; });
-    try { sessionStorage.setItem('hangaOrder', JSON.stringify(order)); }
-    catch (e2) { order.items.forEach(i => { i.imageData = null; }); sessionStorage.setItem('hangaOrder', JSON.stringify(order)); }
-  }
-  window.location.href = 'checkout.html';
+function proceedToCheckout() {
+  // Adds this design (unless it is already in the cart), then goes to checkout.
+  if (HANGA.cart.count() && _addedSig === designSig()) { window.location.href = 'checkout.html'; return; }
+  if (!imagesDone() && HANGA.cart.count()) { window.location.href = 'checkout.html'; return; }
+  addToCart({ quiet: true }).then(ok => { if (ok) window.location.href = 'checkout.html'; });
 }
 
 // ── Order on WhatsApp (only shown when a WhatsApp number is set) ─
 function orderOnWhatsApp() {
   if (!checkReady()) return false;
-  const lines = ['Hi Hanga! I\'d like to order:'].concat(HANGA.orderLines(buildOrder()));
+  const lines = ['Hi Hanga! I have a question about this frame:'].concat(HANGA.orderLines(buildOrder()));
   if (state.slots.some(s => s.isUpload)) lines.push('(I\'ll send my own file(s) — PDF or full-size image — here.)');
   window.open(HANGA.whatsappLink(lines.join('\n')), '_blank', 'noopener');
   return false;

@@ -83,12 +83,12 @@
     // Totals
     y += 4;
     row('Subtotal', H.formatNaira(R.subtotal));
-    if (R.discount) row(H.setLabel(R.n) + ' set discount', '−' + H.formatNaira(R.discount), { color: '#1e6b34' });
-    row('Delivery', 'To be confirmed');
+    if (R.discount) row(R.discountLabel, '−' + H.formatNaira(R.discount), { color: '#1e6b34' });
+    row('Delivery', R.deliveryText);
     y += 4; if (draw) { ctx.fillStyle = INK; ctx.fillRect(x0, y - 14, x1 - x0, 2); }
     y += 22;
     row(paid ? 'TOTAL PAID' : 'TOTAL', H.formatNaira(R.total), { font: '700 22px ' + SANS, labelColor: INK, gap: 30 });
-    font('400 13px ' + SANS); text('Nationwide delivery within 3 business days. We will confirm your delivery fee after your order.', x0, y, 'left', MUTED);
+    font('400 13px ' + SANS); text(R.v === 2 ? 'Nationwide delivery within 3 business days.' : H.DELIVERY_LINE, x0, y, 'left', MUTED);
     y += 26; rule(y); y += 30;
 
     // Customer

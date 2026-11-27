@@ -8,7 +8,8 @@
    Only figures that exist in the order are shown — nothing is invented. */
 (function () {
   var H = window.HANGA;
-  var DELIVERY_LINE = 'Nationwide delivery within 3 business days. We will confirm your delivery fee after your order.';
+  var DELIVERY_LINE = 'Nationwide delivery within 3 business days. Delivery: ' + H.DELIVERY_SUMMARY + '.';
+  H.DELIVERY_LINE = DELIVERY_LINE;
 
   function el(tag, cls, text) {
     var e = document.createElement(tag);
@@ -28,7 +29,30 @@
     failed:   { text: 'Payment not completed', note: 'No money was taken. You can try again below.', cls: 'is-failed' }
   };
 
+  function uploadTag(p) { return p.isUpload ? (p.fileKind === 'pdf' ? ' (your PDF)' : ' (your photo)') : ''; }
+  // v2 (cart) orders: one row per cart line, delivery fee included in the total.
+  function cartRows(o) {
+    var gross = 0, discount = 0, frames = 0;
+    var rows = o.lines.map(function (l) {
+      var items = l.items || [], n = items.length || 1, q = Math.max(1, Number(l.qty) || 1);
+      var unit = Number(l.unit || 0) * n; // gross; the pair discount is its own line below
+      gross += Number(l.unit || 0) * n * q; discount += H.setDiscount(n) * q; frames += n * q;
+      return {
+        name: n > 1 ? (l.setName && l.setName !== 'Custom set' ? l.setName + ': ' : '') + items.map(function (i) { return i.imageName + uploadTag(i); }).join(' + ')
+                    : (items[0] ? items[0].imageName + uploadTag(items[0]) : 'Frame'),
+        piece: '', size: l.size ? l.size + '"' : '—', style: H.styleText(l.style),
+        set: H.setLabel(n) + (n > 1 && H.setDiscount(n) ? ' (−' + H.formatNaira(H.setDiscount(n)) + ')' : ''),
+        qty: q, unit: unit, total: unit * q
+      };
+    });
+    var fee = Number(o.deliveryFee || 0);
+    return { rows: rows, n: frames, v: 2, subtotal: gross, discount: discount, discountLabel: 'Pair discount',
+             delivery: fee, deliveryText: fee ? H.formatNaira(fee) + (o.state ? ' · ' + o.state : '') : 'To be confirmed',
+             total: o.price };
+  }
+
   H.receiptRows = function (o) {
+    if (o && Array.isArray(o.lines) && o.lines.length) return cartRows(o);
     var pieces = H.orderPieces(o), n = o.pieces || pieces.length || 1;
     var unit = o.unitPrice || (n === 1 ? o.price : 0);
     var setTxt = H.setLabel(n) + (n > 1 && o.setName ? ' · ' + o.setName : '');
@@ -43,7 +67,7 @@
     });
     if (!rows.length) rows.push({ name: o.imageName || 'Frame', piece: '', size: o.size ? o.size + '"' : '—', style: H.styleText(o.style), set: setTxt, qty: n, unit: unit, total: o.price });
     var discount = n > 1 ? (o.discount != null ? Number(o.discount) : H.setDiscount(n)) : 0;
-    return { rows: rows, n: n, subtotal: unit ? unit * n : o.price, discount: discount, total: o.price };
+    return { rows: rows, n: n, subtotal: unit ? unit * n : o.price, discount: discount, discountLabel: H.setLabel(n) + ' set discount', delivery: null, deliveryText: 'To be confirmed', total: o.price };
   };
 
   // Everything the server needs to process a paid order, sent to Paystack as
@@ -53,12 +77,30 @@
   // (orders.hanga.ng has no mail server). It is only sent to Paystack as the
   // payer "email" and never shown on receipts or stored in the order.
   H.payEmail = function (o) {
+    if (o && H.validEmail && H.validEmail(o.email)) return String(o.email).trim();
     var d = String((o && o.phone) || '').replace(/\D/g, '');
     if (d.startsWith('234')) d = '0' + d.slice(3);
     return 'customer-' + (d || 'guest') + '@orders.hanga.ng';
   };
 
   H.paystackOrder = function (o, ref) {
+    var cust = { name: o.name || '', email: (H.validEmail && H.validEmail(o.email)) ? String(o.email).trim() : '', phone: o.phone || '', address: o.address || '', city: o.city || '', state: o.state || '', notes: o.notes || '' };
+    if (Array.isArray(o.lines) && o.lines.length) {
+      var C = cartRows(o);
+      return {
+        v: 2, ref: ref, placedAt: o.placedAt || null,
+        lines: o.lines.map(function (l) {
+          return { size: l.size, style: H.normStyle(l.style), qty: Math.max(1, Number(l.qty) || 1), unit: l.unit,
+            setName: (l.items || []).length > 1 ? (l.setName || 'Custom set') : null,
+            items: (l.items || []).map(function (p) {
+              return { name: p.imageName, imageId: p.imageId || null, isUpload: !!p.isUpload, fileKind: p.fileKind || null,
+                       fileName: p.fileName || null, fileUrl: p.cloudinaryUrl || null };
+            }) };
+        }),
+        subtotal: C.subtotal, discount: C.discount, deliveryFee: C.delivery, total: C.total,
+        customer: cust
+      };
+    }
     var R = H.receiptRows(o), pieces = H.orderPieces(o);
     return {
       ref: ref,
@@ -73,8 +115,22 @@
       }),
       subtotal: R.subtotal, discount: R.discount, total: R.total,
       delivery: 'To be confirmed after order',
-      customer: { name: o.name || '', email: '', phone: o.phone || '', address: o.address || '', city: o.city || '', state: o.state || '', notes: o.notes || '' }
+      customer: cust
     };
+  };
+
+  // Readable fields on the Paystack dashboard / receipt.
+  H.paystackFields = function (o, meta, ref) {
+    var items = meta.lines
+      ? meta.lines.map(function (l) { return (l.qty > 1 ? l.qty + '× ' : '') + l.items.map(function (i) { return i.name; }).join(' + ') + ' (' + l.size + '", ' + l.style + ')'; }).join('; ')
+      : meta.items.map(function (i) { return i.name; }).join(', ') + ' (' + meta.size + '", ' + meta.style + ', ' + meta.set + ')';
+    var f = [
+      { display_name: 'Order', variable_name: 'order_ref', value: ref },
+      { display_name: 'Customer', variable_name: 'customer', value: (o.name || '') + ' · ' + (o.phone || '') },
+      { display_name: 'Items', variable_name: 'items', value: items.slice(0, 480) }
+    ];
+    if (meta.lines) f.push({ display_name: 'Delivery', variable_name: 'delivery', value: H.formatNaira(meta.deliveryFee) + ' · ' + (o.state || '') });
+    return f;
   };
 
   H.renderReceipt = function (root, o, opts) {
@@ -152,11 +208,11 @@
     var tot = el('dl', 'rc-totals');
     function tRow(k, v, cls) { var d = el('div', cls || null); d.append(el('dt', null, k), el('dd', null, v)); tot.appendChild(d); }
     tRow('Subtotal', H.formatNaira(R.subtotal));
-    if (R.discount) tRow(H.setLabel(R.n) + ' set discount', '−' + H.formatNaira(R.discount), 'rc-discount');
-    tRow('Delivery', 'To be confirmed');
+    if (R.discount) tRow(R.discountLabel, '−' + H.formatNaira(R.discount), 'rc-discount');
+    tRow('Delivery', R.deliveryText);
     tRow('Total' + (opts.status === 'paid' ? ' paid' : ''), H.formatNaira(R.total), 'rc-grand');
     root.appendChild(tot);
-    root.appendChild(el('p', 'rc-delivery-note', DELIVERY_LINE));
+    root.appendChild(el('p', 'rc-delivery-note', R.v === 2 ? 'Nationwide delivery within 3 business days.' : DELIVERY_LINE));
 
     // Customer
     var cust = el('div', 'rc-cust');

@@ -76,7 +76,7 @@ window.HANGA = {
       var d = o.discount != null ? o.discount : H.setDiscount(n);
       if (d) lines.push('• ' + H.setLabel(n) + ' saving: −' + H.formatNaira(d));
     }
-    lines.push('• Total: ' + H.formatNaira(o.price) + ' + delivery');
+    lines.push('• Total: ' + H.formatNaira(o.price) + ' + delivery (' + H.DELIVERY_SUMMARY + ')');
     return lines;
   };
 
@@ -88,6 +88,115 @@ window.HANGA = {
   H.mailtoLink = function (subject, body) {
     return 'mailto:' + H.email + '?subject=' + encodeURIComponent(subject || '') + '&body=' + encodeURIComponent(body || '');
   };
+
+  // ── Delivery: flat fee by region (must match api/_lib.js) ───
+  H.DELIVERY_REGIONS = [
+    { key: 'south-west', label: 'South-West', fee: 2500,
+      states: ['Lagos', 'Ogun', 'Oyo', 'Osun', 'Ondo', 'Ekiti'] },
+    { key: 'east', label: 'East & South', fee: 4500,
+      states: ['Abia', 'Anambra', 'Ebonyi', 'Enugu', 'Imo', 'Akwa Ibom', 'Bayelsa', 'Cross River', 'Delta', 'Edo', 'Rivers'] },
+    { key: 'north', label: 'North', fee: 6000,
+      states: ['FCT (Abuja)', 'Benue', 'Kogi', 'Kwara', 'Nasarawa', 'Niger', 'Plateau', 'Adamawa', 'Bauchi', 'Borno', 'Gombe', 'Taraba', 'Yobe', 'Jigawa', 'Kaduna', 'Kano', 'Katsina', 'Kebbi', 'Sokoto', 'Zamfara'] }
+  ];
+  H.NG_STATES = H.DELIVERY_REGIONS.reduce(function (a, r) { return a.concat(r.states); }, []).sort(function (a, b) { return a.localeCompare(b); });
+  H.DELIVERY_SUMMARY = '₦2,500 South-West · ₦4,500 East & South · ₦6,000 North';
+  H.deliveryFor = function (state) {
+    var s = String(state || '').trim().toLowerCase().replace(/\s*\(abuja\)$/, '');
+    if (s === 'abuja') s = 'fct';
+    for (var i = 0; i < H.DELIVERY_REGIONS.length; i++) {
+      var r = H.DELIVERY_REGIONS[i];
+      for (var j = 0; j < r.states.length; j++) {
+        if (r.states[j].toLowerCase().replace(/\s*\(abuja\)$/, '') === s) return { region: r.key, label: r.label, fee: r.fee, state: r.states[j] };
+      }
+    }
+    return null;
+  };
+
+  // ── Cart (localStorage) ─────────────────────────────────────
+  // A cart line is one Single or one Pair:
+  // { id, pieces, size, style, setName, unit, qty, items:[{ imageId, imageName, isUpload,
+  //   fileKind, fileName, thumb, cloudinaryUrl, cloudinaryId, cloudinaryFailed }] }
+  var CART_KEY = 'hangaCart', MAX_LINES = 10, MAX_QTY = 10;
+  H.lineTotal = function (l) {
+    var n = (l.items && l.items.length) || l.pieces || 1;
+    return H.setTotal(l.unit, n) * Math.max(1, Number(l.qty) || 1);
+  };
+  H.lineName = function (l) {
+    var items = l.items || [];
+    if (items.length > 1) return (l.setName && l.setName !== 'Custom set' ? l.setName + ' — ' : '') + items.map(function (i) { return i.imageName; }).join(' + ');
+    return items[0] ? items[0].imageName : 'Frame';
+  };
+  H.cartTotals = function (lines, state) {
+    var gross = 0, discount = 0, frames = 0, count = 0;
+    (lines || []).forEach(function (l) {
+      var n = (l.items && l.items.length) || 1, q = Math.max(1, Number(l.qty) || 1);
+      gross += Number(l.unit || 0) * n * q; discount += H.setDiscount(n) * q; frames += n * q; count += q;
+    });
+    var d = state ? H.deliveryFor(state) : null;
+    var subtotal = gross - discount;
+    return { gross: gross, discount: discount, subtotal: subtotal, frames: frames, count: count,
+             delivery: d, deliveryFee: d ? d.fee : 0, total: subtotal + (d ? d.fee : 0) };
+  };
+  H.cart = {
+    load: function () {
+      try { var c = JSON.parse(localStorage.getItem(CART_KEY) || '[]'); return Array.isArray(c) ? c : []; } catch (e) { return []; }
+    },
+    save: function (lines) {
+      lines = (lines || []).slice(0, MAX_LINES);
+      try { localStorage.setItem(CART_KEY, JSON.stringify(lines)); }
+      catch (e) {
+        // Over quota: drop the local photo previews (the file itself is on Cloudinary).
+        lines.forEach(function (l) { (l.items || []).forEach(function (i) { if (i.isUpload) i.thumb = null; }); });
+        try { localStorage.setItem(CART_KEY, JSON.stringify(lines)); } catch (e2) { return false; }
+      }
+      try { window.dispatchEvent(new CustomEvent('hanga:cart')); } catch (e3) {}
+      return true;
+    },
+    add: function (line) {
+      var lines = H.cart.load();
+      if (lines.length >= MAX_LINES) return false;
+      line.id = line.id || ('L' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6));
+      line.qty = Math.min(MAX_QTY, Math.max(1, Number(line.qty) || 1));
+      lines.push(line);
+      return H.cart.save(lines);
+    },
+    remove: function (id) { H.cart.save(H.cart.load().filter(function (l) { return l.id !== id; })); },
+    setQty: function (id, q) {
+      var lines = H.cart.load();
+      lines.forEach(function (l) { if (l.id === id) l.qty = Math.min(MAX_QTY, Math.max(1, Number(q) || 1)); });
+      H.cart.save(lines);
+    },
+    clear: function () { try { localStorage.removeItem(CART_KEY); } catch (e) {} try { window.dispatchEvent(new CustomEvent('hanga:cart')); } catch (e3) {} },
+    count: function () { return H.cart.load().reduce(function (a, l) { return a + (Math.max(1, Number(l.qty) || 1)); }, 0); },
+    MAX_QTY: MAX_QTY, MAX_LINES: MAX_LINES
+  };
+
+  // Cart icon + count badge in every header (and the mobile header bar).
+  (function () {
+    var header = document.querySelector('body > header');
+    if (!header || header.querySelector('.cart-link')) return;
+    var a = document.createElement('a');
+    a.href = 'checkout.html'; a.className = 'cart-link';
+    a.innerHTML = '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" aria-hidden="true" focusable="false"><path d="M3 4h2.2l2.1 10.2a1.6 1.6 0 0 0 1.6 1.3h8.4a1.6 1.6 0 0 0 1.6-1.2L20.6 8H6.1" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/><circle cx="9.5" cy="19.5" r="1.4" fill="currentColor"/><circle cx="17" cy="19.5" r="1.4" fill="currentColor"/></svg><span class="cart-badge" hidden></span>';
+    var toggleBtn = header.querySelector('.nav-toggle');
+    if (toggleBtn) header.insertBefore(a, toggleBtn); else header.appendChild(a);
+    function sync() {
+      var n = H.cart.count(), b = a.querySelector('.cart-badge');
+      b.textContent = n > 99 ? '99+' : String(n); b.hidden = !n;
+      a.setAttribute('aria-label', n ? 'Cart, ' + n + ' item' + (n === 1 ? '' : 's') : 'Cart is empty');
+      a.classList.toggle('has-items', !!n);
+    }
+    sync();
+    window.addEventListener('hanga:cart', sync);
+    window.addEventListener('storage', function (e) { if (e.key === CART_KEY) sync(); });
+    window.addEventListener('pageshow', sync);
+  })();
+
+  // Paystack payer email: the customer's own if valid, else a placeholder.
+  H.validEmail = function (e) { return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(String(e || '').trim()); };
+  // Nigerian mobile: 080…, 070…, 090…, 081…, +234…, 234…
+  H.normPhone = function (p) { return String(p || '').replace(/[\s\-().]/g, ''); };
+  H.validPhone = function (p) { return /^(\+?234|0)[789][01]\d{8}$/.test(H.normPhone(p)); };
 
   // ── Featured Makers "get featured" CTA ──────────────────────
   document.querySelectorAll('[data-makers-wa]').forEach(function (a) {

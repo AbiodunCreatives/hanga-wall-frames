@@ -11,6 +11,23 @@ const MAX_PIECES = 2;
 const SET_LABELS = { 1: 'Single', 2: 'Pair' };
 const setLabelOf = n => SET_LABELS[n] || (n > 1 ? n + ' frames' : 'Single');
 
+// Flat delivery fee by region. Keep in sync with js/site.js (DELIVERY_REGIONS).
+const DELIVERY_REGIONS = [
+  { key: 'south-west', label: 'South-West', fee: 2500, states: ['Lagos', 'Ogun', 'Oyo', 'Osun', 'Ondo', 'Ekiti'] },
+  { key: 'east', label: 'East & South', fee: 4500, states: ['Abia', 'Anambra', 'Ebonyi', 'Enugu', 'Imo', 'Akwa Ibom', 'Bayelsa', 'Cross River', 'Delta', 'Edo', 'Rivers'] },
+  { key: 'north', label: 'North', fee: 6000, states: ['FCT', 'Benue', 'Kogi', 'Kwara', 'Nasarawa', 'Niger', 'Plateau', 'Adamawa', 'Bauchi', 'Borno', 'Gombe', 'Taraba', 'Yobe', 'Jigawa', 'Kaduna', 'Kano', 'Katsina', 'Kebbi', 'Sokoto', 'Zamfara'] }
+];
+const normState = s => { let v = String(s || '').trim().toLowerCase().replace(/\s*\(abuja\)$/, '').replace(/\s+state$/, ''); if (v === 'abuja' || v === 'federal capital territory') v = 'fct'; return v; };
+function deliveryFor(state) {
+  const v = normState(state);
+  if (!v) return null;
+  for (const r of DELIVERY_REGIONS) if (r.states.some(s => s.toLowerCase() === v)) return { region: r.key, label: r.label, fee: r.fee };
+  return null;
+}
+const MAX_LINES = 10, MAX_QTY = 10;
+const CLOUDINARY_RE = /^https:\/\/res\.cloudinary\.com\/[A-Za-z0-9_-]+\/[A-Za-z0-9_\/.,:-]{1,300}$/;
+const normSize = s => String(s || '').replace(/["x]/g, m => (m === 'x' ? '×' : ''));
+
 const naira = n => '₦' + Number(n || 0).toLocaleString('en-NG');
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 
@@ -27,6 +44,20 @@ const EMAIL_RE = /^[^\s@<>",;]{1,64}@[A-Za-z0-9.-]{1,190}\.[A-Za-z]{2,24}$/;
 
 // Price the order from our own table — never trust a total sent by the browser.
 function expectedTotal(order) {
+  // v2 (cart) orders: price every line, then add the delivery fee for the state.
+  if (order && Array.isArray(order.lines)) {
+    let gross = 0, discount = 0, frames = 0;
+    for (const l of order.lines) {
+      const unit = PRICES[normSize(l.size)];
+      const n = l.items.length, q = l.qty;
+      if (!unit || n < 1 || n > MAX_PIECES || !(q >= 1 && q <= MAX_QTY)) return null;
+      gross += unit * n * q; discount += (n > 1 ? (SET_DISCOUNTS[n] || 0) : 0) * q; frames += n * q;
+    }
+    const d = deliveryFor((order.customer || {}).state);
+    if (!order.lines.length || !d) return null;
+    const subtotal = gross - discount;
+    return { v: 2, n: frames, gross, discount, subtotal, delivery: d.fee, region: d.label, total: subtotal + d.fee };
+  }
   const size = String((order && order.size) || '').replace(/["x]/g, m => (m === 'x' ? '×' : ''));
   const unit = PRICES[size];
   // The number of frames actually listed wins over a "pieces" claim, so a
@@ -65,6 +96,43 @@ function readMetaOrder(data) {
   const c = (o.customer && typeof o.customer === 'object') ? o.customer : {};
   const items = Array.isArray(o.items) ? o.items : [];
   const email = line(c.email, 254);
+  const customer = {
+    name: line(c.name, 80), email: EMAIL_RE.test(email) ? email : '',
+    phone: line(c.phone, 20), address: block(c.address, 300),
+    city: line(c.city, 60), state: line(c.state, 60), notes: block(c.notes, 500)
+  };
+  if (Number(o.v) === 2 && Array.isArray(o.lines)) {
+    const lineCount = o.lines.length;
+    const lines = o.lines.slice(0, MAX_LINES).map(l => {
+      l = (l && typeof l === 'object') ? l : {};
+      const its = Array.isArray(l.items) ? l.items : [];
+      const q = parseInt(l.qty, 10);
+      return {
+        size: line(l.size, 12), style: line(l.style, 40),
+        qty: q >= 1 && q <= MAX_QTY ? q : 0, unit: num(l.unit),
+        setName: l.setName ? line(l.setName, 60) : null,
+        itemCount: its.length,
+        items: its.slice(0, MAX_PIECES).map(i => (i && typeof i === 'object' ? {
+          name: line(i.name || i.imageName, 80) || 'Frame', imageId: line(i.imageId, 60) || null,
+          isUpload: !!i.isUpload, fileKind: i.fileKind === 'pdf' ? 'pdf' : (i.isUpload ? 'image' : null),
+          fileName: i.fileName ? line(i.fileName, 80) : null,
+          fileUrl: (i.isUpload && CLOUDINARY_RE.test(String(i.fileUrl || ''))) ? String(i.fileUrl) : null
+        } : { name: 'Frame' }))
+      };
+    });
+    const flat = [];
+    lines.forEach(l => l.items.forEach(i => flat.push(Object.assign({}, i, { size: l.size, style: l.style, qty: l.qty }))));
+    return {
+      v: 2, ref: line(o.ref, 40), placedAt: line(o.placedAt, 40) || null,
+      lines, lineCount,
+      subtotal: num(o.subtotal), discount: num(o.discount), deliveryFee: num(o.deliveryFee), total: num(o.total),
+      // Legacy-shaped summary fields for older admin views.
+      size: lines[0] ? lines[0].size : '', style: lines[0] ? lines[0].style : '',
+      pieces: lines.reduce((a, l) => a + l.items.length * (l.qty || 1), 0),
+      items: flat, itemCount: flat.length,
+      customer
+    };
+  }
   return {
     ref: line(o.ref, 40),
     placedAt: line(o.placedAt, 40) || null,
@@ -79,11 +147,7 @@ function readMetaOrder(data) {
       fileName: i.fileName ? line(i.fileName, 80) : null,
       unit: num(i.unit), lineTotal: num(i.lineTotal)
     } : { name: 'Frame' })),
-    customer: {
-      name: line(c.name, 80), email: EMAIL_RE.test(email) ? email : '',
-      phone: line(c.phone, 20), address: block(c.address, 300),
-      city: line(c.city, 60), state: line(c.state, 60), notes: block(c.notes, 500)
-    }
+    customer
   };
 }
 
@@ -95,11 +159,26 @@ function checkPayment(data) {
   const problems = [];
   if (data.status !== 'success') problems.push('Paystack status is "' + data.status + '"');
   if (data.currency && data.currency !== 'NGN') problems.push('Currency is ' + data.currency);
-  if (!exp) problems.push('Could not price this order (unknown size "' + (order.size || '') + '")');
-  else if (paid !== exp.total) problems.push('Paid ' + naira(paid) + ' but price list says ' + naira(exp.total));
+  if (order.v === 2) {
+    if (order.lineCount > MAX_LINES) problems.push('Order lists ' + order.lineCount + ' cart lines (max ' + MAX_LINES + ')');
+    order.lines.forEach((l, i) => {
+      if (l.itemCount > MAX_PIECES || l.itemCount < 1) problems.push('Line ' + (i + 1) + ' lists ' + l.itemCount + ' frames (Single or Pair only)');
+      if (!l.qty) problems.push('Line ' + (i + 1) + ' has an invalid quantity');
+      if (!PRICES[normSize(l.size)]) problems.push('Line ' + (i + 1) + ' has an unknown size "' + l.size + '"');
+    });
+    if (!deliveryFor(order.customer.state)) problems.push('Unknown delivery state "' + (order.customer.state || '') + '"');
+    if (!exp) problems.push('Could not price this order');
+    else {
+      if (paid !== exp.total) problems.push('Paid ' + naira(paid) + ' but price list + delivery says ' + naira(exp.total));
+      if (order.deliveryFee != null && order.deliveryFee !== exp.delivery) problems.push('Delivery fee sent (' + naira(order.deliveryFee) + ') does not match ' + naira(exp.delivery) + ' for ' + order.customer.state);
+    }
+  } else {
+    if (!exp) problems.push('Could not price this order (unknown size "' + (order.size || '') + '")');
+    else if (paid !== exp.total) problems.push('Paid ' + naira(paid) + ' but price list says ' + naira(exp.total));
+    if (order.itemCount > MAX_PIECES) problems.push('Order lists ' + order.itemCount + ' frames (max ' + MAX_PIECES + ')');
+    if (order.pieces && order.itemCount && order.pieces !== order.itemCount) problems.push('Pieces (' + order.pieces + ') does not match frames listed (' + order.itemCount + ')');
+  }
   if (order.total != null && Number(order.total) !== paid) problems.push('Paid ' + naira(paid) + ' but receipt total was ' + naira(order.total));
-  if (order.itemCount > MAX_PIECES) problems.push('Order lists ' + order.itemCount + ' frames (max ' + MAX_PIECES + ')');
-  if (order.pieces && order.itemCount && order.pieces !== order.itemCount) problems.push('Pieces (' + order.pieces + ') does not match frames listed (' + order.itemCount + ')');
   // The Paystack reference must belong to this order (ref, or ref-R<n> for a retry).
   const pref = String(data.reference || '');
   if (!order.ref || !(pref === order.ref || (pref.startsWith(order.ref + '-R') && /^-R\d{1,3}$/.test(pref.slice(order.ref.length))))) problems.push('Paystack reference does not match the order reference');
@@ -132,6 +211,10 @@ function publicView(data, check) {
       ref: o.ref, size: o.size, style: o.style, pieces: o.pieces, setName: o.setName,
       unitPrice: o.unitPrice, discount: o.discount, subtotal: o.subtotal, total: o.total,
       items: Array.isArray(o.items) ? o.items.map(i => ({ imageName: i.name, isUpload: !!i.isUpload, fileKind: i.fileKind || null })) : [],
+      v: o.v === 2 ? 2 : undefined,
+      lines: o.v === 2 ? o.lines.map(l => ({ size: l.size, style: l.style, qty: l.qty, unit: l.unit, setName: l.setName,
+        items: l.items.map(i => ({ imageName: i.name, isUpload: !!i.isUpload, fileKind: i.fileKind || null })) })) : undefined,
+      deliveryFee: o.v === 2 && check.expected ? check.expected.delivery : undefined,
       name: cu.name, phone: cu.phone, address: cu.address,
       city: cu.city, state: cu.state, notes: cu.notes,
       placedAt: o.placedAt
@@ -152,13 +235,28 @@ function waLink(phone, text) {
 // Full owner receipt, HTML + plain text.
 function receiptEmail(data, check) {
   const o = check.order || {}, c = o.customer || {}, exp = check.expected;
-  const n = (o.items || []).length || Number(o.pieces) || 1;
-  const items = (o.items || []).map((it, i) => ({
-    name: (it.name || it.imageName || 'Frame') + (it.isUpload ? (it.fileKind === 'pdf' ? ' (customer PDF' + (it.fileName ? ': ' + it.fileName : '') + ')' : ' (customer photo' + (it.fileName ? ': ' + it.fileName : '') + ')') : ''),
+  const v2 = o.v === 2;
+  const n = v2 ? (exp ? exp.n : (o.items || []).length) : ((o.items || []).length || Number(o.pieces) || 1);
+  const fileTag = it => it.isUpload ? (it.fileKind === 'pdf' ? ' (customer PDF' + (it.fileName ? ': ' + it.fileName : '') + ')' : ' (customer photo' + (it.fileName ? ': ' + it.fileName : '') + ')') : '';
+  const files = [];
+  const items = v2
+    ? o.lines.map(l => {
+        const k = l.items.length, unit = PRICES[normSize(l.size)] || 0, each = unit * k; // gross; pair discount shown below
+        l.items.forEach(it => { if (it.fileUrl) files.push({ name: it.fileName || it.name, url: it.fileUrl }); });
+        return { name: l.items.map(it => it.name + fileTag(it)).join(' + '), piece: k > 1 && l.setName && l.setName !== 'Custom set' ? l.setName : '',
+          size: l.size, style: l.style, set: setLabelOf(k), qty: l.qty, unit: each, total: each * l.qty };
+      })
+    : (o.items || []).map((it, i) => ({
+    name: (it.name || it.imageName || 'Frame') + fileTag(it),
     piece: n > 1 ? 'Frame ' + (i + 1) + ' of ' + n : '',
     size: o.size, style: o.style, set: setLabelOf(n) + (o.setName && n > 1 ? ' · ' + o.setName : ''),
     qty: 1, unit: it.unit || o.unitPrice, total: it.lineTotal || it.unit || o.unitPrice
   }));
+  const subtotalShown = v2 ? (exp ? exp.gross : o.subtotal) : (o.subtotal != null ? o.subtotal : exp && exp.subtotal);
+  const discountShown = v2 ? (exp ? exp.discount : o.discount) : o.discount;
+  const discountLabel = v2 ? 'Pair discount' : setLabelOf(n) + ' set discount';
+  const deliveryText = v2 && exp ? naira(exp.delivery) + ' (' + exp.region + ' · ' + (c.state || '') + ') · paid' : 'Fee to be confirmed';
+  const nextStep = v2 ? 'Next: delivery is paid — start framing and deliver within 3 business days.' : 'Next: confirm the delivery fee with the customer, then start framing.';
   const ref = line(o.ref || data.reference, 40);
   const subject = line((check.ok ? '' : '⚠ CHECK AMOUNT — ') + 'New paid order ' + ref + ' — ' + naira(check.paid), 150);
   const warn = check.ok ? '' : 'CHECK BEFORE SHIPPING: ' + check.problems.join('; ');
@@ -175,14 +273,15 @@ function receiptEmail(data, check) {
     '', 'ITEMS',
     ...items.map(i => '- ' + i.name + (i.piece ? ' [' + i.piece + ']' : '') + ' | ' + i.size + '" | ' + i.style + ' | ' + i.set + ' | qty ' + i.qty + ' | ' + naira(i.unit) + ' | ' + naira(i.total)),
     '',
-    'Subtotal: ' + naira(o.subtotal != null ? o.subtotal : exp && exp.subtotal),
-    (o.discount ? (setLabelOf(n) + ' set discount: -' + naira(o.discount)) : ''),
-    'Delivery: nationwide within 3 business days; fee to be confirmed with the customer',
+    'Subtotal: ' + naira(subtotalShown),
+    (discountShown ? (discountLabel + ': -' + naira(discountShown)) : ''),
+    'Delivery: ' + deliveryText + ' — nationwide within 3 business days',
     'TOTAL PAID: ' + naira(check.paid),
     '', 'CUSTOMER', ...custRows.map(r => r[0] + ': ' + r[1]),
     wa ? 'WhatsApp the customer: ' + wa : '',
-    uploads ? '\nThis order includes the customer\'s own file(s). Ask them to send the original file(s) on WhatsApp or email.' : '',
-    '\nNext: confirm the delivery fee with the customer, then start framing.'
+    files.length ? '\nCUSTOMER FILES\n' + files.map(f => '- ' + f.name + ': ' + f.url).join('\n') : '',
+    uploads && !files.length ? '\nThis order includes the customer\'s own file(s). Ask them to send the original file(s) on WhatsApp or email.' : '',
+    '\n' + nextStep
   ].filter(l => l !== '').join('\n');
 
   const td = 'padding:8px 6px;border-bottom:1px solid #eee;vertical-align:top;font-size:13px';
@@ -204,16 +303,17 @@ ${data.channel ? `<tr><td style="color:#777">Channel</td><td style="text-align:r
 ${items.map(i => `<tr><td style="${td}">${esc(i.name)}${i.piece ? `<br><span style="color:#888;font-size:11px">${esc(i.piece)}</span>` : ''}</td><td style="${td}">${esc(i.size)}"</td><td style="${td}">${esc(i.style)}</td><td style="${td}">${esc(i.set)}</td><td style="${td};text-align:right">${i.qty}</td><td style="${td};text-align:right">${naira(i.unit)}</td><td style="${td};text-align:right">${naira(i.total)}</td></tr>`).join('')}
 </table>
 <table style="width:100%;font-size:14px;margin-top:10px">
-<tr><td>Subtotal</td><td style="text-align:right">${naira(o.subtotal != null ? o.subtotal : exp && exp.subtotal)}</td></tr>
-${o.discount ? `<tr><td>${esc(setLabelOf(n))} set discount</td><td style="text-align:right">−${naira(o.discount)}</td></tr>` : ''}
-<tr><td>Delivery</td><td style="text-align:right">Fee to be confirmed · Nationwide within 3 business days</td></tr>
+<tr><td>Subtotal</td><td style="text-align:right">${naira(subtotalShown)}</td></tr>
+${discountShown ? `<tr><td>${esc(discountLabel)}</td><td style="text-align:right">−${naira(discountShown)}</td></tr>` : ''}
+<tr><td>Delivery</td><td style="text-align:right">${esc(deliveryText)} · Nationwide within 3 business days</td></tr>
 <tr><td style="font-weight:bold;font-size:17px;border-top:2px solid #1a1a1a;padding-top:8px">TOTAL PAID</td><td style="text-align:right;font-weight:bold;font-size:17px;border-top:2px solid #1a1a1a;padding-top:8px">${naira(check.paid)}</td></tr>
 </table>
 <h3 style="font-size:13px;letter-spacing:1px;color:#777;margin:20px 0 6px">CUSTOMER</h3>
 <table style="width:100%;font-size:13px">${custRows.map(r => `<tr><td style="color:#777;width:140px;vertical-align:top">${esc(r[0])}</td><td>${esc(r[1]).replace(/\n/g, '<br>')}</td></tr>`).join('')}</table>
 ${wa ? `<p style="margin:14px 0"><a href="${esc(wa)}" style="display:inline-block;background:#25D366;color:#fff;text-decoration:none;font-weight:bold;padding:10px 18px;border-radius:999px;font-size:14px">Message ${esc(c.name || 'customer')} on WhatsApp</a></p>` : ''}
-${uploads ? '<p style="font-size:13px;background:#fff6e0;padding:10px;border-radius:4px">This order includes the customer\'s own file(s). Ask them to send the original file(s) on WhatsApp or email.</p>' : ''}
-<p style="font-size:13px;color:#555;border-top:1px dashed #ccc;padding-top:12px">Next: confirm the delivery fee with the customer, then start framing.</p>
+${files.length ? `<p style="font-size:13px;background:#eef6ff;padding:10px;border-radius:4px"><strong>Customer files:</strong><br>${files.map(f => `<a href="${esc(f.url)}">${esc(f.name)}</a>`).join('<br>')}</p>` : ''}
+${uploads && !files.length ? '<p style="font-size:13px;background:#fff6e0;padding:10px;border-radius:4px">This order includes the customer\'s own file(s). Ask them to send the original file(s) on WhatsApp or email.</p>' : ''}
+<p style="font-size:13px;color:#555;border-top:1px dashed #ccc;padding-top:12px">${esc(nextStep)}</p>
 </div></div></body></html>`;
   return { subject, text, html, ref };
 }
@@ -264,8 +364,13 @@ async function notifyPaid(data, check, source) {
       price:       check.paid,
       expectedTotal: check.expected ? check.expected.total : null,
       unitPrice:   o.unitPrice,
-      subtotal:    o.subtotal,
-      discount:    o.discount,
+      subtotal:    o.v === 2 && check.expected ? check.expected.subtotal : o.subtotal,
+      discount:    o.v === 2 && check.expected ? check.expected.discount : o.discount,
+      v:           o.v === 2 ? 2 : undefined,
+      lines:       o.v === 2 ? o.lines : undefined,
+      framesTotal: o.v === 2 && check.expected ? check.expected.subtotal : undefined,
+      deliveryFee: o.v === 2 && check.expected ? check.expected.delivery : undefined,
+      deliveryRegion: o.v === 2 && check.expected ? check.expected.region : undefined,
       size:        o.size,
       style:       o.style,
       pieces:      o.pieces,
@@ -308,4 +413,4 @@ function isFresh(data) {
   return !t || Date.now() - t < FRESH_MS;
 }
 
-module.exports = { line, block, REF_RE, STRONG_REF_RE, PAYSTACK_REF_RE, EMAIL_RE, rateLimited, isFresh, notifyPaid, waLink, PRICES, SET_DISCOUNTS, naira, expectedTotal, verifySignature, paystackVerify, checkPayment, publicView, receiptEmail, sendResend, readMetaOrder };
+module.exports = { DELIVERY_REGIONS, deliveryFor, line, block, REF_RE, STRONG_REF_RE, PAYSTACK_REF_RE, EMAIL_RE, rateLimited, isFresh, notifyPaid, waLink, PRICES, SET_DISCOUNTS, naira, expectedTotal, verifySignature, paystackVerify, checkPayment, publicView, receiptEmail, sendResend, readMetaOrder };

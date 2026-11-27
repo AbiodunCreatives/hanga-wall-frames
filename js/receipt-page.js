@@ -57,13 +57,20 @@
     dl.textContent = '';
     var rows = [];
     if (R) {
-      rows.push(['Items', R.rows.map(function (r) { return r.name; }).join(', ')]);
-      rows.push(['Frame', [order.size ? order.size + '"' : '', H.styleText(order.style), H.setLabel(R.n)].filter(Boolean).join(' · ')]);
+      rows.push(['Items', R.rows.map(function (r) { return (r.qty > 1 ? r.qty + ' × ' : '') + r.name; }).join(', ')]);
+      if (R.v === 2) rows.push(['Frames', R.rows.map(function (r) { return [r.size, r.style.replace(' (no frame)', ''), r.set].join(' · '); }).join(' | ')]);
+      else rows.push(['Frame', [order.size ? order.size + '"' : '', H.styleText(order.style), H.setLabel(R.n)].filter(Boolean).join(' · ')]);
+      if (R.v === 2) rows.push(['Delivery', R.deliveryText + ' · within 3 business days']);
       rows.push(['Amount paid', H.formatNaira(paidAmount != null ? paidAmount : R.total)]);
     }
     if (paystackRef) rows.push(['Paystack ref', paystackRef]);
-    rows.push(['Delivery', 'Fee confirmed after your order']);
+    if (!R || R.v !== 2) rows.push(['Delivery', 'Within 3 business days']);
     rows.forEach(function (r) { var dt = document.createElement('dt'), dd = document.createElement('dd'); dt.textContent = r[0]; dd.textContent = r[1]; dl.append(dt, dd); });
+    var okWa = $('okWhatsApp');
+    if (okWa) {
+      var waL = H.whatsappLink('Hi Hanga! I just paid for my order.\nOrder reference: ' + ref + (paystackRef ? '\nPaystack ref: ' + paystackRef : '') + (order.name ? '\nName: ' + order.name : ''));
+      okWa.hidden = !waL; if (waL) okWa.href = waL;
+    }
     var canDl = !!order.price;
     $('dlPdf').disabled = !canDl; $('dlPng').disabled = !canDl;
     if (!successShown) {
@@ -127,10 +134,10 @@
       lines.push('', 'Items:');
       R.rows.forEach(function (r) { lines.push('• ' + r.name + (r.piece ? ' [' + r.piece + ']' : '') + ' — ' + r.size + ', ' + r.style + ', ' + r.set + ' — ' + r.qty + ' × ' + H.formatNaira(r.unit)); });
       lines.push('Subtotal: ' + H.formatNaira(R.subtotal));
-      if (R.discount) lines.push(H.setLabel(R.n) + ' set discount: −' + H.formatNaira(R.discount));
-      lines.push('Delivery: to be confirmed', 'TOTAL: ' + H.formatNaira(R.total));
+      if (R.discount) lines.push(R.discountLabel + ': −' + H.formatNaira(R.discount));
+      lines.push('Delivery: ' + R.deliveryText, 'TOTAL: ' + H.formatNaira(R.total));
     }
-    lines.push('', 'Name: ' + (order.name || ''), 'Phone: ' + (order.phone || ''), 'Delivery address: ' + (order.address || ''));
+    lines.push('', 'Name: ' + (order.name || ''), 'Phone: ' + (order.phone || ''), 'Delivery address: ' + [order.address, order.city, order.state].filter(Boolean).join(', '));
     return lines.join('\n');
   }
   function wireSend() {
@@ -226,18 +233,14 @@
     loadScript('https://js.paystack.co/v2/inline.js').then(function () {
       new window.PaystackPop().newTransaction({
         key: pk,
-        email: H.payEmail(order), // placeholder; we don't collect customer email
-        amount: Math.round(Number(order.price) * 100), // kobo; delivery is confirmed after the order
+        email: H.payEmail(order), // the customer's email if given, else a placeholder
+        amount: Math.round(Number(order.price) * 100), // kobo; v2 orders include delivery
         currency: 'NGN',
         reference: attempt === 1 ? ref : ref + '-R' + attempt, // Paystack refuses a reused reference
         metadata: {
           order_ref: ref,
           order: meta,
-          custom_fields: [
-            { display_name: 'Order', variable_name: 'order_ref', value: ref },
-            { display_name: 'Customer', variable_name: 'customer', value: (order.name || '') + ' · ' + (order.phone || '') },
-            { display_name: 'Items', variable_name: 'items', value: meta.items.map(function (i) { return i.name; }).join(', ') + ' (' + meta.size + '", ' + meta.style + ', ' + meta.set + ')' }
-          ]
+          custom_fields: H.paystackFields(order, meta, ref)
         },
         onSuccess: function (tx) { $('payBtn').disabled = false; status = 'checking'; paystackRef = tx.reference; rememberPayRef(tx.reference); render(); alertBox('Confirming your payment with Paystack…', 'is-info'); verify(tx.reference); },
         onCancel: function () { $('payBtn').disabled = false; alertBox('Payment not completed. Your order is still saved.', 'is-warn', true); },

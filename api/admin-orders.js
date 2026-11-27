@@ -131,7 +131,8 @@ async function writeOrder(orderData) {
   const record = Object.assign({}, orderData, {
     _savedAt: new Date().toISOString(),
     fulfilmentStatus: 'paid',   // paid | processing | shipped | delivered | cancelled
-    deliveryFee: null,
+    // v2 (cart) orders arrive with the delivery fee already paid; legacy orders set it later.
+    deliveryFee: orderData.deliveryFee != null ? orderData.deliveryFee : null,
     adminNotes: '',
     deleted: false
   });

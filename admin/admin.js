@@ -248,7 +248,7 @@
         '<td><div class="items-name">' + esc(itemsLabel(o)) + '</div>' +
               '<div class="items-detail">' + esc(frameDetail(o)) + '</div></td>' +
         '<td><div class="order-total">' + fmt(o.price) + '</div>' +
-              (o.deliveryFee != null ? '<div class="delivery-fee">+' + fmt(o.deliveryFee) + ' delivery</div>' : '') + '</td>' +
+              (o.deliveryFee != null ? '<div class="delivery-fee">' + (o.v === 2 ? 'incl. ' : '+') + fmt(o.deliveryFee) + ' delivery</div>' : '') + '</td>' +
         '<td>' + fmtDate(o.paidAt || o.placedAt) + '</td>' +
         '<td>' + statusBadge(o) + '</td>' +
         '<td><button class="action-btn" type="button">View</button></td>';
@@ -313,6 +313,21 @@
 
     // Items
     html += '<div class="dsec"><div class="dsec-title">Items</div>';
+    if (o.v === 2 && Array.isArray(o.lines)) {
+      o.lines.forEach(function (l, li) {
+        var k = (l.items || []).length || 1;
+        var names = (l.items || []).map(function (it) {
+          var nm = esc(it.name || it.imageName || 'Frame');
+          if (it.isUpload) nm += it.fileUrl && /^https:\/\/res\.cloudinary\.com\//.test(it.fileUrl)
+            ? ' <a href="' + esc(it.fileUrl) + '" target="_blank" rel="noopener">(customer file ↗)</a>'
+            : ' <em style="color:var(--muted)">(upload)</em>';
+          return nm;
+        }).join(' + ');
+        html += drow('Line ' + (li + 1), names + '<br><span style="color:var(--muted)">' +
+          esc([setLabel(k) + (k > 1 && l.setName && l.setName !== 'Custom set' ? ' · ' + l.setName : ''), l.size ? l.size + '"' : '', l.style, 'qty ' + (l.qty || 1)].filter(Boolean).join(' · ')) + '</span>');
+      });
+      html += '</div>';
+    } else {
     items.forEach(function (it, i) {
       var label = n > 1 ? 'Frame ' + (i + 1) : 'Image';
       html += drow(label, esc(it.imageName || it.name || '—') + (it.isUpload ? ' <em style="color:var(--muted)">(upload)</em>' : ''));
@@ -321,14 +336,22 @@
     html += drow('Style', esc(o.style || '—'));
     html += drow('Set', esc(setLabel(n) + (o.setName && n > 1 ? ' · ' + o.setName : '')));
     html += '</div>';
+    }
 
     // Payment
     html += '<div class="dsec"><div class="dsec-title">Payment</div>';
+    if (o.v === 2) {
+      html += drow('Frames', fmt((o.framesTotal != null ? o.framesTotal : (o.price || 0) - (o.deliveryFee || 0)) + (o.discount || 0)));
+      if (o.discount) html += drow('Pair discount', '−' + fmt(o.discount));
+      html += drow('Delivery fee', fmt(o.deliveryFee || 0) + (o.deliveryRegion ? ' <span style="color:var(--muted)">(' + esc(o.deliveryRegion) + (o.state ? ' · ' + esc(o.state) : '') + ')</span>' : ''));
+      html += drow('Grand total paid', '<strong>' + fmt(o.price) + '</strong>');
+    } else {
     if (n > 1 && o.unitPrice) html += drow('Unit price', fmt(o.unitPrice) + ' × ' + n);
     if (o.discount) html += drow('Set discount', '−' + fmt(o.discount));
     html += drow('Frame total', fmt(o.price));
     html += drow('Delivery fee', o.deliveryFee != null ? fmt(o.deliveryFee) : '<em style="color:var(--muted)">Not set</em>');
     html += drow('Grand total', o.deliveryFee != null ? fmt((o.price || 0) + (o.deliveryFee || 0)) : '<em style="color:var(--muted)">Pending delivery fee</em>');
+    }
     html += '</div>';
 
     // Customer
@@ -449,12 +472,19 @@
     return '<span class="status-badge ' + cls + '">' + esc(label) + '</span>';
   }
   function itemsLabel(o) {
+    if (o.v === 2 && Array.isArray(o.lines)) {
+      return o.lines.map(function (l) { return ((l.qty || 1) > 1 ? l.qty + '× ' : '') + (l.items || []).map(function (i) { return i.name || i.imageName || 'Frame'; }).join(' + '); }).join(', ');
+    }
     if (Array.isArray(o.items) && o.items.length > 1) {
       return o.items.map(function (i) { return i.imageName || i.name || 'Frame'; }).join(', ');
     }
     return o.imageName || (o.items && o.items[0] && o.items[0].imageName) || 'Frame';
   }
   function frameDetail(o) {
+    if (o.v === 2 && Array.isArray(o.lines)) {
+      var fr = o.lines.reduce(function (a, l) { return a + ((l.items || []).length || 1) * (l.qty || 1); }, 0);
+      return o.lines.length + ' item' + (o.lines.length === 1 ? '' : 's') + ' · ' + fr + ' frame' + (fr === 1 ? '' : 's') + (o.state ? ' · ' + o.state : '');
+    }
     var n = o.pieces || (Array.isArray(o.items) ? o.items.length : 1) || 1;
     return [setLabel(n), o.size ? o.size + '"' : null, o.style].filter(Boolean).join(' · ');
   }
