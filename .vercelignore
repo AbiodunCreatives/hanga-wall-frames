@@ -8,3 +8,4 @@ data/prints-manifest.json
 data/collection-credits.json
 .gitignore
 tools
+SETUP-ADMIN.md
