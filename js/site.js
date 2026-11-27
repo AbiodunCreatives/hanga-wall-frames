@@ -134,6 +134,28 @@ window.HANGA = {
     return 'mailto:' + H.email + '?subject=' + encodeURIComponent(subject || '') + '&body=' + encodeURIComponent(body || '');
   };
 
+  // ── One upload rule for the whole site (customizer, FAQ, schema) ──
+  // PDF, JPG, PNG or WEBP; images up to 10 MB, PDFs up to 20 MB.
+  H.UPLOAD = {
+    imageTypes: ['image/jpeg', 'image/png', 'image/webp'],
+    imageMaxMB: 10, pdfMaxMB: 20,
+    accept: 'application/pdf,image/jpeg,image/png,image/webp',
+    rule: 'PDF, JPG, PNG or WEBP — images up to 10 MB, PDFs up to 20 MB',
+    heicHelp: "This iPhone photo is in HEIC format, which we can't read here. Please upload it as a JPG: choose it from your Photos library (not the Files app) and your iPhone converts it automatically, or set Settings › Camera › Formats to “Most Compatible” for new photos. You can also send the original on WhatsApp after you order."
+  };
+  H.isHeic = function (f) { return !!f && (/^image\/hei[cf](-sequence)?$/i.test(f.type || '') || /\.(heic|heif)$/i.test(f.name || '')); };
+  // → { ok, kind: 'pdf'|'image'|'heic', msg }
+  H.checkUpload = function (f) {
+    var U = H.UPLOAD, MB = 1024 * 1024;
+    if (!f) return { ok: false, msg: 'No file selected.' };
+    var isPdf = f.type === 'application/pdf' || (!f.type && /\.pdf$/i.test(f.name || '')) || (/\.pdf$/i.test(f.name || '') && f.type === 'application/octet-stream');
+    if (isPdf) return f.size > U.pdfMaxMB * MB ? { ok: false, kind: 'pdf', msg: 'That PDF is too large. PDFs can be up to ' + U.pdfMaxMB + ' MB.' } : { ok: true, kind: 'pdf' };
+    if (H.isHeic(f)) return { ok: false, kind: 'heic', msg: U.heicHelp };
+    if (U.imageTypes.indexOf(f.type) === -1) return { ok: false, msg: 'Please upload a PDF, JPG, PNG or WEBP file (images up to ' + U.imageMaxMB + ' MB, PDFs up to ' + U.pdfMaxMB + ' MB).' };
+    if (f.size > U.imageMaxMB * MB) return { ok: false, kind: 'image', msg: 'That image is too large. Images can be up to ' + U.imageMaxMB + ' MB (PDFs up to ' + U.pdfMaxMB + ' MB).' };
+    return { ok: true, kind: 'image' };
+  };
+
   // ── Delivery: flat fee by region (must match api/_lib.js) ───
   H.DELIVERY_REGIONS = [
     { key: 'south-west', label: 'South-West', fee: 2500,

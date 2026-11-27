@@ -268,7 +268,7 @@
           <p style="font-size:12px; margin-top:4px">PDF, JPG, PNG or WEBP — images up to 10 MB, PDFs up to 20 MB</p>
         </div>
         <input type="file" id="fileInput" accept="application/pdf,image/jpeg,image/png,image/webp" aria-label="Upload your image or PDF" aria-describedby="uploadHint" style="display:none" onchange="handleFileUpload(event)">
-        <p class="upload-hint" id="uploadHint">💡 For the sharpest print, upload a PDF or a high-resolution image (JPG/PNG, ideally 3000px+ on the long side).</p>
+        <p class="upload-hint" id="uploadHint">💡 PDF, JPG, PNG or WEBP — images up to 10 MB, PDFs up to 20 MB. For the sharpest print, upload the original photo or a PDF (ideally 3000px+ on the long side), not a screenshot or a WhatsApp copy. iPhone photos: pick them from your Photos library so they upload as JPG.</p>
         <p class="upload-warn" id="uploadWarn" hidden></p>
       </div>
       </div><!-- /.bld-step-body -->
@@ -805,7 +805,32 @@ filterMiniGallery('featured');
 // The photo stays in the browser (nothing is uploaded to a server). We keep a
 // resized copy for the preview and checkout; customers are asked to send the
 // original file with their order reference so it prints sharply.
-const ACCEPTED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
+// Types and size caps come from HANGA.UPLOAD (js/site.js), the one rule the
+// FAQ and schema also state: PDF, JPG, PNG or WEBP; images ≤10 MB, PDFs ≤20 MB.
+// `accept` deliberately leaves HEIC out: that makes iPhone Safari hand us a JPG
+// when the photo is picked from the Photos library.
+// iPhone HEIC: browsers that can decode it (Safari) get a JPEG copy made here
+// in the page (no extra library); elsewhere the customer gets clear steps.
+function heicToJpeg(file) {
+  return new Promise((res, rej) => {
+    const url = URL.createObjectURL(file), img = new Image();
+    img.onload = () => {
+      try {
+        const c = document.createElement('canvas');
+        c.width = img.naturalWidth; c.height = img.naturalHeight;
+        if (!c.width || !c.height) throw new Error('empty');
+        c.getContext('2d').drawImage(img, 0, 0);
+        c.toBlob(b => {
+          URL.revokeObjectURL(url);
+          if (!b) return rej(new Error('encode'));
+          res(new File([b], file.name.replace(/\.(heic|heif)$/i, '') + '.jpg', { type: 'image/jpeg' }));
+        }, 'image/jpeg', 0.92);
+      } catch (e) { URL.revokeObjectURL(url); rej(e); }
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); rej(new Error('decode')); };
+    img.src = url;
+  });
+}
 
 function downscaleImage(dataUrl, maxSide, cb) {
   const img = new Image();
@@ -888,16 +913,31 @@ const CLOUDINARY = {
 // so we upload BEFORE proceeding to checkout).
 const _uploadFiles = {};  // slot index → File
 
-function handleFileUpload(event) {
+function uploadProblem(msg) {
+  const warn = document.getElementById('uploadWarn');
+  warn.textContent = msg; warn.hidden = false;
+  showToast(msg.length > 90 ? msg.split('. ')[0] + '.' : msg);
+  document.getElementById('fileInput').value = '';
+}
+function handleFileUpload(event, converted) {
   const file = event.target.files[0];
   if (!file) return;
-  // Store the original file for Cloudinary upload at checkout
-  _uploadFiles[state.activeSlot] = file;
   const warn = document.getElementById('uploadWarn');
   warn.hidden = true;
-  const isPdf = file.type === 'application/pdf' || /\.pdf$/i.test(file.name);
-  if (!isPdf && ACCEPTED_TYPES.indexOf(file.type) === -1) { showToast('Please upload a PDF, JPG, PNG or WEBP file.'); return; }
-  if (file.size > (isPdf ? 20 : 10) * 1024 * 1024) { showToast(isPdf ? 'PDF too large (max 20 MB)' : 'File too large (max 10 MB)'); return; }
+  const chk = HANGA.checkUpload(file);
+  if (chk.kind === 'heic' && !converted) {
+    heicToJpeg(file).then(jpg => {
+      const c2 = HANGA.checkUpload(jpg);
+      if (!c2.ok) return uploadProblem(c2.msg);
+      handleFileUpload({ target: { files: [jpg] } }, true);
+      setTimeout(() => { warn.textContent = 'iPhone photo converted to JPG ✓'; warn.hidden = false; }, 50);
+    }).catch(() => uploadProblem(chk.msg));
+    return;
+  }
+  if (!chk.ok) return uploadProblem(chk.msg);
+  const isPdf = chk.kind === 'pdf';
+  // Keep the (validated) original file for the Cloudinary upload at add-to-cart.
+  _uploadFiles[state.activeSlot] = file;
   const slotNo = state.activeSlot + 1;
   const done = (item, label) => {
     confirmStep('image');
@@ -1342,6 +1382,7 @@ function smallThumb(src) {
   });
 }
 function uploadToCloudinary(file, slot) {
+  if (!HANGA.checkUpload(file).ok) return Promise.resolve(null); // same rule as the picker
   const fd = new FormData();
   fd.append('file', file);
   fd.append('upload_preset', CLOUDINARY.preset);
