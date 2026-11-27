@@ -1,6 +1,10 @@
 User-agent: *
 Allow: /
+Disallow: /checkout
 Disallow: /checkout.html
+Disallow: /confirmation
 Disallow: /confirmation.html
+Disallow: /admin
+Disallow: /api/
 
 Sitemap: https://www.hangaframes.art/sitemap.xml
