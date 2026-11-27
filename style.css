@@ -2691,3 +2691,59 @@ html.kb-open .toast.show { transform: none !important; }
 .ok-wa { display: block; margin: 14px auto 0; font-size: 14px; text-decoration: none; }
 .ok-wa:hover { text-decoration: underline; }
 @media (max-width: 600px) { .checkout-form-col .form-row { grid-template-columns: 1fr; } }
+
+/* ─── Real frames, real walls ───────────────────────────────── */
+.real-section { background: var(--white, #fff); }
+.real-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+.real-card { margin: 0; }
+.real-card picture, .real-card img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  height: auto;
+  object-fit: cover;
+  border-radius: 12px;
+  background: #e9e4dc;
+}
+.real-card figcaption {
+  margin-top: 10px;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.real-note { margin-top: 22px; font-size: 14px; color: var(--muted); }
+.real-note a { color: var(--black); font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
+@media (min-width: 761px) { .real-note { font-size: 0; } .real-note a { font-size: 14px; } }
+@media (max-width: 760px) {
+  .real-grid {
+    display: flex;
+    gap: 14px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    margin: 0 calc(-1 * var(--px));
+    padding: 0 var(--px) 4px;
+    scroll-padding: 0 var(--px);
+  }
+  .real-grid::-webkit-scrollbar { display: none; }
+  .real-card { flex: 0 0 78%; scroll-snap-align: start; }
+}
+
+/* About carousel: real photos are square, keep them uncropped */
+.about-scene-card.is-real { flex: 0 0 340px; }
+.about-scene-card.is-real img { height: 340px; aspect-ratio: 1 / 1; }
+@media (max-width: 900px) {
+  .about-scene-card.is-real { flex: 0 0 min(85vw, 340px); }
+  .about-scene-card.is-real img { height: auto; }
+}
+
+/* Keep the big pricing CTA inside narrow phones (was 3px wider than a 390px screen) */
+@media (max-width: 600px) {
+  .btn-cta-primary { max-width: 100%; padding-left: 28px; padding-right: 28px; }
+}
