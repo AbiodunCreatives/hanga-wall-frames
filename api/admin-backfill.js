@@ -18,11 +18,12 @@ module.exports = async function handler(req, res) {
   const provided = (qs.get('secret') || '').trim();
   const dry      = qs.get('dry') === '1';
 
-  if (!secret || !provided) return end(res, { ok: false, error: 'missing_secret' });
+  if (L.rateLimited(req, 5, 60 * 1000)) { res.statusCode = 429; res.setHeader('Retry-After', '60'); return end(res, { ok: false, error: 'too_many_requests' }); }
+  if (!secret || !provided) { res.statusCode = 401; return end(res, { ok: false, error: 'missing_secret' }); }
   const a = Buffer.from(crypto.createHmac('sha256','gate').update(secret).digest('hex'));
   const b = Buffer.from(crypto.createHmac('sha256','gate').update(provided).digest('hex'));
   if (a.length !== b.length || !crypto.timingSafeEqual(a, b))
-    return end(res, { ok: false, error: 'wrong_secret' });
+    { res.statusCode = 401; return end(res, { ok: false, error: 'wrong_secret' }); }
 
   const PS_KEY = process.env.PAYSTACK_SECRET_KEY || '';
   const KV_URL = (process.env.KV_REST_API_URL || '').replace(/\/$/, '');
