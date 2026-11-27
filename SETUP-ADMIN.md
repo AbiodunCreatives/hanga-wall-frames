@@ -1,6 +1,6 @@
 # Admin Dashboard Setup
 
-The dashboard lives at `/admin` (e.g. `https://hangaframes.art/admin`).
+The dashboard lives at `/admin` (e.g. `https://www.hangaframes.art/admin`).
 
 ---
 

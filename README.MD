@@ -2,7 +2,7 @@
 
 Static website for **Hanga**, a Nigerian custom wall-frame shop. Customers pick a print from the gallery (or upload their own photo), choose one of four sizes (12×16" to 20×24") and a black or white frame, or a borderless finish, preview it on a real wall, and place an order.
 
-Live: https://hangaframes.art
+Live: https://www.hangaframes.art
 
 ## Pages
 

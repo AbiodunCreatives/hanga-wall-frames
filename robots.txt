@@ -3,4 +3,4 @@ Allow: /
 Disallow: /checkout.html
 Disallow: /confirmation.html
 
-Sitemap: https://hangaframes.art/sitemap.xml
+Sitemap: https://www.hangaframes.art/sitemap.xml
