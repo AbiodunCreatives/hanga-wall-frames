@@ -42,7 +42,8 @@
                     : (items[0] ? items[0].imageName + uploadTag(items[0]) : 'Frame'),
         piece: '', size: l.size ? l.size + '"' : '—', style: H.styleText(l.style),
         set: H.setLabel(n) + (n > 1 && H.setDiscount(n) ? ' (−' + H.formatNaira(H.setDiscount(n)) + ')' : ''),
-        qty: q, unit: unit, total: unit * q
+        qty: q, unit: unit, total: unit * q,
+        items: items
       };
     });
     var fee = Number(o.deliveryFee || 0);
@@ -63,10 +64,10 @@
         piece: n > 1 ? 'Frame ' + (i + 1) + ' of ' + n : '',
         size: o.size ? o.size + '"' : '—',
         style: H.styleText(o.style),
-        set: setTxt, qty: 1, unit: unit, total: unit
+        set: setTxt, qty: 1, unit: unit, total: unit, items: [p]
       };
     });
-    if (!rows.length) rows.push({ name: o.imageName || 'Frame', piece: '', size: o.size ? o.size + '"' : '—', style: H.styleText(o.style), set: setTxt, qty: n, unit: unit, total: o.price });
+    if (!rows.length) rows.push({ name: o.imageName || 'Frame', piece: '', size: o.size ? o.size + '"' : '—', style: H.styleText(o.style), set: setTxt, qty: n, unit: unit, total: o.price, items: pieces });
     var discount = n > 1 ? (o.discount != null ? Number(o.discount) : H.setDiscount(n)) : 0;
     return { rows: rows, n: n, subtotal: unit ? unit * n : o.price, discount: discount, discountLabel: H.setLabel(n) + ' set discount', delivery: null, deliveryText: 'To be confirmed', total: o.price };
   };
@@ -173,9 +174,11 @@
     refBox.appendChild(refRow);
     var meta = el('dl', 'rc-meta');
     function metaRow(k, v, cls) { var d = el('div', cls || null); d.append(el('dt', null, k), el('dd', null, v)); meta.appendChild(d); return d; }
-    metaRow('Date', fmtDate(opts.date ? new Date(opts.date) : new Date()));
+    var when = opts.status === 'paid' ? (opts.paidAt || opts.date) : opts.date;
+    metaRow(opts.status === 'paid' ? 'Date paid' : 'Date', fmtDate(when ? new Date(when) : new Date()));
     var sRow = metaRow('Status', st.text, 'rc-status ' + st.cls);
-    if (opts.status === 'paid' && opts.paystackRef) metaRow('Paystack ref', opts.paystackRef);
+    if (opts.status === 'paid' && opts.paystackRef && opts.paystackRef !== opts.ref) metaRow('Paystack ref', opts.paystackRef);
+    if (opts.status === 'paid' && opts.channel) metaRow('Payment', 'Paystack · ' + String(opts.channel).replace(/_/g, ' '));
     refBox.appendChild(meta);
     if (st.note) refBox.appendChild(el('p', 'rc-status-note', st.note));
     root.appendChild(refBox);

@@ -99,6 +99,15 @@ window.HANGA = {
   H.styleText = function (style) { style = H.normStyle(style); return style === 'Borderless' ? 'Borderless (no frame)' : style + ' frame'; };
   // CSS class that draws thumbnails with the right frame (or none)
   H.styleClass = function (style) { return 'fstyle-' + H.normStyle(style).toLowerCase(); };
+  // Same-origin gallery thumb, or a Cloudinary upload URL. Empty if we have neither.
+  H.itemThumb = function (item) {
+    if (!item) return '';
+    var cloud = item.cloudinaryUrl || item.fileUrl || '';
+    if (/^https:\/\/res\.cloudinary\.com\//.test(cloud)) return cloud;
+    if (item.thumb && !/^https?:/i.test(item.thumb)) return item.thumb;
+    if (item.imageId) return 'images/thumbs/' + item.imageId + '.jpg';
+    return '';
+  };
 
   // Plain-text lines describing an order, used in WhatsApp / email messages.
   H.uploadNote = function (p) {

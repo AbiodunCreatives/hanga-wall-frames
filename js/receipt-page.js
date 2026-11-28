@@ -34,7 +34,7 @@
   var pk = H.paystackPublicKey || '', attempt = 0, configDone = !!pk;
 
   function render() {
-    H.renderReceipt($('receipt'), order, { ref: ref, status: status, paystackRef: paystackRef, date: order.placedAt });
+    H.renderReceipt($('receipt'), order, receiptOpts());
     var paid = status === 'paid', mismatch = status === 'mismatch', checking = status === 'checking';
     $('confirmTitle').textContent = paid ? 'Payment successful' : (mismatch ? "Payment doesn't match your order" : 'Your Hanga receipt');
     // Receipt + one PAY button. Orders reach Hanga by email automatically.
@@ -54,33 +54,58 @@
   }
 
   // Paid: swap the receipt view for the success screen (receipt stays one tap away).
-  var successShown = false, paidAt = null;
+  var successShown = false, paidAt = null, paidChannel = null;
   function showSuccess(paid) {
     var ok = $('successScreen');
     ok.hidden = !paid;
     document.body.classList.toggle('is-paid-view', paid);
     if (!paid) return;
+    var R = order.price ? H.receiptRows(order) : null;
+    var amount = paidAmount != null ? paidAmount : (R ? R.total : order.price);
+    $('okAmount').textContent = amount != null ? H.formatNaira(amount) : '—';
     $('okRef').textContent = ref;
-    var R = order.price ? H.receiptRows(order) : null, dl = $('okSummary');
-    dl.textContent = '';
-    var rows = [];
+    $('okRefBtn').setAttribute('aria-label', 'Copy order reference ' + ref);
+    var card = $('okCard');
+    card.textContent = '';
     if (R) {
-      rows.push(['Items', R.rows.map(function (r) { return (r.qty > 1 ? r.qty + ' × ' : '') + r.name; }).join(', ')]);
-      if (R.v === 2) rows.push(['Frames', R.rows.map(function (r) { return [r.size, r.style.replace(' (no frame)', ''), r.set].join(' · '); }).join(' | ')]);
-      else rows.push(['Frame', [order.size ? order.size + '"' : '', H.styleText(order.style), H.setLabel(R.n)].filter(Boolean).join(' · ')]);
-      if (R.v === 2) rows.push(['Delivery', R.deliveryText + ' · within 3 business days']);
-      rows.push(['Amount paid', H.formatNaira(paidAmount != null ? paidAmount : R.total)]);
+      R.rows.forEach(function (r) {
+        var row = document.createElement('div'); row.className = 'ok-card-item';
+        var items = r.items || [];
+        var thumb = document.createElement('div');
+        thumb.className = 'ok-thumb ' + H.styleClass((items[0] && items[0].style) || r.style || order.style);
+        var src = H.itemThumb(items[0]) || (items[1] ? H.itemThumb(items[1]) : '');
+        if (src) {
+          var img = document.createElement('img');
+          img.src = src; img.alt = r.name || '';
+          img.onerror = function () { this.remove(); var ph = document.createElement('span'); ph.className = 'ok-thumb-ph'; ph.textContent = (r.name || '?').charAt(0); thumb.appendChild(ph); };
+          thumb.appendChild(img);
+        } else {
+          var ph = document.createElement('span'); ph.className = 'ok-thumb-ph'; ph.textContent = (r.name || '?').charAt(0); thumb.appendChild(ph);
+        }
+        var copy = document.createElement('div'); copy.className = 'ok-card-copy';
+        var h = document.createElement('h2'); h.textContent = (r.qty > 1 ? r.qty + ' × ' : '') + r.name;
+        var sub = document.createElement('p');
+        sub.textContent = [r.size, (r.style || '').replace(' (no frame)', ''), r.set].filter(Boolean).join(' · ');
+        var amt = document.createElement('p'); amt.className = 'ok-card-amt'; amt.textContent = r.total ? H.formatNaira(r.total) : '';
+        copy.append(h, sub, amt);
+        row.append(thumb, copy);
+        card.appendChild(row);
+      });
+      if (R.deliveryText) {
+        var del = document.createElement('p'); del.className = 'ok-card-copy'; del.style.margin = '0';
+        del.textContent = 'Delivery · ' + R.deliveryText;
+        card.appendChild(del);
+      }
     }
-    if (paystackRef) rows.push(['Paystack ref', paystackRef]);
-    if (!R || R.v !== 2) rows.push(['Delivery', 'Within 3 business days']);
-    rows.forEach(function (r) { var dt = document.createElement('dt'), dd = document.createElement('dd'); dt.textContent = r[0]; dd.textContent = r[1]; dl.append(dt, dd); });
     var okWa = $('okWhatsApp');
     if (okWa) {
-      var waL = H.whatsappLink('Hi Hanga! I just paid for my order.\nOrder reference: ' + ref + (paystackRef ? '\nPaystack ref: ' + paystackRef : '') + (order.name ? '\nName: ' + order.name : ''));
+      var waBits = ['Hi Hanga! I just paid for my order.', 'Order reference: ' + ref];
+      if (paystackRef && paystackRef !== ref) waBits.push('Paystack ref: ' + paystackRef);
+      if (order.name) waBits.push('Name: ' + order.name);
+      var waL = H.whatsappLink(waBits.join('\n'));
       okWa.hidden = !waL; if (waL) okWa.href = waL;
     }
-    var canDl = !!order.price;
-    $('dlPdf').disabled = !canDl; $('dlPng').disabled = !canDl;
+    $('dlPdf').disabled = !order.price;
     if (!successShown) {
       successShown = true;
       $('receiptWrap').hidden = true;
@@ -88,6 +113,20 @@
       try { $('okTitle').focus({ preventScroll: true }); } catch (e) {}
     }
   }
+  function copyOrderRef() {
+    var text = ref, live = $('okCopied');
+    function done() { live.textContent = 'Copied'; clearTimeout(copyOrderRef._t); copyOrderRef._t = setTimeout(function () { if (live.textContent === 'Copied') live.textContent = ''; }, 2000); }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done).catch(function () { fallback(); });
+    } else fallback();
+    function fallback() {
+      var ta = document.createElement('textarea'); ta.value = text; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.left = '-9999px';
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy'); } catch (e) {}
+      ta.remove(); done();
+    }
+  }
+  $('okRefBtn').addEventListener('click', copyOrderRef);
   // Underpaid: no success screen, no receipt, no downloads — just the
   // server-verified numbers and a way to reach Hanga.
   var mm = null;
@@ -118,7 +157,7 @@
     window.scrollTo(0, 0);
     try { $('mmTitle').focus({ preventScroll: true }); } catch (e) {}
   }
-  function receiptOpts() { return { ref: ref, status: status, paystackRef: paystackRef, date: order.placedAt, paidAt: paidAt }; }
+  function receiptOpts() { return { ref: ref, status: status, paystackRef: paystackRef, date: order.placedAt, paidAt: paidAt, channel: paidChannel }; }
   function doDownload(kind, btn) {
     if (status !== 'paid') return; // receipts only for server-confirmed, fully paid orders
     var label = btn.textContent; btn.disabled = true; btn.textContent = 'Preparing…';
@@ -127,7 +166,6 @@
       .then(function () { btn.disabled = false; btn.textContent = label; });
   }
   $('dlPdf').addEventListener('click', function () { doDownload('pdf', this); });
-  $('dlPng').addEventListener('click', function () { doDownload('png', this); });
   $('toggleReceipt').addEventListener('click', function () {
     var w = $('receiptWrap'), open = w.hidden;
     w.hidden = !open; this.setAttribute('aria-expanded', String(open));
@@ -213,6 +251,7 @@
       if (v.ok && v.paid) {
         if (!order.price && v.order) order = Object.assign({}, v.order, { price: v.expectedTotal != null ? v.expectedTotal : v.order.total });
         paidAt = v.paidAt || null;
+        paidChannel = v.channel || paidChannel || null;
         if (v.amountStatus !== 'exact' && v.amountStatus !== 'over') return markMismatch(v);
         paidAmount = Number(v.amount) || null;
         markPaid(v.reference);

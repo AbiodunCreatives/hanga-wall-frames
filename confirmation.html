@@ -15,7 +15,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preload" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Lato:wght@300;400;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Lato:wght@300;400;700&display=swap"></noscript>
-  <link rel="stylesheet" href="style.css?v=17">
+  <link rel="stylesheet" href="style.css?v=18">
 </head>
 <body class="rc-body">
 <a class="skip-link" href="#main">Skip to content</a>
@@ -45,18 +45,31 @@
       <path class="ok-tick" d="M28 49 l13 13 l27 -28"/>
     </svg>
     <h1 id="okTitle" tabindex="-1">Payment successful</h1>
-    <p class="ok-sub">We'll WhatsApp you to arrange delivery within 3 business days.</p>
-    <div class="ok-ref">
+    <p class="ok-hero" id="okHero"><span class="visually-hidden">Amount paid </span><strong id="okAmount">—</strong></p>
+    <button type="button" class="ok-refchip" id="okRefBtn" aria-label="Copy order reference">
       <span class="ok-label">Order reference</span>
-      <strong id="okRef">—</strong>
+      <span class="ok-refchip-row">
+        <strong id="okRef">—</strong>
+        <svg class="ok-copy-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="8" y="8" width="12" height="14" rx="2" stroke="currentColor" stroke-width="2"/><path d="M4 16V6a2 2 0 0 1 2-2h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </span>
+    </button>
+    <p class="ok-copied" id="okCopied" aria-live="polite"></p>
+    <div class="ok-card" id="okCard"></div>
+    <div class="ok-timeline" aria-label="Delivery within 3 business days">
+      <p class="ok-timeline-label">Within 3 business days · WhatsApp updates</p>
+      <ol class="ok-steps">
+        <li class="is-done"><span class="ok-dot" aria-hidden="true"></span>Paid</li>
+        <li><span class="ok-dot" aria-hidden="true"></span>Printing</li>
+        <li><span class="ok-dot" aria-hidden="true"></span>Framing</li>
+        <li><span class="ok-dot" aria-hidden="true"></span>Out for delivery</li>
+      </ol>
     </div>
-    <dl class="ok-summary" id="okSummary"></dl>
     <p class="ok-note" id="okNote" role="status"></p>
-    <div class="ok-downloads">
-      <button type="button" class="btn btn-primary ok-dl" id="dlPdf">Download receipt (PDF)</button>
-      <button type="button" class="btn ok-dl ok-dl-alt" id="dlPng">Save as image (PNG)</button>
+    <div class="ok-actions">
+      <button type="button" class="btn btn-gold ok-dl" id="dlPdf">Download receipt</button>
+      <a class="btn btn-outline-dark ok-wa-btn" id="okWhatsApp" href="#" target="_blank" rel="noopener" hidden>Chat on WhatsApp</a>
+      <a class="ok-continue" id="okContinue" href="index.html">Continue shopping</a>
     </div>
-    <a class="ok-wa" id="okWhatsApp" href="#" target="_blank" rel="noopener" hidden>WhatsApp us about this order →</a>
     <button type="button" class="rc-link ok-toggle" id="toggleReceipt" aria-expanded="false" aria-controls="receiptWrap">View full receipt</button>
   </section>
 
@@ -80,7 +93,7 @@
   <!-- Shown when there is no order to display (opened directly, or storage cleared) -->
   <section class="ok-screen empty-screen no-print" id="emptyScreen" hidden aria-labelledby="emptyTitle">
     <h1 id="emptyTitle" tabindex="-1">No order to show</h1>
-    <p class="ok-sub">We couldn't find an order on this device. If you've just paid, check your email or WhatsApp, or message us.</p>
+    <p class="ok-sub">We couldn't find an order on this device. If you've just paid, message us on WhatsApp with your order reference.</p>
     <div class="empty-actions">
       <a href="/" class="btn btn-gold">Browse prints</a>
       <a href="#" class="btn btn-outline-dark" data-contact="whatsapp">Need help on WhatsApp</a>
@@ -148,10 +161,10 @@
   </div>
 </footer>
 
-<script src="js/site.js?v=12"></script>
-<script src="js/receipt.js?v=8"></script>
-<script src="js/receipt-export.js?v=6"></script>
-<script src="js/receipt-page.js?v=8"></script>
+<script src="js/site.js?v=13"></script>
+<script src="js/receipt.js?v=9"></script>
+<script src="js/receipt-export.js?v=7"></script>
+<script src="js/receipt-page.js?v=9"></script>
 
 </body>
 </html>
