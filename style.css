@@ -2928,3 +2928,41 @@ body:has(.bld-mobilebar.is-ready) .customize-layout { padding-bottom: calc(120px
 .faq-section .xmas-cutoff { margin: 4px 0 20px; }
 .co-delivery-card .xmas-cutoff { margin: 8px 0 0; }
 #orderSummary .xmas-cutoff { margin: 6px 0 0; }
+
+/* Mobile hero: the photo is 3:2, the screen is tall, so cover shows the
+   whole wall and leaves a large gap under the frames. Zoom to the centre
+   print so it sits with the headline as one composition. Desktop unchanged. */
+@media (max-width: 600px) {
+  .hero::before {
+    background-position: center top;
+    background-size: auto 160%;
+  }
+  .hero::after {
+    background: linear-gradient(to bottom,
+      rgba(0,0,0,0.20) 0%,
+      rgba(0,0,0,0.08) 32%,
+      rgba(0,0,0,0.42) 62%,
+      rgba(0,0,0,0.68) 100%);
+  }
+}
+
+/* Homepage rhythm: tighten oversized section padding and leftover
+   gaps after the copy trim (testimonials already gone from the markup).
+   About and checkout keep the original section padding. */
+section.gallery-section,
+section.pricing-section,
+section.real-section,
+section.faq-section,
+section.hiw2-section {
+  padding-top: clamp(44px, 6.5vw, 72px);
+  padding-bottom: clamp(44px, 6.5vw, 72px);
+}
+@media (max-width: 600px) {
+  section.hiw2-section { padding-top: 28px; padding-bottom: 24px; }
+  .hiw2-section .section-title { margin-bottom: 14px; }
+}
+.cta-banner { padding: clamp(40px, 5.5vw, 64px) var(--px); }
+.gallery-section .section-sub,
+.real-section .section-sub { margin-bottom: 24px; }
+.gallery-upload-wrap { margin-top: 24px; }
+.faq-section .faq-list { margin-top: 16px; }
