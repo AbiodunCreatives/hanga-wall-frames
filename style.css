@@ -2922,3 +2922,9 @@ body:has(.bld-mobilebar.is-ready) .customize-layout { padding-bottom: calc(120px
 .field-hint { margin-top: 4px; }
 .cta-banner h2 { margin-bottom: 20px; }
 .faq-section .section-title { margin-bottom: 20px; }
+
+/* Christmas order cut-off (hidden after 18 Dec 2026, Lagos) */
+.xmas-cutoff { margin: 8px 0 0; font-size: 14px; color: var(--muted); line-height: 1.45; }
+.faq-section .xmas-cutoff { margin: 4px 0 20px; }
+.co-delivery-card .xmas-cutoff { margin: 8px 0 0; }
+#orderSummary .xmas-cutoff { margin: 6px 0 0; }

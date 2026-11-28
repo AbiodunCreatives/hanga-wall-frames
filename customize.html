@@ -28,7 +28,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preload" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Lato:wght@300;400;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Lato:wght@300;400;700&display=swap"></noscript>
-  <link rel="stylesheet" href="style.css?v=13">
+  <link rel="stylesheet" href="style.css?v=14">
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -344,6 +344,7 @@
       <div class="summary-row"><span>Delivery</span><span>Added at checkout · by state</span></div>
       <div class="summary-row total"><span>Total before delivery</span><span id="summaryTotal">₦0</span></div>
       <p class="summary-note">Pairs ₦500 off. Delivery <span data-delivery-summary>₦2,500 South-West · ₦4,500 East &amp; South · ₦6,000 North &amp; FCT · one fee per order</span>.</p>
+      <p class="xmas-cutoff" data-xmas-cutoff hidden></p>
       <button type="button" class="btn btn-gold proceed-btn" id="addToCartBtn" onclick="addToCart()">Add to Cart</button>
       <button type="button" class="btn btn-outline-dark checkout-btn" id="checkoutBtn" onclick="proceedToCheckout()">Proceed to Checkout →</button>
       <p class="summary-wa" id="whatsappOrderBtn" hidden><a href="#" onclick="return orderOnWhatsApp()">WhatsApp us</a></p>
@@ -393,7 +394,7 @@
   </div>
 </footer>
 
-<script src="js/site.js?v=9"></script>
+<script src="js/site.js?v=10"></script>
 <script>
 // ── State ──────────────────────────────────────────────────────
 // An order is 1 or 2 frames ("Single" or "Pair"). Each slot holds one

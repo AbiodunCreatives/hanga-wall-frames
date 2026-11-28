@@ -376,6 +376,26 @@ window.HANGA = {
   // Text the delivery rules wherever a page asks for them (one shared string).
   document.querySelectorAll('[data-delivery-summary]').forEach(function (el) { el.textContent = H.DELIVERY_SUMMARY; });
 
+  // Christmas order cut-off (confirmed): Friday 18 December 2026, Africa/Lagos.
+  // Shown through 18 Dec 23:59:59 Lagos; hidden from 19 Dec 00:00. Not a promo line.
+  H.XMAS_CUTOFF = {
+    label: 'Order by 18 Dec for Christmas delivery.',
+    endMs: Date.parse('2026-12-19T00:00:00+01:00') // exclusive
+  };
+  H.nowMs = function () { return Date.now(); };
+  H.xmasCutoffActive = function (ms) {
+    ms = Number.isFinite(ms) ? ms : H.nowMs();
+    return ms < H.XMAS_CUTOFF.endMs;
+  };
+  H.renderXmasCutoff = function () {
+    var on = H.xmasCutoffActive(), label = H.XMAS_CUTOFF.label;
+    document.querySelectorAll('[data-xmas-cutoff]').forEach(function (el) {
+      el.textContent = on ? label : '';
+      el.hidden = !on;
+    });
+  };
+  H.renderXmasCutoff();
+
   // ── Footer year ───────────────────────────────────────────────
   document.querySelectorAll('[data-year]').forEach(function (el) { el.textContent = new Date().getFullYear(); });
 })();
