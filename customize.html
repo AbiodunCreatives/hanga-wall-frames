@@ -28,7 +28,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preload" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Lato:wght@300;400;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Lato:wght@300;400;700&display=swap"></noscript>
-  <link rel="stylesheet" href="style.css?v=15">
+  <link rel="stylesheet" href="style.css?v=16">
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -141,12 +141,14 @@
       </div>
 
       <div id="tab-gallery">
-        <div class="gallery-filters mini-filters" role="group" aria-label="Filter gallery by category">
-          <button type="button" class="filter-chip active" data-filter="featured" onclick="filterMiniGallery('featured', this)">Featured</button>
-          <button type="button" class="filter-chip" data-filter="all" onclick="filterMiniGallery('all', this)">All</button>
-          <button type="button" class="filter-chip" data-filter="portraits" onclick="filterMiniGallery('portraits', this)">Portrait</button>
-          <button type="button" class="filter-chip" data-filter="landscapes" onclick="filterMiniGallery('landscapes', this)">Landscape</button>
-          <button type="button" class="filter-chip" data-filter="cars" onclick="filterMiniGallery('cars', this)">Cars</button>
+        <div class="gallery-filters-wrap mini-filters-wrap" data-filter-scroll>
+          <div class="gallery-filters mini-filters" role="group" aria-label="Filter gallery by category">
+            <button type="button" class="filter-chip active" data-filter="featured" onclick="filterMiniGallery('featured', this)">Featured</button>
+            <button type="button" class="filter-chip" data-filter="all" onclick="filterMiniGallery('all', this)">All</button>
+            <button type="button" class="filter-chip" data-filter="portraits" onclick="filterMiniGallery('portraits', this)">Portrait</button>
+            <button type="button" class="filter-chip" data-filter="landscapes" onclick="filterMiniGallery('landscapes', this)">Landscape</button>
+            <button type="button" class="filter-chip" data-filter="cars" onclick="filterMiniGallery('cars', this)">Cars</button>
+          </div>
         </div>
         <div class="mini-gallery" id="miniGallery">
           <!-- ── New images ────────────────────────────────────── -->
@@ -394,7 +396,7 @@
   </div>
 </footer>
 
-<script src="js/site.js?v=10"></script>
+<script src="js/site.js?v=11"></script>
 <script>
 // ── State ──────────────────────────────────────────────────────
 // An order is 1 or 2 frames ("Single" or "Pair"). Each slot holds one

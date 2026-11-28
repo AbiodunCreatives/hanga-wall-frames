@@ -326,12 +326,48 @@ window.HANGA = {
     });
   };
 
-  // ── Filter chips: expose the active chip to screen readers ───
+  // ── Filter chips: active state, keep the chosen chip in view, edge fades ──
+  function prefersReducedMotion() {
+    return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  }
+  function updateFilterFades(wrap, scroller) {
+    if (!wrap || !scroller) return;
+    var max = scroller.scrollWidth - scroller.clientWidth;
+    var overflow = max > 2;
+    wrap.classList.toggle('is-overflow-start', overflow && scroller.scrollLeft > 2);
+    wrap.classList.toggle('is-overflow-end', overflow && (max - scroller.scrollLeft) > 2);
+  }
+  function scrollChipIntoView(chip) {
+    if (!chip || !chip.scrollIntoView) return;
+    try {
+      chip.scrollIntoView({
+        inline: 'center',
+        block: 'nearest',
+        behavior: prefersReducedMotion() ? 'instant' : 'smooth'
+      });
+    } catch (e) { chip.scrollIntoView(); }
+  }
   document.querySelectorAll('.gallery-filters').forEach(function (group) {
     var chips = group.querySelectorAll('.filter-chip');
-    var sync = function () { chips.forEach(function (c) { c.setAttribute('aria-pressed', String(c.classList.contains('active'))); }); };
+    var wrap = group.closest('[data-filter-scroll]') || group.parentElement;
+    var sync = function () {
+      chips.forEach(function (c) { c.setAttribute('aria-pressed', String(c.classList.contains('active'))); });
+    };
     sync();
-    chips.forEach(function (c) { c.addEventListener('click', function () { setTimeout(sync, 0); }); });
+    chips.forEach(function (c) {
+      c.addEventListener('click', function () {
+        setTimeout(function () {
+          sync();
+          var active = group.querySelector('.filter-chip.active');
+          if (active) scrollChipIntoView(active);
+          updateFilterFades(wrap, group);
+        }, 0);
+      });
+    });
+    group.addEventListener('scroll', function () { updateFilterFades(wrap, group); }, { passive: true });
+    window.addEventListener('resize', function () { updateFilterFades(wrap, group); });
+    try { group.scrollLeft = 0; } catch (e) {}
+    updateFilterFades(wrap, group);
   });
 
   // ── Mobile keyboard handling ─────────────────────────────────

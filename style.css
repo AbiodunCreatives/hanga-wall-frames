@@ -2966,3 +2966,171 @@ section.hiw2-section {
 .real-section .section-sub { margin-bottom: 24px; }
 .gallery-upload-wrap { margin-top: 24px; }
 .faq-section .faq-list { margin-top: 16px; }
+
+/* ─── Shop filter pills + audit polish (mobile-first) ─────────── */
+
+/* Active shop pills: filled brand gold, not just an outline */
+.gallery-section .filter-chip.active,
+.mini-filters .filter-chip.active {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: #1a1a1a;
+  font-weight: 700;
+}
+.filter-chip:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
+.gallery-filters-wrap { position: relative; margin: 28px 0 32px; }
+.gallery-section .gallery-filters { margin: 0; }
+.mini-filters-wrap { margin: 0 0 12px; }
+.mini-filters-wrap .mini-filters { margin: 0; }
+
+/* Phones/tablets: one horizontally scrollable row, snap, edge fades */
+@media (max-width: 900px) {
+  .gallery-section .gallery-filters-wrap {
+    position: sticky;
+    top: var(--nav-space);
+    z-index: 20;
+    margin-left: calc(-1 * var(--px));
+    margin-right: calc(-1 * var(--px));
+    margin-bottom: 20px;
+    padding: 8px 0;
+    background: #111;
+    box-shadow: 0 10px 18px -14px rgba(0,0,0,0.55);
+  }
+  .gallery-filters-wrap::before,
+  .gallery-filters-wrap::after {
+    content: "";
+    position: absolute;
+    top: 0; bottom: 0;
+    width: 40px;
+    pointer-events: none;
+    z-index: 2;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+  .gallery-filters-wrap::before {
+    left: 0;
+    background: linear-gradient(to right, #111 15%, transparent);
+  }
+  .gallery-filters-wrap::after {
+    right: 0;
+    background: linear-gradient(to left, #111 15%, transparent);
+  }
+  .mini-filters-wrap::before {
+    background: linear-gradient(to right, var(--cream, #f8f5f0) 15%, transparent);
+  }
+  .mini-filters-wrap::after {
+    background: linear-gradient(to left, var(--cream, #f8f5f0) 15%, transparent);
+  }
+  .gallery-filters-wrap.is-overflow-start::before,
+  .gallery-filters-wrap.is-overflow-end::after { opacity: 1; }
+
+  .gallery-filters {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 8px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x proximity;
+    scroll-padding-inline: var(--px);
+    scrollbar-width: none;
+    padding: 2px 0;
+  }
+  .gallery-section .gallery-filters .filter-chip:first-child { margin-left: var(--px); }
+  .gallery-section .gallery-filters .filter-chip:last-child { margin-right: var(--px); }
+  .mini-filters { padding: 2px 0; }
+  .mini-filters .filter-chip:first-child { margin-left: 2px; }
+  .mini-filters .filter-chip:last-child { margin-right: 2px; }
+  .gallery-filters::-webkit-scrollbar { display: none; }
+  .gallery-filters .filter-chip,
+  .mini-filters .filter-chip {
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+    min-height: 44px;
+    min-width: 44px;
+    padding: 0 16px;
+    font-size: 12px;
+  }
+}
+@media (min-width: 901px) {
+  .gallery-section .gallery-filters {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    overflow: visible;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gallery-filters-wrap::before,
+  .gallery-filters-wrap::after { transition: none; }
+  .gallery-filters { scroll-behavior: auto; }
+}
+
+/* Builder preview: contain the room canvas so a tall 16×24 frame is
+   never clipped by max-height (object-fit:cover was cutting the top
+   of the frame on short phones). Keep 16:10 aspect; shrink to fit. */
+@media (max-width: 900px) {
+  .preview-panel .frame-preview-wrap canvas {
+    width: auto !important;
+    height: auto !important;
+    max-width: 100%;
+    max-height: 28svh;
+    object-fit: contain;
+    object-position: center bottom;
+    margin-inline: auto;
+  }
+}
+@media (max-width: 900px) and (max-height: 760px) {
+  .preview-panel .frame-preview-wrap canvas { max-height: 22svh; }
+}
+
+/* Audit: 44px tap targets on primary controls and nav */
+.logo { display: inline-flex; align-items: center; min-height: 44px; }
+.btn, .btn-show-all, .btn-cta-primary, .btn-nav, .nav-links a, .nav-links a.btn-nav {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+.source-tab { min-height: 44px; display: inline-flex; align-items: center; justify-content: center; }
+.skip-link { min-height: 44px; display: inline-flex; align-items: center; }
+.footer-col ul li a { min-height: 44px; }
+.pricing-set-note a, .real-note a, .add-another {
+  display: inline-flex; align-items: center; min-height: 44px;
+}
+.co-trust a, .co-returns a, .co-wa a, .bld-step a[href*="whatsapp" i], .ok-wa {
+  display: inline-flex; align-items: center; min-height: 44px;
+}
+input[type="text"], input[type="tel"], input[type="email"], input[type="search"],
+select, textarea { min-height: 44px; }
+
+/* Short footer labels and remaining compact controls */
+.footer-col ul li a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 9px 8px;
+  box-sizing: border-box;
+}
+.summary-wa a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+@media (max-width: 900px) {
+  .preview-panel .preview-toggle {
+    min-height: 44px;
+    min-width: 44px;
+    padding: 8px 12px;
+  }
+}
