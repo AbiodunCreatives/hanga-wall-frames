@@ -253,18 +253,8 @@
         '<td>' + statusBadge(o) + '</td>' +
         '<td><button class="action-btn" type="button">View</button></td>';
       tr.addEventListener('click', function () { openDrawer(o); });
-      tr.addEventListener('touchend', function (e) {
-        // Prevent the 300ms delay on iOS — only fire if it wasn't a scroll
-        if (e.cancelable) e.preventDefault();
-        openDrawer(o);
-      });
       tr.querySelector('.action-btn').addEventListener('click', function (e) {
         e.stopPropagation();
-        openDrawer(o);
-      });
-      tr.querySelector('.action-btn').addEventListener('touchend', function (e) {
-        e.stopPropagation();
-        if (e.cancelable) e.preventDefault();
         openDrawer(o);
       });
       tbody.appendChild(tr);
@@ -451,8 +441,11 @@
   function statusBadge(o) {
     var s = o.fulfilmentStatus || 'paid';
     var cls = 's-' + s;
-    if (o.amountStatus === 'mismatch') cls = 's-mismatch';
-    var label = o.amountStatus === 'mismatch' ? 'Mismatch' : statusName(s);
+    // Only show mismatch badge if order is NOT yet delivered/cancelled
+    var showMismatch = o.amountStatus === 'mismatch' &&
+                       s !== 'delivered' && s !== 'cancelled';
+    if (showMismatch) cls = 's-mismatch';
+    var label = showMismatch ? 'Mismatch' : statusName(s);
     return '<span class="status-badge ' + cls + '">' + esc(label) + '</span>';
   }
   function itemsLabel(o) {

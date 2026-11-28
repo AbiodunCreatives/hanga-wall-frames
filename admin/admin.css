@@ -434,6 +434,8 @@ body.page-login .sidebar { display: none; }
   padding: 5px 12px; font-size: 12px; font-weight: 500;
   font-family: inherit; color: var(--muted);
   cursor: pointer; white-space: nowrap;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
   transition: border-color 0.14s, color 0.14s;
 }
 .action-btn:hover { border-color: var(--gold); color: var(--black); }
