@@ -102,11 +102,16 @@
         try {
           var c = document.createElement('canvas');
           var w = img.naturalWidth || img.width, h = img.naturalHeight || img.height;
-          var max = 360;
+          var max = 480; // 16 mm wide on the page, so this is well past 300 dpi
           var s = Math.min(1, max / Math.max(w, h));
           c.width = Math.max(1, Math.round(w * s)); c.height = Math.max(1, Math.round(h * s));
-          c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
-          res({ data: c.toDataURL('image/jpeg', 0.88), w: c.width, h: c.height });
+          var cx = c.getContext('2d');
+          cx.globalAlpha = 1; cx.filter = 'none'; cx.globalCompositeOperation = 'source-over';
+          cx.fillStyle = '#ffffff'; cx.fillRect(0, 0, c.width, c.height); // flatten any transparency on white, not black/grey
+          cx.imageSmoothingEnabled = true; cx.imageSmoothingQuality = 'high';
+          cx.drawImage(img, 0, 0, c.width, c.height);
+          // Full-colour JPEG, q0.95: the old q0.88 + 360px pass softened colour edges.
+          res({ data: c.toDataURL('image/jpeg', 0.95), w: c.width, h: c.height });
         } catch (e) { res(null); }
       };
       img.onerror = function () { res(null); };
