@@ -128,6 +128,23 @@
     });
   }
 
+  // Lockup for the PDF header: 1440px transparent PNG (about 760 dpi at 48 mm wide), flattened by nothing.
+  function loadLockup() {
+    return new Promise(function (res) {
+      var img = new Image();
+      img.onload = function () {
+        try {
+          var c = document.createElement('canvas');
+          c.width = img.naturalWidth; c.height = img.naturalHeight;
+          c.getContext('2d').drawImage(img, 0, 0);
+          res({ data: c.toDataURL('image/png'), w: c.width, h: c.height });
+        } catch (e) { res(null); }
+      };
+      img.onerror = function () { res(null); };
+      img.src = '/images/brand/lockup-print.png?v=1';
+    });
+  }
+
   function drawPdf(pdf, model, images, pageH, skipFooter) {
     var W = 210, margin = 18, x0 = margin, x1 = W - margin, y = 18, col = x1 - x0;
     pageH = pageH || 297;
@@ -140,13 +157,18 @@
     }
     function money(n) { return H.formatNaira(n); }
 
-    // Header
-    font('Playfair', 'bold', 22);
-    ink(INK);
-    pdf.text('HANGA', x0, y + 8);
-    var hw = pdf.getTextWidth('HANGA');
-    pdf.setTextColor(GOLD[0], GOLD[1], GOLD[2]);
-    pdf.text('.', x0 + hw, y + 8);
+    // Header: the G-Tilt horizontal lockup (dark ink + gold pin/dot; reads in greyscale).
+    // Its artboard carries ~5.7% padding each side, so offset by that to align the frame with the left margin.
+    var lw = 48, lh = lw * (images.lockup ? images.lockup.h / images.lockup.w : 0.2788), lpad = lw * 0.0567;
+    if (images.lockup) {
+      pdf.addImage(images.lockup.data, 'PNG', x0 - lpad, y - 1.5, lw, lh, undefined, 'FAST');
+    } else {
+      font('Playfair', 'bold', 22); ink(INK);
+      pdf.text('HANGA', x0, y + 8);
+      var hw = pdf.getTextWidth('HANGA');
+      pdf.setTextColor(GOLD[0], GOLD[1], GOLD[2]);
+      pdf.text('.', x0 + hw, y + 8);
+    }
     // PAID badge (outline + text, not colour-only)
     if (model.paid) {
       font('Lato', 'bold', 8);
@@ -158,7 +180,7 @@
       ink(INK);
       pdf.text(badge, bx + bw / 2, by + 4.5, { align: 'center' });
     }
-    y += 13;
+    y += 17;
     font('Playfair', 'italic', 10);
     ink(MUTED);
     pdf.text(model.tagline, x0, y);
@@ -269,8 +291,8 @@
     var lib = (window.jspdf && window.jspdf.jsPDF)
       ? Promise.resolve()
       : loadScript('https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js', 'sha384-JcnsjUPPylna1s1fvi1u12X5qjY5OL56iySh75FdtrwhO/SWXgMjoVqcKyIIWOLk');
-    return Promise.all([lib, loadFonts(), Promise.all(thumbs.map(loadImg))]).then(function (parts) {
-      var vfs = parts[1], images = parts[2];
+    return Promise.all([lib, loadFonts(), Promise.all(thumbs.map(loadImg)), loadLockup()]).then(function (parts) {
+      var vfs = parts[1], images = parts[2]; images.lockup = parts[3];
       var scratch = new window.jspdf.jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
       registerFonts(scratch, vfs);
       var bodyEnd = drawPdf(scratch, model, images, 297, true);

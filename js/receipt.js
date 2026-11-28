@@ -152,7 +152,7 @@
 
     // Header
     var head = el('div', 'rc-head');
-    var brand = el('div', 'rc-brand'); brand.append('HANGA', el('span', null, '.'));
+    var brand = el('div', 'rc-brand'); var lk = el('img'); lk.src = '/images/brand/lockup.svg?v=1'; lk.alt = 'Hanga'; lk.width = 143; lk.height = 40; brand.appendChild(lk);
     head.append(brand, el('div', 'rc-addr rc-tagline', 'Make your wall speak.'));
     root.appendChild(head);
 

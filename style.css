@@ -88,6 +88,8 @@ header {
   flex-shrink: 0;
 }
 .logo span { color: var(--gold-dk); }
+.logo img { display: block; height: 32px; width: 114px; max-width: none; margin-left: -7px; } /* lockup artboard has ~5.7% side padding; pull the mark to the text edge */
+.footer-brand .logo img { height: 28px; width: 100px; margin-left: -6px; }
 
 /* Desktop nav */
 .nav-links {
@@ -1861,7 +1863,7 @@ button.pay-method { font: inherit; color: inherit; background: var(--white); }
 }
 .rc-head { text-align: center; padding-bottom: 14px; border-bottom: 1px dashed #c9c1b2; }
 .rc-brand { font-family: "Playfair Display", "Playfair Fallback", serif; font-weight: 700; font-size: 28px; letter-spacing: 3px; }
-.rc-brand span { color: var(--gold, #c9a96e); }
+.rc-brand img { display: block; margin: 0 auto; width: 143px; height: 40px; }
 .rc-addr { font-size: 12.5px; color: #6b6b6b; line-height: 1.6; }
 .rc-label { font-size: 11px; font-weight: 700; letter-spacing: 1.6px; text-transform: uppercase; color: #7a7366; text-align: left; margin-bottom: 6px; }
 .rc-ref { padding: 16px 0 14px; border-bottom: 1px dashed #c9c1b2; }
