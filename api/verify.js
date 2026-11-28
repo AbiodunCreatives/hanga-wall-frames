@@ -25,7 +25,7 @@ module.exports = async function handler(req, res) {
   if (!secret) return send(res, 503, { ok: false, error: 'unavailable' });
   try {
     const data = await L.paystackVerify(reference, secret);
-    const check = L.checkPayment(data);
+    const check = await L.verifyPayment(data, { record: true });
     let notified = false;
     if (data.status === 'success' && L.isFresh(data)) {
       const r = await L.notifyPaid(data, check, 'verify').catch(() => ({}));

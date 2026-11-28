@@ -2,6 +2,7 @@
 // exposed as routes by Vercel.
 'use strict';
 const crypto = require('crypto');
+const P = require('./_promo');
 
 // Keep in sync with customize.html (data-price) and js/site.js (setDiscounts).
 const PRICES = { '12×16': 7000, '16×20': 9000, '16×24': 11000, '20×24': 13000, '20×30': 16000, '24×36': 20000 };
@@ -43,7 +44,10 @@ const PAYSTACK_REF_RE = /^HNG-[A-Z0-9]{4,12}-[A-Z0-9]{3,16}(-R\d{1,3})?$/;
 const EMAIL_RE = /^[^\s@<>",;]{1,64}@[A-Za-z0-9.-]{1,190}\.[A-Za-z]{2,24}$/;
 
 // Price the order from our own table — never trust a total sent by the browser.
-function expectedTotal(order) {
+// ctx: { times: [ms…] Paystack timestamps, usedBy: order ref holding this
+// phone's DETTY26 use } — the DETTY26 claim is only honoured if it passes here.
+function expectedTotal(order, ctx) {
+  ctx = ctx || {};
   // v2 (cart) orders: price every line, then add the delivery fee for the state.
   if (order && Array.isArray(order.lines)) {
     let gross = 0, discount = 0, frames = 0;
@@ -56,7 +60,15 @@ function expectedTotal(order) {
     const d = deliveryFor((order.customer || {}).state);
     if (!order.lines.length || !d) return null;
     const subtotal = gross - discount;
-    return { v: 2, n: frames, gross, discount, subtotal, delivery: d.fee, region: d.label, total: subtotal + d.fee };
+    // DETTY26: only when the browser claimed it AND the server rules agree.
+    let promo = null, promoRejected = null;
+    if (order.promo) {
+      const pe = P.evaluate({ subtotal, times: ctx.times || [], phone: (order.customer || {}).phone, usedBy: ctx.usedBy || null, ref: order.ref });
+      if (pe.ok) promo = { name: pe.name, amount: pe.amount, label: P.PROMO.label };
+      else promoRejected = { reason: pe.reason, usedBy: pe.usedBy || null };
+    }
+    const promoOff = promo ? promo.amount : 0;
+    return { v: 2, n: frames, gross, discount, subtotal, promo, promoRejected, promoDiscount: promoOff, delivery: d.fee, region: d.label, total: subtotal - promoOff + d.fee };
   }
   const size = String((order && order.size) || '').replace(/["x]/g, m => (m === 'x' ? '×' : ''));
   const unit = PRICES[size];
@@ -152,6 +164,8 @@ function readMetaOrder(data) {
       v: 2, ref: line(o.ref, 40), placedAt: line(o.placedAt, 40) || null,
       lines, lineCount,
       subtotal: num(o.subtotal), discount: num(o.discount), deliveryFee: num(o.deliveryFee), total: num(o.total),
+      // Automatic promo the browser CLAIMS (name only; the amount is ours, never theirs).
+      promo: (o.promo && typeof o.promo === 'object' && o.promo.name === P.PROMO.name) ? { name: P.PROMO.name, amount: num(o.promo.amount) } : null,
       // Legacy-shaped summary fields for older admin views.
       size: lines[0] ? lines[0].size : '', style: lines[0] ? lines[0].style : '',
       pieces: lines.reduce((a, l) => a + l.items.length * (l.qty || 1), 0),
@@ -178,9 +192,10 @@ function readMetaOrder(data) {
 }
 
 // Check a verified Paystack transaction against our own price table.
-function checkPayment(data) {
+function checkPayment(data, ctx) {
   const order = readMetaOrder(data);
-  const exp = expectedTotal(order);
+  ctx = Object.assign({ times: P.txTimes(data) }, ctx || {});
+  const exp = expectedTotal(order, ctx);
   const paid = Number(data.amount || 0) / 100;
   const problems = [];
   if (data.status !== 'success') problems.push('Paystack status is "' + data.status + '"');
@@ -195,7 +210,8 @@ function checkPayment(data) {
     if (!deliveryFor(order.customer.state)) problems.push('Unknown delivery state "' + (order.customer.state || '') + '"');
     if (!exp) problems.push('Could not price this order');
     else {
-      if (paid !== exp.total) problems.push('Paid ' + naira(paid) + ' but price list + delivery says ' + naira(exp.total));
+      if (paid !== exp.total) problems.push('Paid ' + naira(paid) + ' but price list + delivery' + (exp.promo ? ' − DETTY26' : '') + ' says ' + naira(exp.total) +
+        (exp.promoRejected ? ' (DETTY26 claimed but not valid: ' + P.REASONS[exp.promoRejected.reason] + (exp.promoRejected.usedBy ? ', order ' + exp.promoRejected.usedBy : '') + ')' : ''));
       if (order.deliveryFee != null && order.deliveryFee !== exp.delivery) problems.push('Delivery fee sent (' + naira(order.deliveryFee) + ') does not match ' + naira(exp.delivery) + ' for ' + order.customer.state);
     }
   } else {
@@ -209,6 +225,23 @@ function checkPayment(data) {
   const pref = String(data.reference || '');
   if (!order.ref || !(pref === order.ref || (pref.startsWith(order.ref + '-R') && /^-R\d{1,3}$/.test(pref.slice(order.ref.length))))) problems.push('Paystack reference does not match the order reference');
   return { order, expected: exp, paid, ok: problems.length === 0, problems };
+}
+
+// Full server check used by /api/verify and the webhook: reads the phone's
+// DETTY26 use from KV, prices the order, and (record:true) records the use
+// only once Paystack says paid and the discounted amount is exactly right.
+async function verifyPayment(data, opts) {
+  opts = opts || {};
+  const order = readMetaOrder(data);
+  const phone = (order.customer || {}).phone;
+  const claimed = order.v === 2 && !!order.promo;
+  const used = claimed ? await P.usedBy(phone) : null;
+  let check = checkPayment(data, { usedBy: used });
+  if (opts.record && claimed && check.ok && check.expected && check.expected.promo && data.status === 'success') {
+    const owner = await P.recordUse(phone, order.ref, { paystackRef: line(data.reference, 60) });
+    if (owner && owner !== order.ref) check = checkPayment(data, { usedBy: owner }); // lost a race: flag it
+  }
+  return check;
 }
 
 // Sanitised view for the browser receipt (no Paystack internals).
@@ -241,6 +274,7 @@ function publicView(data, check) {
       lines: o.v === 2 ? o.lines.map(l => ({ size: l.size, style: l.style, qty: l.qty, unit: l.unit, setName: l.setName,
         items: l.items.map(i => ({ imageName: i.name, isUpload: !!i.isUpload, fileKind: i.fileKind || null })) })) : undefined,
       deliveryFee: o.v === 2 && check.expected ? check.expected.delivery : undefined,
+      promo: o.v === 2 && check.expected && check.expected.promo ? check.expected.promo : undefined,
       name: cu.name, phone: cu.phone, address: cu.address,
       city: cu.city, state: cu.state, notes: cu.notes,
       placedAt: o.placedAt,
@@ -282,6 +316,7 @@ function receiptEmail(data, check) {
   const subtotalShown = v2 ? (exp ? exp.gross : o.subtotal) : (o.subtotal != null ? o.subtotal : exp && exp.subtotal);
   const discountShown = v2 ? (exp ? exp.discount : o.discount) : o.discount;
   const discountLabel = v2 ? 'Pair discount' : setLabelOf(n) + ' set discount';
+  const promo = v2 && exp && exp.promo ? exp.promo : null;
   const deliveryText = v2 && exp ? naira(exp.delivery) + ' (' + exp.region + ' · ' + (c.state || '') + ') · paid' : 'Fee to be confirmed';
   const nextStep = v2 ? 'Next: delivery is paid — start framing and deliver within 3 business days.' : 'Next: confirm the delivery fee with the customer, then start framing.';
   const ref = line(o.ref || data.reference, 40);
@@ -303,6 +338,7 @@ function receiptEmail(data, check) {
     '',
     'Subtotal: ' + naira(subtotalShown),
     (discountShown ? (discountLabel + ': -' + naira(discountShown)) : ''),
+    (promo ? promo.label + ': -' + naira(promo.amount) : ''),
     'Delivery: ' + deliveryText + ' — nationwide within 3 business days',
     'TOTAL PAID: ' + naira(check.paid),
     '', 'CUSTOMER', ...custRows.map(r => r[0] + ': ' + r[1]),
@@ -334,6 +370,7 @@ ${items.map(i => `<tr><td style="${td}">${esc(i.name)}${i.piece ? `<br><span sty
 <table style="width:100%;font-size:14px;margin-top:10px">
 <tr><td>Subtotal</td><td style="text-align:right">${naira(subtotalShown)}</td></tr>
 ${discountShown ? `<tr><td>${esc(discountLabel)}</td><td style="text-align:right">−${naira(discountShown)}</td></tr>` : ''}
+${promo ? `<tr><td>${esc(promo.label)}</td><td style="text-align:right">−${naira(promo.amount)}</td></tr>` : ''}
 <tr><td>Delivery</td><td style="text-align:right">${esc(deliveryText)} · Nationwide within 3 business days</td></tr>
 <tr><td style="font-weight:bold;font-size:17px;border-top:2px solid #1a1a1a;padding-top:8px">TOTAL PAID</td><td style="text-align:right;font-weight:bold;font-size:17px;border-top:2px solid #1a1a1a;padding-top:8px">${naira(check.paid)}</td></tr>
 </table>
@@ -402,6 +439,8 @@ async function notifyPaid(data, check, source) {
       framesTotal: o.v === 2 && check.expected ? check.expected.subtotal : undefined,
       deliveryFee: o.v === 2 && check.expected ? check.expected.delivery : undefined,
       deliveryRegion: o.v === 2 && check.expected ? check.expected.region : undefined,
+      promo:       o.v === 2 && check.expected && check.expected.promo ? { name: check.expected.promo.name, amount: check.expected.promo.amount } : null,
+      promoDiscount: o.v === 2 && check.expected && check.expected.promo ? check.expected.promo.amount : 0,
       size:        o.size,
       style:       o.style,
       pieces:      o.pieces,
@@ -446,4 +485,4 @@ function isFresh(data) {
   return !t || Date.now() - t < FRESH_MS;
 }
 
-module.exports = { readUtm, utmSummary, UTM_KEYS, fetchT, DELIVERY_REGIONS, deliveryFor, line, block, REF_RE, STRONG_REF_RE, PAYSTACK_REF_RE, EMAIL_RE, rateLimited, isFresh, notifyPaid, waLink, PRICES, SET_DISCOUNTS, naira, expectedTotal, verifySignature, paystackVerify, checkPayment, publicView, receiptEmail, sendResend, readMetaOrder };
+module.exports = { verifyPayment, PROMO: P.PROMO, readUtm, utmSummary, UTM_KEYS, fetchT, DELIVERY_REGIONS, deliveryFor, line, block, REF_RE, STRONG_REF_RE, PAYSTACK_REF_RE, EMAIL_RE, rateLimited, isFresh, notifyPaid, waLink, PRICES, SET_DISCOUNTS, naira, expectedTotal, verifySignature, paystackVerify, checkPayment, publicView, receiptEmail, sendResend, readMetaOrder };

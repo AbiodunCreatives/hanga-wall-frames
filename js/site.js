@@ -193,7 +193,12 @@ window.HANGA = {
     if (items.length > 1) return (l.setName && l.setName !== 'Custom set' ? l.setName + ' — ' : '') + items.map(function (i) { return i.imageName; }).join(' + ');
     return items[0] ? items[0].imageName : 'Frame';
   };
-  H.cartTotals = function (lines, state) {
+  // DETTY26 automatic discount — display copy only. The server decides
+  // whether it applies (dates, phone limit) via /api/promo and re-checks it
+  // when the payment is verified; the browser never sets the amount itself.
+  H.PROMO = { name: 'DETTY26', amount: 1000, minSubtotal: 13000, label: 'DETTY26 – ₦1,000 off' };
+  // promoOn: the server said DETTY26 is running for this phone right now.
+  H.cartTotals = function (lines, state, promoOn) {
     var gross = 0, discount = 0, frames = 0, count = 0;
     (lines || []).forEach(function (l) {
       var n = (l.items && l.items.length) || 1, q = Math.max(1, Number(l.qty) || 1);
@@ -201,8 +206,10 @@ window.HANGA = {
     });
     var d = state ? H.deliveryFor(state) : null;
     var subtotal = gross - discount;
+    var P = H.PROMO, promo = promoOn && subtotal >= P.minSubtotal ? P.amount : 0; // once per order
     return { gross: gross, discount: discount, subtotal: subtotal, frames: frames, count: count,
-             delivery: d, deliveryFee: d ? d.fee : 0, total: subtotal + (d ? d.fee : 0) };
+             promoDiscount: promo, promoShort: Math.max(0, P.minSubtotal - subtotal),
+             delivery: d, deliveryFee: d ? d.fee : 0, total: subtotal - promo + (d ? d.fee : 0) };
   };
   H.cart = {
     load: function () {

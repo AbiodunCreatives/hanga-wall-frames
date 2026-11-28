@@ -344,6 +344,7 @@
     if (o.v === 2) {
       html += drow('Frames', fmt((o.framesTotal != null ? o.framesTotal : (o.price || 0) - (o.deliveryFee || 0)) + (o.discount || 0)));
       if (o.discount) html += drow('Pair discount', '−' + fmt(o.discount));
+      if (o.promo && o.promoDiscount) html += drow(esc(o.promo.name) + ' discount', '−' + fmt(o.promoDiscount));
       html += drow('Delivery fee', fmt(o.deliveryFee || 0) + (o.deliveryRegion ? ' <span style="color:var(--muted)">(' + esc(o.deliveryRegion) + (o.state ? ' · ' + esc(o.state) : '') + ')</span>' : ''));
       html += drow('Grand total paid', '<strong>' + fmt(o.price) + '</strong>');
     } else {

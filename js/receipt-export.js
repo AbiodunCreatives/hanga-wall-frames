@@ -84,6 +84,7 @@
     y += 4;
     row('Subtotal', H.formatNaira(R.subtotal));
     if (R.discount) row(R.discountLabel, '−' + H.formatNaira(R.discount), { color: '#1e6b34' });
+    if (R.promo) row(R.promo.label, '−' + H.formatNaira(R.promo.amount), { color: '#1e6b34' });
     row('Delivery', R.deliveryText);
     y += 4; if (draw) { ctx.fillStyle = INK; ctx.fillRect(x0, y - 14, x1 - x0, 2); }
     y += 22;

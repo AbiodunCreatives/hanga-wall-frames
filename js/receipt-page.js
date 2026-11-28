@@ -143,6 +143,7 @@
       R.rows.forEach(function (r) { lines.push('• ' + r.name + (r.piece ? ' [' + r.piece + ']' : '') + ' — ' + r.size + ', ' + r.style + ', ' + r.set + ' — ' + r.qty + ' × ' + H.formatNaira(r.unit)); });
       lines.push('Subtotal: ' + H.formatNaira(R.subtotal));
       if (R.discount) lines.push(R.discountLabel + ': −' + H.formatNaira(R.discount));
+      if (R.promo) lines.push(R.promo.label + ': −' + H.formatNaira(R.promo.amount));
       lines.push('Delivery: ' + R.deliveryText, 'TOTAL: ' + H.formatNaira(R.total));
     }
     lines.push('', 'Name: ' + (order.name || ''), 'Phone: ' + (order.phone || ''), 'Delivery address: ' + [order.address, order.city, order.state].filter(Boolean).join(', '));
@@ -234,9 +235,32 @@
     status = 'checking'; render();
     alertBox("We couldn't confirm your payment yet. Please don't pay again — check again in a minute or contact Hanga.", 'is-warn', false, reference);
   }
+  // DETTY26 on a retry: ask the server again. If it no longer applies (window
+  // closed, or this phone has used it since), charge the full official total.
+  function promoStillValid() {
+    if (!order.promo) return Promise.resolve(true);
+    return fetch('/api/promo?phone=' + encodeURIComponent(H.normPhone(order.phone || '')), { cache: 'no-store' })
+      .then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; })
+      .then(function (p) { return !!(p && p.active && !p.used); });
+  }
   function pay() {
     if (!pk || !order.price) return;
-    $('payAlert').hidden = true; $('payBtn').disabled = true; attempt++;
+    $('payAlert').hidden = true; $('payBtn').disabled = true;
+    promoStillValid().then(function (valid) {
+      if (!valid && order.promo) {
+        order.price = Number(order.price) + (Number(order.promo.amount) || H.PROMO.amount);
+        delete order.promo;
+        try { sessionStorage.setItem('hangaOrderData', JSON.stringify(order)); localStorage.setItem('hangaLastOrder', JSON.stringify(order)); } catch (e) {}
+        render();
+        alertBox('DETTY26 no longer applies to this order, so the total is now ' + H.formatNaira(order.price) + '. Tap Pay again to continue.', 'is-warn');
+        $('payBtn').disabled = false;
+        return;
+      }
+      payNow();
+    });
+  }
+  function payNow() {
+    attempt++;
     var meta = H.paystackOrder(order, ref);
     loadScript('https://js.paystack.co/v2/inline.js').then(function () {
       new window.PaystackPop().newTransaction({

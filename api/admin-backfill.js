@@ -60,7 +60,7 @@ module.exports = async function handler(req, res) {
 
   for (const tx of allTx) {
     try {
-      const check = L.checkPayment(tx);
+      const check = await L.verifyPayment(tx);
       const o     = check.order || {};
       const c     = o.customer || {};
       const mail  = L.receiptEmail(tx, check);
@@ -102,6 +102,8 @@ module.exports = async function handler(req, res) {
         amountStatus:  check.ok ? 'exact' : 'mismatch',
         problems:      check.ok ? [] : (check.problems || []),
         utm:           o.utm || null,
+        promo:         check.expected && check.expected.promo ? { name: check.expected.promo.name, amount: check.expected.promo.amount } : null,
+        promoDiscount: check.expected && check.expected.promo ? check.expected.promo.amount : 0,
         campaign:      L.utmSummary(o.utm) || null,
         // Fulfilment status — default to 'paid' for successful transactions,
         // 'cancelled' for failed/abandoned ones

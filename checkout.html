@@ -15,7 +15,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preload" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Lato:wght@300;400;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Lato:wght@300;400;700&display=swap"></noscript>
-  <link rel="stylesheet" href="style.css?v=11">
+  <link rel="stylesheet" href="style.css?v=12">
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -53,6 +53,7 @@
         <div class="sidebar-totals">
           <div class="row"><span id="sidebarFrameLabel">Frames</span><span id="sidebarFramePrice">₦0</span></div>
           <div class="row saving" id="sidebarSaveRow" hidden><span>Pair savings (included)</span><span id="sidebarSave">—</span></div>
+          <div class="row saving co-promo-row" id="sidebarPromoRow" hidden><span>DETTY26 – ₦1,000 off</span><span id="sidebarPromo">−₦1,000</span></div>
           <div class="row"><span id="sidebarDeliveryLabel">Delivery</span><span id="sidebarDelivery">Select your state</span></div>
           <div class="row grand"><span>Total</span><span id="sidebarTotal">₦0</span></div>
         </div>
@@ -137,6 +138,12 @@
       <p class="delivery-quote" id="deliveryQuote" aria-live="polite">Pick your state to see the delivery fee.</p>
     </div>
 
+    <!-- DETTY26: automatic, nothing to type. Shown only when the server says it applies. -->
+    <div class="co-promo" id="promoBox" aria-live="polite" hidden>
+      <p class="co-promo-line" id="promoLine" hidden><span>DETTY26 – ₦1,000 off</span><strong>−₦1,000</strong></p>
+      <p class="co-promo-note" id="promoNote" hidden></p>
+    </div>
+
     <div class="co-trust">
       <p class="co-guarantee">✓ Damaged or misprinted? Free reprint — 48h guarantee</p>
       <p class="co-secure">
@@ -192,8 +199,8 @@
   </div>
 </footer>
 
-<script src="js/site.js?v=7"></script>
-<script src="js/receipt.js?v=6"></script>
+<script src="js/site.js?v=8"></script>
+<script src="js/receipt.js?v=7"></script>
 <script>
 const $ = id => document.getElementById(id);
 
@@ -235,7 +242,7 @@ function render() {
   $('coPill').hidden = empty;
   if (empty) return;
 
-  const T = HANGA.cartTotals(lines, $('state').value);
+  const T = HANGA.cartTotals(lines, $('state').value, promoOn());
   $('cartCount').textContent = '(' + T.count + ')';
   const ul = $('cartLines'); ul.textContent = '';
   lines.forEach(l => {
@@ -289,6 +296,14 @@ function render() {
     $('deliveryQuote').textContent = 'Pick your state to see the delivery fee.';
     $('deliveryQuote').classList.remove('is-set');
   }
+  // DETTY26 line (server said it is running for this phone; once per order)
+  $('sidebarPromoRow').hidden = !T.promoDiscount;
+  $('promoLine').hidden = !T.promoDiscount;
+  let note = '';
+  if (promo.active && promo.used) note = 'DETTY26 (₦1,000 off) has already been used with this phone number, so it isn\'t applied to this order.';
+  else if (promo.active && !T.promoDiscount && T.promoShort > 0) note = 'Add ' + HANGA.formatNaira(T.promoShort) + ' more in frames to get ₦1,000 off (DETTY26).';
+  $('promoNote').textContent = note; $('promoNote').hidden = !note;
+  $('promoBox').hidden = !T.promoDiscount && !note;
   $('sidebarTotal').textContent = HANGA.formatNaira(T.total) + (T.delivery ? '' : ' + delivery');
   $('coPillTotal').textContent = HANGA.formatNaira(T.total) + (T.delivery ? '' : ' + delivery');
   $('coSumCount').textContent = '(' + T.count + ')';
@@ -298,6 +313,32 @@ function render() {
   $('coPillBtn').textContent = T.delivery ? 'Pay ' + HANGA.formatNaira(T.total) : 'Pay →';
 }
 let busy = false;
+
+// ── DETTY26 (automatic) ─────────────────────────────────────────
+// The server decides: /api/promo says whether it is running now (Lagos dates)
+// and whether this phone has used it. No answer → no discount (full price).
+let promo = { active: false, used: false, phone: null };
+// Shown as soon as the server says it is running; the phone check can take it away.
+function promoOn() { return !!(promo.active && !promo.used); }
+let promoSeq = 0;
+function refreshPromo() {
+  const ph = $('phone').value.trim(), valid = HANGA.validPhone(ph), seq = ++promoSeq;
+  const q = valid ? '?phone=' + encodeURIComponent(HANGA.normPhone(ph)) : '';
+  const ctl = ('AbortController' in window) ? new AbortController() : null;
+  const t = ctl ? setTimeout(() => ctl.abort(), 5000) : null;
+  return fetch('/api/promo' + q, { cache: 'no-store', signal: ctl ? ctl.signal : undefined })
+    .then(r => r.ok ? r.json() : null).catch(() => null)
+    .then(p => {
+      if (t) clearTimeout(t);
+      if (seq !== promoSeq) return; // a newer check is running
+      promo = { active: !!(p && p.ok && p.active), used: !!(p && p.used), phone: valid && p && p.ok ? HANGA.normPhone(ph) : null };
+      render();
+    });
+}
+let promoTimer = null;
+$('phone').addEventListener('input', () => { clearTimeout(promoTimer); promoTimer = setTimeout(refreshPromo, 450); });
+$('phone').addEventListener('blur', () => { clearTimeout(promoTimer); refreshPromo(); });
+
 // Mobile: cart collapses into an "Order summary" row so the form starts near the top.
 $('coSumToggle').addEventListener('click', () => {
   const box = document.querySelector('.order-sidebar'), open = !box.classList.contains('is-open');
@@ -306,6 +347,7 @@ $('coSumToggle').addEventListener('click', () => {
 window.addEventListener('hanga:cart', render);
 window.addEventListener('pageshow', render);
 render();
+refreshPromo();
 
 // Floating pill shows only while the real Pay button is off-screen.
 (function () {
@@ -362,7 +404,7 @@ let orderRef = null, attempt = 0;
 function buildOrderData(method) {
   const lines = HANGA.cart.load();
   const c = customerDetails();
-  const T = HANGA.cartTotals(lines, c.state);
+  const T = HANGA.cartTotals(lines, c.state, promoOn() && promo.phone === HANGA.normPhone(c.phone));
   return Object.assign({
     v: 2, ref: orderRef, method, placedAt: new Date().toISOString(),
     lines: lines.map(l => ({ id: l.id, pieces: (l.items || []).length, size: l.size, style: HANGA.normStyle(l.style), unit: l.unit, qty: Math.max(1, Number(l.qty) || 1), setName: l.setName || null,
@@ -370,6 +412,7 @@ function buildOrderData(method) {
         cloudinaryUrl: i.cloudinaryUrl || null, cloudinaryFailed: !!i.cloudinaryFailed })) })),
     gross: T.gross, discount: T.discount, subtotal: T.subtotal,
     deliveryFee: T.deliveryFee, deliveryRegion: T.delivery ? T.delivery.label : null,
+    promo: T.promoDiscount ? { name: HANGA.PROMO.name, amount: T.promoDiscount } : undefined,
     price: T.total,
     utm: HANGA.getUtm() || undefined // first-touch campaign (attribution only)
   }, c);
@@ -396,11 +439,15 @@ function placeOrder() {
   if (!HANGA.cart.load().length) { render(); return; }
   if (!validate()) return;
   orderRef = orderRef || genRef();
-  attempt++;
-  const data = buildOrderData('paystack');
-  saveOrder(data);
   setBusy(true);
-  Promise.all([getPk(), loadPaystack().catch(() => null)]).then(([key]) => {
+  // Re-ask the server about DETTY26 for this exact phone right before paying,
+  // so the amount Paystack charges is the one the server will accept.
+  const shown = HANGA.cartTotals(HANGA.cart.load(), $('state').value, promoOn()).total;
+  Promise.all([getPk(), loadPaystack().catch(() => null), refreshPromo()]).then(([key]) => {
+    attempt++;
+    const data = buildOrderData('paystack');
+    saveOrder(data);
+    if (data.price !== shown) { setBusy(false); showToast('Your total changed to ' + HANGA.formatNaira(data.price) + '. Please check it and tap Pay again.'); return; }
     if (!key || !window.PaystackPop) {
       // Online payment unavailable: keep the order and finish on the receipt page.
       setBusy(false);

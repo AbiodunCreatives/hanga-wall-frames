@@ -46,7 +46,8 @@
       };
     });
     var fee = Number(o.deliveryFee || 0);
-    return { rows: rows, n: frames, v: 2, subtotal: gross, discount: discount, discountLabel: 'Pair discount',
+    var promo = o.promo && o.promo.name === H.PROMO.name ? { label: H.PROMO.label, amount: Number(o.promo.amount) || H.PROMO.amount } : null;
+    return { rows: rows, n: frames, v: 2, subtotal: gross, discount: discount, discountLabel: 'Pair discount', promo: promo,
              delivery: fee, deliveryText: fee ? H.formatNaira(fee) + (o.state ? ' · ' + o.state : '') : 'To be confirmed',
              total: o.price };
   }
@@ -103,6 +104,7 @@
             }) };
         }),
         subtotal: C.subtotal, discount: C.discount, deliveryFee: C.delivery, total: C.total,
+        promo: C.promo ? { name: H.PROMO.name, amount: C.promo.amount } : undefined, // a claim; the server re-checks it
         customer: cust, utm: utm || undefined
       };
     }
@@ -134,6 +136,7 @@
       { display_name: 'Customer', variable_name: 'customer', value: (o.name || '') + ' · ' + (o.phone || '') },
       { display_name: 'Items', variable_name: 'items', value: items.slice(0, 480) }
     ];
+    if (meta.promo) f.push({ display_name: 'Discount', variable_name: 'promo', value: H.PROMO.label + ' (−' + H.formatNaira(meta.promo.amount) + ')' });
     if (meta.lines) f.push({ display_name: 'Delivery', variable_name: 'delivery', value: H.formatNaira(meta.deliveryFee) + ' · ' + (o.state || '') });
     var camp = H.utmSummary ? H.utmSummary(meta.utm) : '';
     if (camp) f.push({ display_name: 'Campaign', variable_name: 'campaign', value: camp });
@@ -216,6 +219,7 @@
     function tRow(k, v, cls) { var d = el('div', cls || null); d.append(el('dt', null, k), el('dd', null, v)); tot.appendChild(d); }
     tRow('Subtotal', H.formatNaira(R.subtotal));
     if (R.discount) tRow(R.discountLabel, '−' + H.formatNaira(R.discount), 'rc-discount');
+    if (R.promo) tRow(R.promo.label, '−' + H.formatNaira(R.promo.amount), 'rc-discount rc-promo');
     tRow('Delivery', R.deliveryText);
     tRow('Total' + (opts.status === 'paid' ? ' paid' : ''), H.formatNaira(R.total), 'rc-grand');
     root.appendChild(tot);

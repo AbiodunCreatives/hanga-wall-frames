@@ -2907,3 +2907,10 @@ body:has(.bld-mobilebar.is-ready) .customize-layout { padding-bottom: calc(120px
   .preview-panel .canvas-placeholder { height: 18svh; }
   .bld-step { scroll-margin-top: calc(var(--nav-space) + 24svh + 16px); }
 }
+
+/* ─── DETTY26 automatic discount (checkout) ───────────────────── */
+.co-promo { margin: 14px 0 4px; }
+.co-promo-line { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin: 0; padding: 10px 14px; border-radius: 10px; background: #edf6ee; color: #1e6b34; font-weight: 700; font-size: 14px; }
+.co-promo-line strong { color: #1e6b34; white-space: nowrap; }
+.co-promo-note { margin: 6px 0 0; font-size: 13px; color: var(--muted); line-height: 1.45; }
+.co-promo-row span:last-child { white-space: nowrap; }

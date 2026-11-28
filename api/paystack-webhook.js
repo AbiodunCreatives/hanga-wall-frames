@@ -38,7 +38,7 @@ module.exports = async function handler(req, res) {
     try {
       // Never trust the webhook body alone: re-check with Paystack.
       const data = await L.paystackVerify(ref, secret);
-      const check = L.checkPayment(data);
+      const check = await L.verifyPayment(data, { record: true });
       // Replay guard: old events don't re-send (Resend also dedupes per ref for 24h).
       if (L.isFresh(data)) await L.notifyPaid(data, check, 'webhook');
     } catch (e) {
