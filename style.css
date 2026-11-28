@@ -1584,7 +1584,7 @@ button.pay-method { font: inherit; color: inherit; background: var(--white); }
     transition: max-height 0.18s ease, visibility 0s 0.18s;
   }
   .bld-step:not(.is-collapsed) .bld-step-body {
-    max-height: 2000px; overflow: visible;
+    max-height: 2000px; overflow: hidden;
     visibility: visible;
     transition: max-height 0.18s ease;
   }
@@ -1815,7 +1815,7 @@ button.pay-method { font: inherit; color: inherit; background: var(--white); }
 .gallery-more-wrap { text-align: center; margin-top: 24px; }
 .mini-more { display: block; width: 100%; margin-top: 10px; padding: 10px; font-size: 12px; }
 @media (max-width: 768px) {
-  .mini-gallery { grid-template-columns: repeat(2, 1fr); max-height: none; overflow: visible; gap: 10px; }
+  .mini-gallery { grid-template-columns: repeat(2, 1fr); max-height: 340px; overflow-y: auto; gap: 10px; -webkit-overflow-scrolling: touch; }
 }
 @media (max-width: 380px) {
   .gallery-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
