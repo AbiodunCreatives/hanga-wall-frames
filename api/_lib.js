@@ -42,6 +42,14 @@ const REF_RE = /^HNG-[A-Z0-9]{4,12}-[A-Z0-9]{3,16}$/;          // our order refe
 const STRONG_REF_RE = /^HNG-[A-Z0-9]{4,12}-[A-Z0-9]{10,16}$/;   // crypto-random refs (Nov 2026+)
 const PAYSTACK_REF_RE = /^HNG-[A-Z0-9]{4,12}-[A-Z0-9]{3,16}(-R\d{1,3})?$/;
 const EMAIL_RE = /^[^\s@<>",;]{1,64}@[A-Za-z0-9.-]{1,190}\.[A-Za-z]{2,24}$/;
+// Paystack requires an email; we generate 234XXXXXXXXXX@orders.hangaframes.art
+// from the phone and never show or mail it. Legacy @orders.hanga.ng is the same.
+const PAYER_EMAIL_DOMAIN = 'orders.hangaframes.art';
+const isPayerEmail = e => /@(orders\.hangaframes\.art|orders\.hanga\.ng)$/i.test(String(e || ''));
+function payerEmail(phone) {
+  const ph = P.normPhone(phone);
+  return ph ? ph + '@' + PAYER_EMAIL_DOMAIN : '';
+}
 
 // Price the order from our own table — never trust a total sent by the browser.
 // ctx: { times: [ms…] Paystack timestamps, usedBy: order ref holding this
@@ -133,9 +141,10 @@ function readMetaOrder(data) {
   if (!o || typeof o !== 'object') return {};
   const c = (o.customer && typeof o.customer === 'object') ? o.customer : {};
   const items = Array.isArray(o.items) ? o.items : [];
-  const email = line(c.email, 254);
+  // Checkout no longer collects an email. Drop anything the browser sent,
+  // including Paystack placeholders, so it is never stored or displayed.
   const customer = {
-    name: line(c.name, 80), email: EMAIL_RE.test(email) ? email : '',
+    name: line(c.name, 80), email: '',
     phone: line(c.phone, 20), address: block(c.address, 300),
     city: line(c.city, 60), state: line(c.state, 60), notes: block(c.notes, 500)
   };
@@ -323,7 +332,8 @@ function receiptEmail(data, check) {
   const subject = line((check.ok ? '' : '⚠ CHECK AMOUNT — ') + 'New paid order ' + ref + ' — ' + naira(check.paid), 150);
   const warn = check.ok ? '' : 'CHECK BEFORE SHIPPING: ' + check.problems.join('; ');
   const when = data.paid_at ? new Date(data.paid_at).toLocaleString('en-NG', { timeZone: 'Africa/Lagos', dateStyle: 'medium', timeStyle: 'short' }) + ' (WAT)' : '';
-  const custRows = [['Name', c.name], ['Email', c.email], ['Phone', c.phone], ['Delivery address', c.address], ['City / State', [c.city, c.state].filter(Boolean).join(', ')], ['Notes', c.notes]].filter(r => r[1]);
+  const shownEmail = (c.email && !isPayerEmail(c.email)) ? c.email : '';
+  const custRows = [['Name', c.name], ['Email', shownEmail], ['Phone', c.phone], ['Delivery address', c.address], ['City / State', [c.city, c.state].filter(Boolean).join(', ')], ['Notes', c.notes]].filter(r => r[1]);
   const uploads = (o.items || []).some(i => i.isUpload);
   const utmRows = o.utm ? [['Campaign', utmSummary(o.utm)], ...UTM_KEYS.concat(['gclid', 'fbclid', 'landing_path', 'capturedAt']).filter(k => o.utm[k]).map(k => [k, o.utm[k]])] : [];
   const wa = waLink(c.phone, 'Hi ' + (c.name || '').split(' ')[0] + ', this is Hanga. Thank you for your order ' + ref + '! ');
@@ -407,9 +417,9 @@ async function notifyPaid(data, check, source) {
   if (!data || data.status !== 'success') return { skipped: 'not paid' };
   const mail = receiptEmail(data, check);
   const owner = process.env.OWNER_EMAIL || 'hangaframes@gmail.com';
-  // Placeholder payer emails (@orders.hanga.ng, used only to satisfy Paystack) are never mailed.
+  // Placeholder payer emails are never mailed and never used as reply-to.
   let cust = ((check.order || {}).customer || {}).email;
-  if (cust && (/@orders\.hanga\.ng$/i.test(cust) || !EMAIL_RE.test(cust))) cust = '';
+  if (cust && (isPayerEmail(cust) || !EMAIL_RE.test(cust))) cust = '';
   const out = {};
   try {
     out.owner = await sendResend({ to: owner, subject: mail.subject, html: mail.html, text: mail.text, replyTo: cust, idempotencyKey: 'owner-' + data.reference });
@@ -450,7 +460,7 @@ async function notifyPaid(data, check, source) {
       imageName:   Array.isArray(o.items) && o.items[0] ? o.items[0].name : (o.imageName || ''),
       name:        c.name    || '',
       phone:       c.phone   || '',
-      email:       c.email   || '',
+      email:       (c.email && !isPayerEmail(c.email)) ? c.email : '',
       address:     c.address || '',
       city:        c.city    || '',
       state:       c.state   || '',
@@ -485,4 +495,4 @@ function isFresh(data) {
   return !t || Date.now() - t < FRESH_MS;
 }
 
-module.exports = { verifyPayment, PROMO: P.PROMO, readUtm, utmSummary, UTM_KEYS, fetchT, DELIVERY_REGIONS, deliveryFor, line, block, REF_RE, STRONG_REF_RE, PAYSTACK_REF_RE, EMAIL_RE, rateLimited, isFresh, notifyPaid, waLink, PRICES, SET_DISCOUNTS, naira, expectedTotal, verifySignature, paystackVerify, checkPayment, publicView, receiptEmail, sendResend, readMetaOrder };
+module.exports = { verifyPayment, PROMO: P.PROMO, readUtm, utmSummary, UTM_KEYS, fetchT, DELIVERY_REGIONS, deliveryFor, line, block, REF_RE, STRONG_REF_RE, PAYSTACK_REF_RE, EMAIL_RE, PAYER_EMAIL_DOMAIN, isPayerEmail, payerEmail, rateLimited, isFresh, notifyPaid, waLink, PRICES, SET_DISCOUNTS, naira, expectedTotal, verifySignature, paystackVerify, checkPayment, publicView, receiptEmail, sendResend, readMetaOrder };

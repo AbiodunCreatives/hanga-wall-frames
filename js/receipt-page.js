@@ -265,7 +265,7 @@
     loadScript('https://js.paystack.co/v2/inline.js').then(function () {
       new window.PaystackPop().newTransaction({
         key: pk,
-        email: H.payEmail(order), // the customer's email if given, else a placeholder
+        email: H.payEmail(order), // synthetic, from the phone; never shown
         amount: Math.round(Number(order.price) * 100), // kobo; v2 orders include delivery
         currency: 'NGN',
         reference: attempt === 1 ? ref : ref + '-R' + attempt, // Paystack refuses a reused reference

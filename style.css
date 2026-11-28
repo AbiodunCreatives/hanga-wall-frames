@@ -2696,6 +2696,10 @@ html.kb-open .toast.show { transform: none !important; }
 .checkout-form-col select { width: 100%; }
 .delivery-quote { font-size: 14px; color: var(--muted); background: rgba(200,169,110,0.1); border-radius: 10px; padding: 10px 14px; margin: 4px 0 0; }
 .delivery-quote.is-set { color: var(--black); background: rgba(30,107,52,0.08); }
+.delivery-quote .dq-line { display: flex; align-items: center; gap: 8px; flex-wrap: nowrap; white-space: nowrap; min-width: 0; }
+.delivery-quote .dq-icon { flex: none; width: 20px; height: 20px; color: var(--black); }
+.delivery-quote .dq-state { flex: 1 1 auto; min-width: 0; }
+.delivery-quote .dq-fee { flex: none; font-weight: 700; }
 .co-trust { text-align: center; margin-top: 14px; }
 .co-trust p { margin: 6px 0; font-size: 13px; }
 .co-guarantee { color: #1e6b34; font-weight: 700; }
@@ -2883,19 +2887,14 @@ html.kb-open .toast.show { transform: none !important; }
 
 /* ─── Dec 1 funnel fixes (P0 / P1) ─────────────────────────────── */
 /* Checkout: rates + one-fee rule always visible; trust sits above Pay */
-.co-rates-note { margin: 6px 0 0; font-size: 12.5px; color: var(--muted); }
 .co-trust { margin: 6px 0 14px; }
 .co-trust .co-returns { margin-top: 4px; }
 .co-trust .co-returns a, .co-trust .co-wa a { font-weight: 700; }
 .co-trust .co-returns a { color: var(--black); }
-.co-pill-trust { display: none; }
 @media (max-width: 900px) {
-  .co-pill { flex-wrap: wrap; row-gap: 2px; border-radius: 26px; padding-top: 6px; }
-  .co-pill-trust { display: block; order: -1; flex: 1 0 100%; margin: 0 0 2px; font-size: 11px; line-height: 1.3; color: #1e6b34; font-weight: 700; text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  body:has(.co-pill.is-ready) .checkout-layout { padding-bottom: calc(132px + env(safe-area-inset-bottom)); }
+  body:has(.co-pill.is-ready) .checkout-layout { padding-bottom: calc(104px + env(safe-area-inset-bottom)); }
   #stateHint { margin-bottom: 4px; }
 }
-@media (max-width: 360px) { .co-pill-trust { font-size: 10px; } }
 /* Sticky CTAs: 44px minimum touch targets */
 #coPillBtn, .bld-mobilebar .bld-mb-add, .bld-mobilebar .bld-mb-go, .place-order-btn { min-height: 44px; }
 /* Builder: note sits under the total (above the buttons), never under the sticky bar */

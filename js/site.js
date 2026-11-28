@@ -266,11 +266,22 @@ window.HANGA = {
     window.addEventListener('pageshow', sync);
   })();
 
-  // Paystack payer email: the customer's own if valid, else a placeholder.
+  // Paystack still needs an email; H.payEmail builds a non-deliverable one
+  // from the phone. We never collect or show a customer email.
   H.validEmail = function (e) { return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(String(e || '').trim()); };
   // Nigerian mobile: 080…, 070…, 090…, 081…, +234…, 234…
   H.normPhone = function (p) { return String(p || '').replace(/[\s\-().]/g, ''); };
   H.validPhone = function (p) { return /^(\+?234|0)[789][01]\d{8}$/.test(H.normPhone(p)); };
+  // Canonical 234XXXXXXXXXX, kept in sync with api/_promo.js normPhone.
+  H.canonPhone = function (p) {
+    var d = String(p == null ? '' : p).replace(/[\s\-().]/g, '');
+    if (d.charAt(0) === '+') d = d.slice(1);
+    if (!/^\d+$/.test(d)) return '';
+    if (d.indexOf('234') === 0) d = d.slice(3);
+    else if (d.charAt(0) === '0') d = d.slice(1);
+    if (d.charAt(0) === '0') d = d.slice(1);
+    return /^[789][01]\d{8}$/.test(d) ? '234' + d : '';
+  };
 
   // ── Featured Makers "get featured" CTA ──────────────────────
   document.querySelectorAll('[data-makers-wa]').forEach(function (a) {

@@ -15,7 +15,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preload" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Lato:wght@300;400;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Lato:wght@300;400;700&display=swap"></noscript>
-  <link rel="stylesheet" href="style.css?v=16">
+  <link rel="stylesheet" href="style.css?v=17">
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -66,7 +66,6 @@
         <li><span>East &amp; South</span><b>₦4,500</b></li>
         <li><span>North &amp; FCT</span><b>₦6,000</b></li>
       </ul>
-      <p class="co-rates-note">One fee per order.</p>
       <p class="xmas-cutoff" data-xmas-cutoff hidden></p>
     </div>
   </div>
@@ -102,14 +101,6 @@
           <p class="field-error" id="phoneErr" hidden></p>
         </div>
       </div>
-      <div class="form-row full">
-        <div class="form-group">
-          <label for="email">Email <span class="opt">optional</span></label>
-          <input type="email" id="email" autocomplete="email" maxlength="120" inputmode="email" placeholder="adaeze@example.com" aria-describedby="emailHint emailErr">
-          <p class="field-hint" id="emailHint">For your Paystack receipt.</p>
-          <p class="field-error" id="emailErr" hidden></p>
-        </div>
-      </div>
     </div>
 
     <div class="form-section">
@@ -120,7 +111,7 @@
           <select id="state" autocomplete="address-level1" required aria-describedby="stateHint stateErr">
             <option value="">Select your state</option>
           </select>
-          <p class="field-hint" id="stateHint">Delivery: South-West ₦2,500 · East &amp; South ₦4,500 · North &amp; FCT ₦6,000 · one fee per order</p>
+          <p class="field-hint" id="stateHint">South-West ₦2,500 · East &amp; South ₦4,500 · North &amp; FCT ₦6,000</p>
           <p class="field-error" id="stateErr" hidden></p>
         </div>
         <div class="form-group">
@@ -146,7 +137,6 @@
     </div>
 
     <div class="co-trust">
-      <p class="co-guarantee">Free reprint within 48 hours</p>
       <p class="co-secure">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2" stroke="currentColor" stroke-width="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
         Secured by <strong>Paystack</strong> · Card, transfer or USSD
@@ -161,7 +151,6 @@
 
 <!-- Mobile: floating total + pay pill -->
 <div class="co-pill" id="coPill" aria-hidden="true">
-  <p class="co-pill-trust">✓ Free reprint · 🔒 Paystack · WhatsApp +234 815 153 3349</p>
   <div class="co-pill-total"><span>Total</span><strong id="coPillTotal">₦0</strong></div>
   <button type="button" class="btn btn-gold" tabindex="-1" id="coPillBtn" onclick="placeOrder()">Pay →</button>
 </div>
@@ -200,8 +189,8 @@
   </div>
 </footer>
 
-<script src="js/site.js?v=11"></script>
-<script src="js/receipt.js?v=7"></script>
+<script src="js/site.js?v=12"></script>
+<script src="js/receipt.js?v=8"></script>
 <script>
 const $ = id => document.getElementById(id);
 
@@ -225,7 +214,7 @@ const $ = id => document.getElementById(id);
 HANGA.NG_STATES.forEach(st => { const o = document.createElement('option'); o.value = st; o.textContent = st; $('state').appendChild(o); });
 
 // Remember typed details for this tab (e.g. while adding another frame).
-const FORM_KEY = 'hangaCheckoutForm', FIELDS = ['name', 'phone', 'email', 'state', 'city', 'address'];
+const FORM_KEY = 'hangaCheckoutForm', FIELDS = ['name', 'phone', 'state', 'city', 'address'];
 try { const f = JSON.parse(sessionStorage.getItem(FORM_KEY) || '{}'); FIELDS.forEach(k => { if (f[k]) $(k).value = f[k]; }); } catch (e) {}
 FIELDS.forEach(k => $(k).addEventListener(k === 'state' ? 'change' : 'input', () => {
   try { const f = {}; FIELDS.forEach(x => { f[x] = $(x).value; }); sessionStorage.setItem(FORM_KEY, JSON.stringify(f)); } catch (e) {}
@@ -288,14 +277,32 @@ function render() {
   if (T.delivery) {
     $('sidebarDeliveryLabel').textContent = 'Delivery · ' + T.delivery.label;
     $('sidebarDelivery').textContent = HANGA.formatNaira(T.deliveryFee);
-    $('deliveryQuote').innerHTML = '';
-    $('deliveryQuote').append(st + ' · ', Object.assign(document.createElement('strong'), { textContent: HANGA.formatNaira(T.deliveryFee) }), ' (' + T.delivery.label + ') · 3 business days');
-    $('deliveryQuote').classList.add('is-set');
+    const q = $('deliveryQuote');
+    q.replaceChildren();
+    const line = document.createElement('span');
+    line.className = 'dq-line';
+    const icon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    icon.setAttribute('class', 'dq-icon');
+    icon.setAttribute('width', '20');
+    icon.setAttribute('height', '20');
+    icon.setAttribute('viewBox', '0 0 24 24');
+    icon.setAttribute('fill', 'none');
+    icon.setAttribute('aria-hidden', 'true');
+    icon.innerHTML = '<path d="M3 7h11v10H3V7z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M14 11h4l3 3v3h-7v-6z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="7" cy="18" r="2" stroke="currentColor" stroke-width="2"/><circle cx="17" cy="18" r="2" stroke="currentColor" stroke-width="2"/>';
+    const sr = Object.assign(document.createElement('span'), { className: 'visually-hidden', textContent: 'Delivery' });
+    const stateEl = Object.assign(document.createElement('span'), { className: 'dq-state', textContent: st });
+    const feeEl = Object.assign(document.createElement('strong'), { className: 'dq-fee', textContent: HANGA.formatNaira(T.deliveryFee) });
+    line.append(icon, sr, stateEl, feeEl);
+    q.append(line);
+    q.classList.add('is-set');
+    q.setAttribute('aria-label', 'Delivery, ' + st + ', ' + T.delivery.label + ', ' + HANGA.formatNaira(T.deliveryFee));
   } else {
     $('sidebarDeliveryLabel').textContent = 'Delivery';
     $('sidebarDelivery').textContent = 'Select your state';
-    $('deliveryQuote').textContent = 'Pick your state to see the delivery fee.';
-    $('deliveryQuote').classList.remove('is-set');
+    const q = $('deliveryQuote');
+    q.textContent = 'Pick your state to see the delivery fee.';
+    q.classList.remove('is-set');
+    q.removeAttribute('aria-label');
   }
   // DETTY26 line (server said it is running for this phone; once per order)
   $('sidebarPromoRow').hidden = !T.promoDiscount;
@@ -370,10 +377,9 @@ function setFieldError(id, msg) {
 }
 FIELDS.forEach(k => $(k).addEventListener(k === 'state' ? 'change' : 'input', () => { if ($(k).getAttribute('aria-invalid')) setFieldError(k, ''); }));
 function validate() {
-  const v = id => $(id).value.trim(), em = v('email'), errs = {
+  const v = id => $(id).value.trim(), errs = {
     name: v('name') ? '' : 'Please enter your full name.',
     phone: !v('phone') ? 'Please enter your phone number.' : (HANGA.validPhone(v('phone')) ? '' : 'Please enter a valid Nigerian phone number, e.g. 0801 234 5678.'),
-    email: em && !HANGA.validEmail(em) ? 'That email doesn\'t look right — fix it or leave it empty.' : '',
     state: HANGA.deliveryFor(v('state')) ? '' : 'Please select your state for delivery.',
     city: v('city') ? '' : 'Please enter your city or area.',
     address: v('address') ? '' : 'Please enter your street address and a landmark.'
@@ -397,7 +403,7 @@ function genRef() {
 
 function customerDetails() {
   const v = id => $(id).value.trim();
-  return { name: v('name'), phone: HANGA.normPhone(v('phone')), email: v('email'), state: v('state'), city: v('city'), address: v('address'), notes: '' };
+  return { name: v('name'), phone: HANGA.normPhone(v('phone')), email: '', state: v('state'), city: v('city'), address: v('address'), notes: '' };
 }
 
 // One order per page visit; Paystack retries use ref-R<n>.
@@ -456,10 +462,12 @@ function placeOrder() {
       location.href = 'confirmation.html?ref=' + encodeURIComponent(orderRef) + '&method=request';
       return;
     }
+    const payer = HANGA.payEmail(data);
+    if (!payer) { setBusy(false); showToast('Please enter a valid Nigerian phone number.'); return; }
     const meta = HANGA.paystackOrder(data, orderRef);
     new window.PaystackPop().newTransaction({
       key,
-      email: HANGA.payEmail(data),
+      email: payer,
       amount: Math.round(Number(data.price) * 100), // kobo: frames + delivery, one payment
       currency: 'NGN',
       reference: attempt === 1 ? orderRef : orderRef + '-R' + attempt,

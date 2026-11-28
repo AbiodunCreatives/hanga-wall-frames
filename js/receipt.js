@@ -73,15 +73,13 @@
 
   // Everything the server needs to process a paid order, sent to Paystack as
   // metadata (there is no database). Server re-prices it before trusting it.
-  // Paystack requires an email, but we no longer ask customers for one.
-  // Build a valid-format, non-deliverable placeholder from the phone number
-  // (orders.hanga.ng has no mail server). It is only sent to Paystack as the
-  // payer "email" and never shown on receipts or stored in the order.
+  // Paystack requires an email. Build one from the canonical phone
+  // (234XXXXXXXXXX@orders.hangaframes.art). It is only sent to Paystack,
+  // never shown on receipts, confirmation, or stored on the order.
+  H.PAYER_EMAIL_DOMAIN = 'orders.hangaframes.art';
   H.payEmail = function (o) {
-    if (o && H.validEmail && H.validEmail(o.email)) return String(o.email).trim();
-    var d = String((o && o.phone) || '').replace(/\D/g, '');
-    if (d.startsWith('234')) d = '0' + d.slice(3);
-    return 'customer-' + (d || 'guest') + '@orders.hanga.ng';
+    var d = (H.canonPhone && H.canonPhone((o && o.phone) || '')) || '';
+    return d ? d + '@' + H.PAYER_EMAIL_DOMAIN : '';
   };
 
   // First-touch campaign for this order: the copy saved on the order at

@@ -16,6 +16,8 @@
   function loadToken()  { try { return localStorage.getItem(STORAGE_KEY) || ''; } catch (e) { return ''; } }
   function clearToken() { try { localStorage.removeItem(STORAGE_KEY); } catch (e) {} token = ''; }
 
+  function isPayerEmail(e) { return /@(orders\.hangaframes\.art|orders\.hanga\.ng)$/i.test(String(e || '')); }
+
   // ── Init ───────────────────────────────────────────────────────
   token = loadToken();
 
@@ -360,7 +362,7 @@
     html += '<div class="dsec"><div class="dsec-title">Customer</div>';
     html += drow('Name', esc(o.name || '—'));
     html += drow('Phone', o.phone ? '<a href="tel:' + esc(o.phone) + '" style="color:var(--black)">' + esc(o.phone) + '</a>' : '—');
-    if (o.email) html += drow('Email', esc(o.email));
+    html += drow('Email', (o.email && !isPayerEmail(o.email)) ? esc(o.email) : 'no email (phone order)');
     html += drow('Address', esc([o.address, o.city, o.state].filter(Boolean).join(', ') || '—'));
     if (o.notes) html += drow('Notes', esc(o.notes));
     html += '</div>';
