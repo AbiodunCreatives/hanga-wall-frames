@@ -141,7 +141,7 @@ window.HANGA = {
     imageMaxMB: 10, pdfMaxMB: 20,
     accept: 'application/pdf,image/jpeg,image/png,image/webp',
     rule: 'PDF, JPG, PNG or WEBP — images up to 10 MB, PDFs up to 20 MB',
-    heicHelp: "This iPhone photo is in HEIC format, which we can't read here. Please upload it as a JPG: choose it from your Photos library (not the Files app) and your iPhone converts it automatically, or set Settings › Camera › Formats to “Most Compatible” for new photos. You can also send the original on WhatsApp after you order."
+    heicHelp: "This iPhone photo is HEIC, which we can't read here. Upload it as a JPG: choose it from your Photos library (not the Files app) so your iPhone converts it, or set Settings › Camera › Formats to “Most Compatible”. You can also send the original on WhatsApp after you order."
   };
   H.isHeic = function (f) { return !!f && (/^image\/hei[cf](-sequence)?$/i.test(f.type || '') || /\.(heic|heif)$/i.test(f.name || '')); };
   // → { ok, kind: 'pdf'|'image'|'heic', msg }

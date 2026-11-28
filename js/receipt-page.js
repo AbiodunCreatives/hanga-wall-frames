@@ -170,7 +170,7 @@
         uploadEl.className = 'rc-upload rc-upload-warn';
         uploadEl.hidden = false;
       } else {
-        uploadEl.innerHTML = '<strong>Framing your own photo?</strong> Please send us the original file (PDF or full-size image) so it prints sharply.';
+        uploadEl.innerHTML = 'Please send the original file (PDF or full-size image) so it prints sharply.';
         uploadEl.className = 'rc-upload';
         uploadEl.hidden = false;
       }
@@ -252,7 +252,7 @@
         delete order.promo;
         try { sessionStorage.setItem('hangaOrderData', JSON.stringify(order)); localStorage.setItem('hangaLastOrder', JSON.stringify(order)); } catch (e) {}
         render();
-        alertBox('DETTY26 no longer applies to this order, so the total is now ' + H.formatNaira(order.price) + '. Tap Pay again to continue.', 'is-warn');
+        alertBox('DETTY26 no longer applies. The total is now ' + H.formatNaira(order.price) + '. Tap Pay again.', 'is-warn');
         $('payBtn').disabled = false;
         return;
       }

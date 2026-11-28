@@ -2914,3 +2914,11 @@ body:has(.bld-mobilebar.is-ready) .customize-layout { padding-bottom: calc(120px
 .co-promo-line strong { color: #1e6b34; white-space: nowrap; }
 .co-promo-note { margin: 6px 0 0; font-size: 13px; color: var(--muted); line-height: 1.45; }
 .co-promo-row span:last-child { white-space: nowrap; }
+
+/* ─── Copy trim: tighter hints and trust, more air around headlines ─── */
+.co-trust { margin-top: 16px; }
+.co-trust p { margin: 0 0 4px; }
+.co-trust p:last-child { margin-bottom: 0; }
+.field-hint { margin-top: 4px; }
+.cta-banner h2 { margin-bottom: 20px; }
+.faq-section .section-title { margin-bottom: 20px; }

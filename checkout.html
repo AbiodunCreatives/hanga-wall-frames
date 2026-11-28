@@ -15,7 +15,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preload" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Lato:wght@300;400;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Lato:wght@300;400;700&display=swap"></noscript>
-  <link rel="stylesheet" href="style.css?v=12">
+  <link rel="stylesheet" href="style.css?v=13">
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -52,7 +52,7 @@
         <a href="customize.html" class="add-another" id="addAnother">+ Add another frame</a>
         <div class="sidebar-totals">
           <div class="row"><span id="sidebarFrameLabel">Frames</span><span id="sidebarFramePrice">₦0</span></div>
-          <div class="row saving" id="sidebarSaveRow" hidden><span>Pair savings (included)</span><span id="sidebarSave">—</span></div>
+          <div class="row saving" id="sidebarSaveRow" hidden><span>Pair savings</span><span id="sidebarSave">—</span></div>
           <div class="row saving co-promo-row" id="sidebarPromoRow" hidden><span>DETTY26 – ₦1,000 off</span><span id="sidebarPromo">−₦1,000</span></div>
           <div class="row"><span id="sidebarDeliveryLabel">Delivery</span><span id="sidebarDelivery">Select your state</span></div>
           <div class="row grand"><span>Total</span><span id="sidebarTotal">₦0</span></div>
@@ -60,20 +60,20 @@
       </div>
     </div>
     <div class="delivery-card co-delivery-card">
-      <strong>📦 Nationwide delivery within 3 business days</strong>
+      <strong>Delivery · 3 business days</strong>
       <ul class="co-rates">
         <li><span>South-West</span><b>₦2,500</b></li>
         <li><span>East &amp; South</span><b>₦4,500</b></li>
         <li><span>North &amp; FCT</span><b>₦6,000</b></li>
       </ul>
-      <p class="co-rates-note">One fee per order, however many frames you buy.</p>
+      <p class="co-rates-note">One fee per order.</p>
     </div>
   </div>
 
   <!-- ── Empty cart ─────────────────────────────────────────── -->
   <div class="co-empty" id="emptyCart" hidden>
     <h2>Your cart is empty</h2>
-    <p class="text-muted">Pick a print from our gallery or frame your own photo.</p>
+    <p class="text-muted">Pick a print or upload a photo.</p>
     <div class="co-empty-actions">
       <a href="customize.html" class="btn btn-gold">Create your frame →</a>
       <a href="index.html#gallery" class="btn btn-outline-dark">Browse prints</a>
@@ -97,15 +97,15 @@
         <div class="form-group">
           <label for="phone">Phone number</label>
           <input type="tel" id="phone" autocomplete="tel" maxlength="20" inputmode="tel" placeholder="0801 234 5678" required aria-describedby="phoneHint phoneErr">
-          <p class="field-hint" id="phoneHint">Nigerian mobile number. We'll call or WhatsApp you to arrange delivery.</p>
+          <p class="field-hint" id="phoneHint">We'll WhatsApp you about delivery.</p>
           <p class="field-error" id="phoneErr" hidden></p>
         </div>
       </div>
       <div class="form-row full">
         <div class="form-group">
-          <label for="email">Email (for your order receipt) <span class="opt">optional</span></label>
+          <label for="email">Email <span class="opt">optional</span></label>
           <input type="email" id="email" autocomplete="email" maxlength="120" inputmode="email" placeholder="adaeze@example.com" aria-describedby="emailHint emailErr">
-          <p class="field-hint" id="emailHint">Used for your Paystack payment receipt. You can also download your Hanga receipt right after paying.</p>
+          <p class="field-hint" id="emailHint">For your Paystack receipt.</p>
           <p class="field-error" id="emailErr" hidden></p>
         </div>
       </div>
@@ -145,13 +145,13 @@
     </div>
 
     <div class="co-trust">
-      <p class="co-guarantee">✓ Damaged or misprinted? Free reprint — 48h guarantee</p>
+      <p class="co-guarantee">Free reprint within 48 hours</p>
       <p class="co-secure">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2" stroke="currentColor" stroke-width="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-        Secured by <strong>Paystack</strong> · Card · Transfer · USSD
+        Secured by <strong>Paystack</strong> · Card, transfer or USSD
       </p>
-      <p class="co-wa" data-show-if="whatsapp">Questions? WhatsApp <a href="#" data-contact="whatsapp">+234 815 153 3349</a></p>
-      <p class="co-returns"><a href="index.html#faq-returns">Delivery &amp; returns policy</a></p>
+      <p class="co-wa" data-show-if="whatsapp">WhatsApp <a href="#" data-contact="whatsapp">+234 815 153 3349</a></p>
+      <p class="co-returns"><a href="index.html#faq-returns">Delivery &amp; returns</a></p>
     </div>
     <button type="button" class="btn btn-gold place-order-btn" id="placeOrderBtn" onclick="placeOrder()">Pay now →</button>
   </div>
@@ -173,14 +173,14 @@
   <div class="footer-grid">
     <div class="footer-brand">
       <a href="index.html" class="logo">HANGA<span>.</span></a>
-      <p>Make your wall speak. Custom wall frames crafted with care, designed by you.</p>
+      <p>Custom wall frames, designed by you.</p>
     </div>
     <div class="footer-col">
       <h4>Navigate</h4>
       <ul>
         <li><a href="index.html">Home</a></li>
         <li><a href="customize.html">Customize</a></li>
-        <li><a href="about.html">About Us</a></li>
+        <li><a href="about.html">About</a></li>
         <li><a href="index.html#faq">Delivery &amp; FAQs</a></li>
       </ul>
     </div>
@@ -195,11 +195,11 @@
   </div>
   <div class="footer-bottom">
     <span>&copy; <span data-year>2026</span> Hanga. All rights reserved.</span>
-    <span>Made with love in Nigeria 🇳🇬</span>
+    <span>Made in Nigeria</span>
   </div>
 </footer>
 
-<script src="js/site.js?v=8"></script>
+<script src="js/site.js?v=9"></script>
 <script src="js/receipt.js?v=7"></script>
 <script>
 const $ = id => document.getElementById(id);
@@ -288,7 +288,7 @@ function render() {
     $('sidebarDeliveryLabel').textContent = 'Delivery · ' + T.delivery.label;
     $('sidebarDelivery').textContent = HANGA.formatNaira(T.deliveryFee);
     $('deliveryQuote').innerHTML = '';
-    $('deliveryQuote').append('Delivery to ' + st + ': ', Object.assign(document.createElement('strong'), { textContent: HANGA.formatNaira(T.deliveryFee) }), ' (' + T.delivery.label + ') · within 3 business days');
+    $('deliveryQuote').append(st + ' · ', Object.assign(document.createElement('strong'), { textContent: HANGA.formatNaira(T.deliveryFee) }), ' (' + T.delivery.label + ') · 3 business days');
     $('deliveryQuote').classList.add('is-set');
   } else {
     $('sidebarDeliveryLabel').textContent = 'Delivery';
@@ -300,8 +300,8 @@ function render() {
   $('sidebarPromoRow').hidden = !T.promoDiscount;
   $('promoLine').hidden = !T.promoDiscount;
   let note = '';
-  if (promo.active && promo.used) note = 'DETTY26 (₦1,000 off) has already been used with this phone number, so it isn\'t applied to this order.';
-  else if (promo.active && !T.promoDiscount && T.promoShort > 0) note = 'Add ' + HANGA.formatNaira(T.promoShort) + ' more in frames to get ₦1,000 off (DETTY26).';
+  if (promo.active && promo.used) note = 'DETTY26 has already been used with this number.';
+  else if (promo.active && !T.promoDiscount && T.promoShort > 0) note = 'Add ' + HANGA.formatNaira(T.promoShort) + ' more to get ₦1,000 off (DETTY26).';
   $('promoNote').textContent = note; $('promoNote').hidden = !note;
   $('promoBox').hidden = !T.promoDiscount && !note;
   $('sidebarTotal').textContent = HANGA.formatNaira(T.total) + (T.delivery ? '' : ' + delivery');
@@ -447,7 +447,7 @@ function placeOrder() {
     attempt++;
     const data = buildOrderData('paystack');
     saveOrder(data);
-    if (data.price !== shown) { setBusy(false); showToast('Your total changed to ' + HANGA.formatNaira(data.price) + '. Please check it and tap Pay again.'); return; }
+    if (data.price !== shown) { setBusy(false); showToast('Total is now ' + HANGA.formatNaira(data.price) + '. Check it, then tap Pay.'); return; }
     if (!key || !window.PaystackPop) {
       // Online payment unavailable: keep the order and finish on the receipt page.
       setBusy(false);
@@ -469,7 +469,7 @@ function placeOrder() {
         try { sessionStorage.removeItem(FORM_KEY); } catch (e) {}
         location.href = 'confirmation.html?ref=' + encodeURIComponent(orderRef) + '&reference=' + encodeURIComponent(tx.reference);
       },
-      onCancel: function () { setBusy(false); showToast('Payment not completed — nothing was charged. Your cart is saved.'); },
+      onCancel: function () { setBusy(false); showToast('Payment not completed. Nothing was charged.'); },
       onError: function (err) { setBusy(false); showToast('Paystack could not start (' + ((err && err.message) || 'error') + '). Please try again.'); }
     });
   }).catch(() => { setBusy(false); showToast('Could not load Paystack. Check your connection and try again.'); });
