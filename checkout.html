@@ -15,7 +15,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preload" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Lato:wght@300;400;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Lato:wght@300;400;700&display=swap"></noscript>
-  <link rel="stylesheet" href="style.css?v=10">
+  <link rel="stylesheet" href="style.css?v=11">
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -65,6 +65,7 @@
         <li><span>East &amp; South</span><b>₦4,500</b></li>
         <li><span>North &amp; FCT</span><b>₦6,000</b></li>
       </ul>
+      <p class="co-rates-note">One fee per order, however many frames you buy.</p>
     </div>
   </div>
 
@@ -117,7 +118,7 @@
           <select id="state" autocomplete="address-level1" required aria-describedby="stateHint stateErr">
             <option value="">Select your state</option>
           </select>
-          <p class="field-hint" id="stateHint">Delivery: South-West ₦2,500 · East &amp; South ₦4,500 · North &amp; FCT ₦6,000</p>
+          <p class="field-hint" id="stateHint">Delivery: South-West ₦2,500 · East &amp; South ₦4,500 · North &amp; FCT ₦6,000 · one fee per order</p>
           <p class="field-error" id="stateErr" hidden></p>
         </div>
         <div class="form-group">
@@ -136,21 +137,23 @@
       <p class="delivery-quote" id="deliveryQuote" aria-live="polite">Pick your state to see the delivery fee.</p>
     </div>
 
-    <button type="button" class="btn btn-gold place-order-btn" id="placeOrderBtn" onclick="placeOrder()">Pay now →</button>
     <div class="co-trust">
       <p class="co-guarantee">✓ Damaged or misprinted? Free reprint — 48h guarantee</p>
       <p class="co-secure">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2" stroke="currentColor" stroke-width="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
         Secured by <strong>Paystack</strong> · Card · Transfer · USSD
       </p>
-      <p class="co-wa" data-show-if="whatsapp" hidden>Questions? <a href="#" data-contact="whatsapp">Chat with us on WhatsApp</a></p>
+      <p class="co-wa" data-show-if="whatsapp">Questions? WhatsApp <a href="#" data-contact="whatsapp">+234 815 153 3349</a></p>
+      <p class="co-returns"><a href="index.html#faq-returns">Delivery &amp; returns policy</a></p>
     </div>
+    <button type="button" class="btn btn-gold place-order-btn" id="placeOrderBtn" onclick="placeOrder()">Pay now →</button>
   </div>
 
 </div>
 
 <!-- Mobile: floating total + pay pill -->
 <div class="co-pill" id="coPill" aria-hidden="true">
+  <p class="co-pill-trust">✓ Free reprint · 🔒 Paystack · WhatsApp +234 815 153 3349</p>
   <div class="co-pill-total"><span>Total</span><strong id="coPillTotal">₦0</strong></div>
   <button type="button" class="btn btn-gold" tabindex="-1" id="coPillBtn" onclick="placeOrder()">Pay →</button>
 </div>
@@ -179,7 +182,7 @@
       <ul>
         <li><a href="mailto:hangaframes@gmail.com" data-contact="email">hangaframes@gmail.com</a></li>
         <li><a href="#" data-contact="instagram">Instagram</a></li>
-        <li><a href="#" data-contact="whatsapp">WhatsApp</a></li>
+        <li><a href="#" data-contact="whatsapp">WhatsApp +234 815 153 3349</a></li>
       </ul>
     </div>
   </div>
@@ -189,7 +192,7 @@
   </div>
 </footer>
 
-<script src="js/site.js?v=6"></script>
+<script src="js/site.js?v=7"></script>
 <script src="js/receipt.js?v=6"></script>
 <script>
 const $ = id => document.getElementById(id);

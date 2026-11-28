@@ -1,3 +1,17 @@
+/* ─── Metric-matched fallback fonts (cut CLS while Google Fonts load) ───
+   Measured with fontTools against Times New Roman / Arial metrics
+   (Liberation Serif / Sans are metric-identical). Keeps display=swap. */
+@font-face { font-family: "Playfair Fallback"; font-weight: 100 500; src: local("Times New Roman"), local("TimesNewRomanPSMT"), local("Liberation Serif"), local("Tinos");
+  size-adjust: 110.89%; ascent-override: 97.57%; descent-override: 22.64%; line-gap-override: 0%; }
+@font-face { font-family: "Playfair Fallback"; font-weight: 600 900; src: local("Times New Roman Bold"), local("TimesNewRomanPS-BoldMT"), local("Liberation Serif Bold"), local("Tinos Bold");
+  size-adjust: 106.55%; ascent-override: 101.55%; descent-override: 23.56%; line-gap-override: 0%; }
+@font-face { font-family: "Lato Fallback"; font-weight: 100 349; src: local("Arial"), local("ArialMT"), local("Liberation Sans"), local("Arimo");
+  size-adjust: 94.97%; ascent-override: 103.92%; descent-override: 22.43%; line-gap-override: 0%; }
+@font-face { font-family: "Lato Fallback"; font-weight: 350 599; src: local("Arial"), local("ArialMT"), local("Liberation Sans"), local("Arimo");
+  size-adjust: 97.93%; ascent-override: 100.79%; descent-override: 21.75%; line-gap-override: 0%; }
+@font-face { font-family: "Lato Fallback"; font-weight: 600 900; src: local("Arial Bold"), local("Arial-BoldMT"), local("Liberation Sans Bold"), local("Arimo Bold");
+  size-adjust: 93.25%; ascent-override: 105.85%; descent-override: 22.84%; line-gap-override: 0%; }
+
 /* Fonts are loaded with <link> tags in each page's <head> (faster than @import). */
 
 /* ─── Reset & Base ─────────────────────────────────────────── */
@@ -6,7 +20,7 @@
 html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; scroll-padding-top: calc(var(--nav-space) + 16px); }
 
 body {
-  font-family: "Lato", sans-serif;
+  font-family: "Lato", "Lato Fallback", sans-serif;
   color: #1a1a1a;
   background: #fff;
   overflow-x: hidden;
@@ -34,7 +48,7 @@ img, canvas, video { max-width: 100%; display: block; }
 }
 
 /* ─── Typography ───────────────────────────────────────────── */
-h1, h2, h3 { font-family: "Playfair Display", serif; letter-spacing: 0.01em; }
+h1, h2, h3 { font-family: "Playfair Display", "Playfair Fallback", serif; letter-spacing: 0.01em; }
 
 /* ─── Header: floating glass pill ───────────────────────────── */
 header {
@@ -65,7 +79,7 @@ header {
 }
 
 .logo {
-  font-family: "Playfair Display", serif;
+  font-family: "Playfair Display", "Playfair Fallback", serif;
   font-size: clamp(20px, 4vw, 24px);
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -195,7 +209,7 @@ header {
   cursor: pointer;
   transition: all 0.25s;
   border: none;
-  font-family: "Lato", sans-serif;
+  font-family: "Lato", "Lato Fallback", sans-serif;
   white-space: nowrap;
 }
 .btn-primary { background: var(--black); color: var(--white); }
@@ -370,7 +384,7 @@ section.section {
 }
 
 .filter-chip {
-  font-family: "Lato", sans-serif;
+  font-family: "Lato", "Lato Fallback", sans-serif;
   font-size: 11px;
   letter-spacing: 0.07em;
   text-transform: uppercase;
@@ -444,7 +458,7 @@ section.section {
   border-color: var(--gold);
   box-shadow: 0 4px 16px rgba(200,169,110,0.15);
 }
-.price-card .size   { font-family: "Playfair Display", serif; font-size: 19px; font-weight: 600; margin-bottom: 7px; }
+.price-card .size   { font-family: "Playfair Display", "Playfair Fallback", serif; font-size: 19px; font-weight: 600; margin-bottom: 7px; }
 .price-card .price  { font-size: 14px; color: var(--gold); font-weight: 700; }
 .price-card .inches { font-size: 12px; color: var(--muted); margin-top: 4px; }
 
@@ -478,7 +492,7 @@ section.section {
   gap: 3px;
   text-align: center;
 }
-.pv-size  { font-family: "Playfair Display", serif; font-size: 17px; font-weight: 600; color: var(--black); }
+.pv-size  { font-family: "Playfair Display", "Playfair Fallback", serif; font-size: 17px; font-weight: 600; color: var(--black); }
 .pv-cm    { font-size: 12px; color: var(--muted); }
 .pv-price { font-size: 15px; font-weight: 700; color: var(--gold); margin-top: 2px; }
 
@@ -508,7 +522,7 @@ section.section {
 }
 .cta-banner .section-label { color: var(--gold); }
 .cta-banner h2 {
-  font-family: "Playfair Display", serif;
+  font-family: "Playfair Display", "Playfair Fallback", serif;
   font-size: clamp(26px, 4vw, 46px);
   margin-bottom: 18px;
   color: var(--white);
@@ -590,7 +604,7 @@ section.section {
   text-align: center;
   gap: 12px;
 }
-.canvas-placeholder p { font-size: 14px; color: #bbb; font-family: "Lato", sans-serif; }
+.canvas-placeholder p { font-size: 14px; color: #bbb; font-family: "Lato", "Lato Fallback", sans-serif; }
 
 .config-panel h1  { font-size: clamp(24px, 4vw, 32px); margin-bottom: 8px; }
 .config-panel .tagline { color: var(--muted); margin-bottom: 32px; font-size: 15px; }
@@ -624,7 +638,7 @@ section.section {
   color: var(--muted);
   border: none;
   transition: all 0.2s;
-  font-family: "Lato", sans-serif;
+  font-family: "Lato", "Lato Fallback", sans-serif;
 }
 .source-tab.active { background: var(--black); color: var(--white); }
 
@@ -694,7 +708,7 @@ section.section {
   transition: all 0.2s;
   background: var(--white);
   color: var(--black);
-  font-family: "Lato", sans-serif;
+  font-family: "Lato", "Lato Fallback", sans-serif;
 }
 .chip:hover { border-color: var(--gold); }
 .chip.selected { background: var(--black); color: var(--white); border-color: var(--black); }
@@ -796,7 +810,7 @@ section.section {
   border: 1.5px solid var(--border);
   border-radius: var(--radius);
   font-size: 14px;
-  font-family: "Lato", sans-serif;
+  font-family: "Lato", "Lato Fallback", sans-serif;
   color: var(--black);
   background: var(--white);
   transition: border-color 0.2s;
@@ -843,7 +857,7 @@ section.section {
   background: var(--black);
   color: var(--white);
   padding: 16px 22px;
-  font-family: "Playfair Display", serif;
+  font-family: "Playfair Display", "Playfair Fallback", serif;
   font-size: 16px;
 }
 .sidebar-body { padding: 22px; }
@@ -969,7 +983,7 @@ section.section {
   margin: 0 auto 24px;
 }
 .value-icon  { font-size: 34px; margin-bottom: 14px; }
-.value-card h3 { font-size: 17px; margin-bottom: 10px; color: var(--white); font-family: "Playfair Display", serif; }
+.value-card h3 { font-size: 17px; margin-bottom: 10px; color: var(--white); font-family: "Playfair Display", "Playfair Fallback", serif; }
 .value-card p  { font-size: 14px; color: rgba(255,255,255,0.6); line-height: 1.7; }
 
 /* ─── About wall-scene scroll strip ─────────────────────────── */
@@ -1017,7 +1031,7 @@ section.section {
   padding: 28px 20px 18px;
   background: linear-gradient(to top, rgba(0,0,0,0.72) 0%, transparent 100%);
   color: var(--white);
-  font-family: "Playfair Display", serif;
+  font-family: "Playfair Display", "Playfair Fallback", serif;
   font-size: 17px;
   font-weight: 600;
   letter-spacing: 0.03em;
@@ -1445,10 +1459,10 @@ button.pay-method { font: inherit; color: inherit; background: var(--white); }
   min-width: 36px; height: 36px; padding: 0 6px; border-radius: 18px;
   display: flex; align-items: center; justify-content: center;
   background: var(--gold); color: var(--black);
-  font-family: "Playfair Display", serif; font-weight: 700; font-size: 14px; letter-spacing: 0.02em;
+  font-family: "Playfair Display", "Playfair Fallback", serif; font-weight: 700; font-size: 14px; letter-spacing: 0.02em;
   border: 3px solid var(--white);
 }
-.hiw2-title { font-family: "Playfair Display", serif; font-size: 21px; margin-bottom: 10px; color: var(--black); }
+.hiw2-title { font-family: "Playfair Display", "Playfair Fallback", serif; font-size: 21px; margin-bottom: 10px; color: var(--black); }
 .hiw2-text { font-size: 15px; color: #555; line-height: 1.75; max-width: 300px; margin: 0 auto; }
 
 /* Connector between cards (desktop: horizontal) */
@@ -1519,7 +1533,7 @@ button.pay-method { font: inherit; color: inherit; background: var(--white); }
   width: 28px; height: 28px; flex: none; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
   background: var(--white); border: 2px solid var(--border); color: var(--muted);
-  font-family: "Playfair Display", serif; font-weight: 700; font-size: 13px; letter-spacing: 0;
+  font-family: "Playfair Display", "Playfair Fallback", serif; font-weight: 700; font-size: 13px; letter-spacing: 0;
   transition: background 0.25s, border-color 0.25s, color 0.25s;
 }
 .bld-progress-step.is-current .bld-progress-dot { border-color: var(--gold); color: var(--black); box-shadow: 0 0 0 4px rgba(200,169,110,0.18); }
@@ -1568,12 +1582,12 @@ button.pay-method { font: inherit; color: inherit; background: var(--white); }
 .bld-step-num {
   position: absolute; right: -8px; top: -6px; min-width: 24px; height: 24px; padding: 0 4px;
   border-radius: 12px; background: var(--gold); color: var(--black); border: 2px solid var(--white);
-  font-family: "Playfair Display", serif; font-weight: 700; font-size: 10px;
+  font-family: "Playfair Display", "Playfair Fallback", serif; font-weight: 700; font-size: 10px;
   display: flex; align-items: center; justify-content: center;
 }
 .bld-step-titles { flex: 1; min-width: 0; }
 .config-section.bld-step h3 {
-  font-family: "Playfair Display", serif; font-size: 19px; letter-spacing: 0; text-transform: none;
+  font-family: "Playfair Display", "Playfair Fallback", serif; font-size: 19px; letter-spacing: 0; text-transform: none;
   color: var(--black); margin: 0 0 3px; padding: 0; border: 0;
 }
 .bld-step-status { font-size: 13px; color: var(--muted); margin: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -1637,7 +1651,7 @@ button.pay-method { font: inherit; color: inherit; background: var(--white); }
 .bld-summary { border: 1px solid var(--border); border-radius: 14px; background: var(--cream); transition: border-color 0.3s, box-shadow 0.3s; position: relative; isolation: isolate; }
 .bld-summary.is-ready { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(200,169,110,0.2); }
 .bld-summary-head { display: flex; gap: 14px; align-items: center; margin-bottom: 16px; }
-.bld-summary-head h3 { margin: 0 0 2px; font-family: "Playfair Display", serif; font-size: 18px; }
+.bld-summary-head h3 { margin: 0 0 2px; font-family: "Playfair Display", "Playfair Fallback", serif; font-size: 18px; }
 .bld-summary-sub { font-size: 13px; color: var(--muted); margin: 0; }
 .bld-summary-thumb {
   width: 54px; height: 68px; flex: none; border-radius: 3px; background: #e8e3dc center/cover no-repeat;
@@ -1685,7 +1699,7 @@ button.pay-method { font: inherit; color: inherit; background: var(--white); }
 .bld-qty-art { display: flex; gap: 4px; height: 34px; align-items: flex-end; margin-bottom: 6px; }
 .bld-qty-art i { display: block; width: 18px; height: 26px; border: 2px solid currentColor; border-radius: 2px; opacity: 0.7; }
 .bld-qty-opt.selected .bld-qty-art i { border-color: var(--gold); opacity: 1; }
-.bld-qty-name { font-family: 'Playfair Display', serif; font-weight: 700; font-size: 16px; }
+.bld-qty-name { font-family: 'Playfair Display', "Playfair Fallback", serif; font-weight: 700; font-size: 16px; }
 .bld-qty-sub { font-size: 12px; opacity: 0.75; }
 .bld-qty-save {
   position: absolute; top: -10px; right: 8px; background: var(--gold); color: var(--black);
@@ -1846,7 +1860,7 @@ button.pay-method { font: inherit; color: inherit; background: var(--white); }
   font-variant-numeric: tabular-nums;
 }
 .rc-head { text-align: center; padding-bottom: 14px; border-bottom: 1px dashed #c9c1b2; }
-.rc-brand { font-family: "Playfair Display", serif; font-weight: 700; font-size: 28px; letter-spacing: 3px; }
+.rc-brand { font-family: "Playfair Display", "Playfair Fallback", serif; font-weight: 700; font-size: 28px; letter-spacing: 3px; }
 .rc-brand span { color: var(--gold, #c9a96e); }
 .rc-addr { font-size: 12.5px; color: #6b6b6b; line-height: 1.6; }
 .rc-label { font-size: 11px; font-weight: 700; letter-spacing: 1.6px; text-transform: uppercase; color: #7a7366; text-align: left; margin-bottom: 6px; }
@@ -2009,7 +2023,7 @@ button.pay-method { font: inherit; color: inherit; background: var(--white); }
 .receipt::after {
   content: "HANGA" / ""; position: absolute; inset: 0; bottom: auto; top: 50%; height: auto; left: 50%; right: auto;
   transform: translate(-50%, -50%) rotate(-24deg);
-  font-family: "Playfair Display", serif; font-weight: 700; letter-spacing: 0.18em;
+  font-family: "Playfair Display", "Playfair Fallback", serif; font-weight: 700; letter-spacing: 0.18em;
   font-size: clamp(64px, 18vw, 150px); line-height: 1; color: #1a1a1a; opacity: 0.045;
   background: none; white-space: nowrap; pointer-events: none; user-select: none; z-index: 0;
 }
@@ -2177,7 +2191,7 @@ button.pay-method { font: inherit; color: inherit; background: var(--white); }
   display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
   color: var(--gold-dk); border: 1px solid rgba(168, 137, 62, 0.45); border-radius: 999px; padding: 6px 14px; margin-bottom: 14px;
 }
-.makers-empty h3 { font-family: "Playfair Display", serif; font-size: clamp(22px, 4.5vw, 28px); line-height: 1.25; margin-bottom: 10px; color: inherit; }
+.makers-empty h3 { font-family: "Playfair Display", "Playfair Fallback", serif; font-size: clamp(22px, 4.5vw, 28px); line-height: 1.25; margin-bottom: 10px; color: inherit; }
 .makers-empty p { color: var(--muted); font-size: 15px; line-height: 1.65; margin: 0 auto 22px; max-width: 480px; }
 .gallery-section .makers-empty p { color: #b9b2a6; }
 .makers-cta { display: flex; flex-direction: column; align-items: center; gap: 10px; }
@@ -2527,7 +2541,7 @@ header > .nav-links { margin-left: auto; }
 .cart-link:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
 .cart-badge {
   position: absolute; top: -3px; right: -3px; min-width: 19px; height: 19px; padding: 0 5px; border-radius: 10px;
-  background: var(--gold-dk, #a8893e); color: #fff; font: 700 11px/19px Lato, sans-serif; text-align: center;
+  background: var(--gold-dk, #a8893e); color: #fff; font: 700 11px/19px Lato, "Lato Fallback", sans-serif; text-align: center;
   box-shadow: 0 0 0 2px #f8f5f0;
 }
 .cart-badge[hidden] { display: none; }
@@ -2576,7 +2590,7 @@ html.kb-open .toast.show { transform: none !important; }
 }
 .gallery-search svg { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: rgba(255,255,255,0.6); pointer-events: none; }
 .gallery-search input {
-  width: 100%; height: 46px; padding: 0 16px 0 44px; border-radius: 999px; font: 400 15px Lato, sans-serif;
+  width: 100%; height: 46px; padding: 0 16px 0 44px; border-radius: 999px; font: 400 15px Lato, "Lato Fallback", sans-serif;
   color: #fff; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.25);
 }
 .gallery-search input::placeholder { color: rgba(255,255,255,0.55); }
@@ -2623,7 +2637,7 @@ html.kb-open .toast.show { transform: none !important; }
   .preview-panel .preview-label { font-size: 11px; line-height: 1.3; }
   .preview-toggle {
     display: block; position: absolute; right: calc(var(--px) + 11px); top: calc(var(--nav-space) + 24px); z-index: 2; box-shadow: 0 2px 8px rgba(0,0,0,0.12);
-    font: 700 11px Lato, sans-serif; padding: 5px 10px; min-height: 26px; border-radius: 999px;
+    font: 700 11px Lato, "Lato Fallback", sans-serif; padding: 5px 10px; min-height: 26px; border-radius: 999px;
     background: rgba(255,255,255,0.92); border: 1px solid rgba(26,26,26,0.15); color: var(--black); cursor: pointer;
   }
   .preview-panel.is-hidden .frame-preview-wrap { display: none; }
@@ -2819,7 +2833,7 @@ html.kb-open .toast.show { transform: none !important; }
   .co-sum-toggle {
     display: flex; width: 100%; align-items: center; justify-content: space-between; gap: 12px;
     min-height: 52px; padding: 14px 18px; border: 0; cursor: pointer; text-align: left;
-    background: #1a1a1a; color: #fff; font: 700 15px/1.3 Lato, sans-serif;
+    background: #1a1a1a; color: #fff; font: 700 15px/1.3 Lato, "Lato Fallback", sans-serif;
   }
   .co-sum-right { display: inline-flex; align-items: center; gap: 10px; }
   .co-sum-right strong { color: var(--gold); white-space: nowrap; }
@@ -2827,7 +2841,7 @@ html.kb-open .toast.show { transform: none !important; }
   .order-sidebar.is-open .co-sum-chev { transform: rotate(180deg); }
   .order-sidebar-box .sidebar-header { display: none; }
   .order-sidebar:not(.is-open) .sidebar-body { display: none; }
-  .co-delivery-card { display: none; }
+  .co-delivery-card { margin-top: 12px; padding: 12px 16px; }
 }
 
 /* Layout stability: content swapped in by JS no longer drags the footer into view */
@@ -2866,3 +2880,30 @@ html.kb-open .toast.show { transform: none !important; }
 .faq-list .faq-a ul { padding: 0 22px 16px 42px; margin: -6px 0 0; color: var(--muted); line-height: 1.7; font-size: 15px; }
 .faq-list .faq-a li { margin: 2px 0; }
 .faq-list .faq-a strong { color: var(--black); }
+
+/* ─── Dec 1 funnel fixes (P0 / P1) ─────────────────────────────── */
+/* Checkout: rates + one-fee rule always visible; trust sits above Pay */
+.co-rates-note { margin: 6px 0 0; font-size: 12.5px; color: var(--muted); }
+.co-trust { margin: 6px 0 14px; }
+.co-trust .co-returns { margin-top: 4px; }
+.co-trust .co-returns a, .co-trust .co-wa a { font-weight: 700; }
+.co-trust .co-returns a { color: var(--black); }
+.co-pill-trust { display: none; }
+@media (max-width: 900px) {
+  .co-pill { flex-wrap: wrap; row-gap: 2px; border-radius: 26px; padding-top: 6px; }
+  .co-pill-trust { display: block; order: -1; flex: 1 0 100%; margin: 0 0 2px; font-size: 11px; line-height: 1.3; color: #1e6b34; font-weight: 700; text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  body:has(.co-pill.is-ready) .checkout-layout { padding-bottom: calc(132px + env(safe-area-inset-bottom)); }
+  #stateHint { margin-bottom: 4px; }
+}
+@media (max-width: 360px) { .co-pill-trust { font-size: 10px; } }
+/* Sticky CTAs: 44px minimum touch targets */
+#coPillBtn, .bld-mobilebar .bld-mb-add, .bld-mobilebar .bld-mb-go, .place-order-btn { min-height: 44px; }
+/* Builder: note sits under the total (above the buttons), never under the sticky bar */
+.bld-summary .summary-note { margin: 10px 0 14px; }
+body:has(.bld-mobilebar.is-ready) .customize-layout { padding-bottom: calc(120px + env(safe-area-inset-bottom)); }
+/* Short phones: smaller sticky room preview so the working area stays usable */
+@media (max-width: 900px) and (max-height: 760px) {
+  .preview-panel .frame-preview-wrap canvas { max-height: 22svh; }
+  .preview-panel .canvas-placeholder { height: 18svh; }
+  .bld-step { scroll-margin-top: calc(var(--nav-space) + 24svh + 16px); }
+}

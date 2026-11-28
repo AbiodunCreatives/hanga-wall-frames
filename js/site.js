@@ -162,11 +162,11 @@ window.HANGA = {
       states: ['Lagos', 'Ogun', 'Oyo', 'Osun', 'Ondo', 'Ekiti'] },
     { key: 'east', label: 'East & South', fee: 4500,
       states: ['Abia', 'Anambra', 'Ebonyi', 'Enugu', 'Imo', 'Akwa Ibom', 'Bayelsa', 'Cross River', 'Delta', 'Edo', 'Rivers'] },
-    { key: 'north', label: 'North', fee: 6000,
+    { key: 'north', label: 'North & FCT', fee: 6000,
       states: ['FCT (Abuja)', 'Benue', 'Kogi', 'Kwara', 'Nasarawa', 'Niger', 'Plateau', 'Adamawa', 'Bauchi', 'Borno', 'Gombe', 'Taraba', 'Yobe', 'Jigawa', 'Kaduna', 'Kano', 'Katsina', 'Kebbi', 'Sokoto', 'Zamfara'] }
   ];
   H.NG_STATES = H.DELIVERY_REGIONS.reduce(function (a, r) { return a.concat(r.states); }, []).sort(function (a, b) { return a.localeCompare(b); });
-  H.DELIVERY_SUMMARY = '₦2,500 South-West · ₦4,500 East & South · ₦6,000 North';
+  H.DELIVERY_SUMMARY = '₦2,500 South-West · ₦4,500 East & South · ₦6,000 North & FCT · one fee per order';
   H.deliveryFor = function (state) {
     var s = String(state || '').trim().toLowerCase().replace(/\s*\(abuja\)$/, '');
     if (s === 'abuja') s = 'fct';
@@ -358,6 +358,16 @@ window.HANGA = {
     });
     if (vv) vv.addEventListener('resize', function () { sync(); clearTimeout(t); t = setTimeout(reveal, 120); });
   })();
+
+  // ── Deep links to an FAQ answer (e.g. index.html#faq-returns) open it ──
+  function openHashDetails() {
+    var id = (location.hash || '').slice(1), d = id && document.getElementById(id);
+    if (d && d.tagName === 'DETAILS') d.open = true;
+  }
+  openHashDetails();
+  window.addEventListener('hashchange', openHashDetails);
+  // Text the delivery rules wherever a page asks for them (one shared string).
+  document.querySelectorAll('[data-delivery-summary]').forEach(function (el) { el.textContent = H.DELIVERY_SUMMARY; });
 
   // ── Footer year ───────────────────────────────────────────────
   document.querySelectorAll('[data-year]').forEach(function (el) { el.textContent = new Date().getFullYear(); });

@@ -15,7 +15,7 @@ const setLabelOf = n => SET_LABELS[n] || (n > 1 ? n + ' frames' : 'Single');
 const DELIVERY_REGIONS = [
   { key: 'south-west', label: 'South-West', fee: 2500, states: ['Lagos', 'Ogun', 'Oyo', 'Osun', 'Ondo', 'Ekiti'] },
   { key: 'east', label: 'East & South', fee: 4500, states: ['Abia', 'Anambra', 'Ebonyi', 'Enugu', 'Imo', 'Akwa Ibom', 'Bayelsa', 'Cross River', 'Delta', 'Edo', 'Rivers'] },
-  { key: 'north', label: 'North', fee: 6000, states: ['FCT', 'Benue', 'Kogi', 'Kwara', 'Nasarawa', 'Niger', 'Plateau', 'Adamawa', 'Bauchi', 'Borno', 'Gombe', 'Taraba', 'Yobe', 'Jigawa', 'Kaduna', 'Kano', 'Katsina', 'Kebbi', 'Sokoto', 'Zamfara'] }
+  { key: 'north', label: 'North & FCT', fee: 6000, states: ['FCT', 'Benue', 'Kogi', 'Kwara', 'Nasarawa', 'Niger', 'Plateau', 'Adamawa', 'Bauchi', 'Borno', 'Gombe', 'Taraba', 'Yobe', 'Jigawa', 'Kaduna', 'Kano', 'Katsina', 'Kebbi', 'Sokoto', 'Zamfara'] }
 ];
 const normState = s => { let v = String(s || '').trim().toLowerCase().replace(/\s*\(abuja\)$/, '').replace(/\s+state$/, ''); if (v === 'abuja' || v === 'federal capital territory') v = 'fct'; return v; };
 function deliveryFor(state) {

@@ -28,7 +28,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preload" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Lato:wght@300;400;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Lato:wght@300;400;700&display=swap"></noscript>
-  <link rel="stylesheet" href="style.css?v=10">
+  <link rel="stylesheet" href="style.css?v=11">
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -342,12 +342,12 @@
       <div class="summary-row"><span>Frame Style</span><span id="summaryStyle">Borderless</span></div>
       <div class="summary-row" id="summarySubRow" hidden><span id="summarySubLabel">Frames</span><span id="summarySub">—</span></div>
       <div class="summary-row bld-saving" id="summarySaveRow" hidden><span id="summarySaveLabel">Set saving</span><span id="summarySave">—</span></div>
-      <div class="summary-row"><span>Delivery</span><span>From ₦2,500 · by state</span></div>
-      <div class="summary-row total"><span>Total</span><span id="summaryTotal">₦0</span></div>
+      <div class="summary-row"><span>Delivery</span><span>Added at checkout · by state</span></div>
+      <div class="summary-row total"><span>Total before delivery</span><span id="summaryTotal">₦0</span></div>
+      <p class="summary-note">Pairs save ₦500. Delivery <span data-delivery-summary>₦2,500 South-West · ₦4,500 East &amp; South · ₦6,000 North &amp; FCT · one fee per order</span> — within 3 business days.</p>
       <button type="button" class="btn btn-gold proceed-btn" id="addToCartBtn" onclick="addToCart()">Add to Cart</button>
       <button type="button" class="btn btn-outline-dark checkout-btn" id="checkoutBtn" onclick="proceedToCheckout()">Proceed to Checkout →</button>
       <p class="summary-wa" id="whatsappOrderBtn" hidden>Questions? <a href="#" onclick="return orderOnWhatsApp()">Chat with us on WhatsApp</a></p>
-      <p class="summary-note">Pairs save ₦500. Delivery: ₦2,500 South-West · ₦4,500 East &amp; South · ₦6,000 North — within 3 business days.</p>
     </div>
   </div>
 
@@ -355,7 +355,7 @@
 
 <!-- Mobile: sticky total + checkout -->
 <div class="bld-mobilebar" id="mobileBar">
-  <div class="bld-mobilebar-total"><span>Total</span><strong id="mobileTotal">₦0</strong><em id="mobileSave"></em></div>
+  <div class="bld-mobilebar-total"><span>Before delivery</span><strong id="mobileTotal">₦0</strong><em id="mobileSave"></em></div>
   <button type="button" class="btn btn-gold bld-mb-add" onclick="addToCart()">Add to Cart</button>
   <button type="button" class="btn bld-mb-go" id="mobileCheckout" onclick="proceedToCheckout()" aria-label="Proceed to checkout">Checkout →</button>
 </div>
@@ -384,7 +384,7 @@
       <ul>
         <li><a href="mailto:hangaframes@gmail.com" data-contact="email">hangaframes@gmail.com</a></li>
         <li><a href="#" data-contact="instagram">Instagram</a></li>
-        <li><a href="#" data-contact="whatsapp">WhatsApp</a></li>
+        <li><a href="#" data-contact="whatsapp">WhatsApp +234 815 153 3349</a></li>
       </ul>
     </div>
   </div>
@@ -394,7 +394,7 @@
   </div>
 </footer>
 
-<script src="js/site.js?v=6"></script>
+<script src="js/site.js?v=7"></script>
 <script>
 // ── State ──────────────────────────────────────────────────────
 // An order is 1 or 2 frames ("Single" or "Pair"). Each slot holds one
@@ -743,12 +743,10 @@ function initFromParams() {
       picked = true;
     }
   }
-  // Defaults so the preview and total are never empty: 16×20" and a featured print.
+  // Size defaults to 16×20" so the room preview has a scale; the image is
+  // never pre-selected, so nothing is ready to buy until the customer picks
+  // or uploads one (?image=, ?set= and gallery links still pre-select).
   if (!state.size) selectSize(document.querySelector('#sizeChips .chip[data-size="16×20"]'), true);
-  if (!picked && !params.get('set') && params.get('tab') !== 'upload' && !state.slots[0]) {
-    const first = document.querySelector('.mini-thumb[data-category~="featured"]');
-    if (first) selectGalleryImage(first, first.dataset.name, { silent: true });
-  }
   updateSummary();
 }
 
