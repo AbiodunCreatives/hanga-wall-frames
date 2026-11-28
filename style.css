@@ -761,6 +761,9 @@ section.section {
   border-radius: var(--radius);
   padding: 22px;
   margin-top: 28px;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
 }
 .order-summary-box h3 { font-size: 15px; margin-bottom: 14px; }
 .summary-row {
@@ -1561,7 +1564,8 @@ button.pay-method { font: inherit; color: inherit; background: var(--white); }
 
 .bld-step {
   background: var(--white); border: 1px solid var(--border); border-radius: 14px;
-  padding: 22px 22px 24px; margin-bottom: 18px; position: relative;
+  padding: 22px 22px 24px; margin-bottom: 18px; position: relative; overflow: hidden;
+  isolation: isolate;
   box-shadow: 0 1px 2px rgba(26,26,26,0.03), 0 8px 24px rgba(26,26,26,0.04);
   transition: border-color 0.3s, box-shadow 0.3s;
 }
@@ -1588,9 +1592,9 @@ button.pay-method { font: inherit; color: inherit; background: var(--white); }
     transition: max-height 0.18s ease, visibility 0s 0.18s;
   }
   .bld-step:not(.is-collapsed) .bld-step-body {
-    max-height: 2000px; overflow: hidden;
+    max-height: 800px; overflow: hidden;
     visibility: visible;
-    transition: max-height 0.18s ease;
+    transition: max-height 0.25s ease;
   }
   .bld-step:not(.is-collapsed) .bld-step-head--collapsible { margin-bottom: 18px; }
   .bld-step.is-collapsed .bld-step-chevron { transform: rotate(-90deg); }
@@ -1671,7 +1675,7 @@ button.pay-method { font: inherit; color: inherit; background: var(--white); }
 .swatch-sub { font-size: 11.5px; color: var(--muted); margin-top: 2px; }
 
 /* Live summary */
-.bld-summary { border: 1px solid var(--border); border-radius: 14px; background: var(--cream); transition: border-color 0.3s, box-shadow 0.3s; }
+.bld-summary { border: 1px solid var(--border); border-radius: 14px; background: var(--cream); transition: border-color 0.3s, box-shadow 0.3s; position: relative; isolation: isolate; }
 .bld-summary.is-ready { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(200,169,110,0.2); }
 .bld-summary-head { display: flex; gap: 14px; align-items: center; margin-bottom: 16px; }
 .bld-summary-head h3 { margin: 0 0 2px; font-family: "Playfair Display", serif; font-size: 18px; }
@@ -1809,6 +1813,12 @@ button.pay-method { font: inherit; color: inherit; background: var(--white); }
 /* Make the hidden attribute win over display rules */
 [hidden] { display: none !important; }
 .customize-layout > * { min-width: 0; }
+
+/* Mobile: ensure each builder section is fully self-contained */
+@media (max-width: 900px) {
+  .config-panel { overflow: hidden; }
+  .order-summary-box { overflow: hidden; }
+}
 .bld-slot, .bld-set, .bld-qty-opt { min-width: 0; }
 
 /* Sizes & prices spacing */
